@@ -1,0 +1,77 @@
+#first-left-leg {
+  transform: rotate(-14deg);
+  transform-origin: 57.55% 53.72%;
+}
+
+@keyframes move-first {
+  0% {
+    transform: rotate(-14deg);
+  }
+
+  20% {
+    transform: rotate(-14deg);
+  }
+
+  100% {
+    transform: rotate(13deg);
+  }
+}
+
+#first-left-leg:hover {
+  transform: rotate(13deg);
+  animation-name: move-first;
+  animation-duration: 0.5s;
+  animation-direction: alternate;
+}
+
+#second-part {
+  transform: rotate(31deg);
+  transform-origin: 75.92% 36.5%;
+}
+
+@keyframes move-second {
+  0% {
+    transform: rotate(31deg);
+  }
+
+  70% {
+    transform: rotate(-25deg);
+  }
+
+  100% {
+    transform: rotate(-25deg);
+  }
+}
+
+#first-left-leg:hover #second-part {
+  transform: rotate(-25deg);
+  animation-name: move-second;
+  animation-duration: 0.5s;
+  animation-direction: alternate;
+}
+
+#third-part {
+  transform: rotate(-17deg);
+  transform-origin: 93.15% 49.46%;
+}
+
+@keyframes move-third {
+  0% {
+    transform: rotate(-17deg);
+  }
+
+  70% {
+    transform: rotate(8deg);
+  }
+
+  100% {
+    transform: rotate(12deg);
+  }
+}
+
+#first-left-leg:hover #third-part {
+  transform: rotate(12deg);
+  animation-name: move-third;
+  animation-duration: 0.5s;
+  animation-direction: alternate;
+}
