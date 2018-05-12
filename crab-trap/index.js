@@ -1,9 +1,14 @@
-function animateLeg() {
-  console.log('test');
-  const firstLeftLeg = document.querySelector('#first-left-leg');
-  firstLeftLeg.firstJoint = firstLeftLeg.querySelector('#first-joint');
+import './style';
+import { Component } from 'preact';
 
-  console.log(firstLeftLeg.firstJoint.getBoundingClientRect());
+import Crab from './components/crab';
+
+export default class App extends Component {
+	render() {
+		return (
+			<div>
+				<Crab walk direction='right' />
+			</div>
+		);
+	}
 }
-
-window.addEventListener('load', animateLeg);
