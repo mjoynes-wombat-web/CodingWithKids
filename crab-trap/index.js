@@ -7,7 +7,7 @@ export default class App extends Component {
 	render() {
 		return (
 			<div>
-				<Crab walk direction='right' />
+				<Crab walk eat direction='right' />
 			</div>
 		);
 	}
