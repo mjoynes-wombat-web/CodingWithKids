@@ -197,8 +197,8 @@ const Crab = styled(UnstyledCrab)`
 }
 
 @keyframes move-shell {
-  33.33% { transform: rotate(1deg); }
-  66.66% { transform: rotate(-1deg); }
+  33.33% { transform: rotate(0.5deg); }
+  66.66% { transform: rotate(-0.5deg); }
 }
 
 .legs {
@@ -524,22 +524,10 @@ const Crab = styled(UnstyledCrab)`
     }
 
   .shell {
-    .outer-shell {
-      transform-origin: 50% 85.07%;
-      animation-name: move-shell;
-      animation-duration: 1s;
-      animation-delay:0.005s;
-      animation-iteration-count: infinite;
-    }
-
-    .inner-shell {
-      transform-origin: 50% 85.07%;
-      animation-name: move-shell;
-      animation-duration: 1s;
-      animation-iteration-count: infinite;
-      animation-direction: reverse;
-    }
-  }
+    transform-origin: 50% 85.07%;
+    animation-name: move-shell;
+    animation-duration: 2s;
+    animation-iteration-count: infinite;
 }
 
 .pincers {
