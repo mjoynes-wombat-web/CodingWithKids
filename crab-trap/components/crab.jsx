@@ -524,10 +524,11 @@ const Crab = styled(UnstyledCrab)`
     }
 
   .shell {
-    transform-origin: 50% 85.07%;
-    animation-name: move-shell;
-    animation-duration: 2s;
-    animation-iteration-count: infinite;
+      transform-origin: 50% 85.07%;
+      animation-name: move-shell;
+      animation-duration: 2s;
+      animation-iteration-count: infinite;
+  }
 }
 
 .pincers {
