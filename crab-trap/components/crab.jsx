@@ -3,202 +3,266 @@ import styled from 'styled-components';
 
 import CrabSVG from '-!svg-react-loader!../assets/design/crab-final.svg';
 
-const UnstyledCrab = ({ className, walk, direction='right', pincerAction }) => (
+class UnstyledCrab extends Preact.Component {
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      changePincerInterval: null,
+    }
+
+    this.componentDidMount = this.componentDidMount.bind(this);
+    this.componentDidUpdate = this.componentDidUpdate.bind(this)
+    this.componentWillUnmount = this.componentWillUnmount.bind(this);
+  }
+
+  componentDidMount() {
+    this.base.addEventListener('transitionend', this.props.pauseWalking);
+    this.base.querySelector('.left-pincer').addEventListener('animationend', this.props.removePincerAction);
+    this.base.style.transform = `translate(${this.props.currentPos[0]}vw, ${this.props.currentPos[1]}vh)`;
+
+    this.setState({ changePincerInterval: setInterval(this.props.changePincerAction, 8000) });
+  }
+
+  componentDidUpdate() {
+    if(this.props.walk) {
+      this.base.style.transform = `translate(${this.props.moveTo[0]}vw, ${this.props.moveTo[1]}vh)`;
+    }
+  }
+
+  componentWillUnmount() {
+    this.base.removeEventListener('transitionend', this.props.pauseWalking);
+    this.base.querySelector('.left-pincer').removeEventListener('animationend', this.props.removePincerAction);
+    clearInterval(this.state.changePincerInterval);
+  }
+
+  render() {
+    return (
     <CrabSVG
+      data-iteration="0"
       className={`
-        ${className}
-        ${pincerAction || ''}
-        ${walk ? 'walking' : ''}
-        ${direction}
+        ${this.props.className}
+        ${this.props.pincerAction || ''}
+        ${this.props.walk ? 'walking' : ''}
+        ${this.props.paused ? 'paused' : ''}
+        ${this.props.direction}
       `} />
-);
+    );
+  }
+}
 
 const Crab = styled(UnstyledCrab)`
-  max-width: 400px;
+  min-width: ${props => props.width}px;
+  min-height: ${props => props.width/2}px;
+  width: 12%;
   overflow: visible;
   cursor: pointer;
+  animation-fill-mode: both;
+  transition: transform ${props =>
+      Math.pow(
+        Math.pow(
+          Math.abs(props.currentPos[0] - props.moveTo[0]),
+          2)
+        + Math.pow(
+          Math.abs(props.currentPos[1] - props.moveTo[1]),
+        2),
+        0.5)
+        / 10 / props.speed}s;
+  transition-timing-function: cubic-bezier(1, 1.02, 0.76, 0.99);
 
 //******LEFT LEGS ANIMATIONS******//
 // First Leg Animations
 @keyframes moveLefts-firstLeg-firstPart {
-  0% { transform: rotate(-14deg); }
+  /* 0% { transform: rotate(-14deg); } */
   10% { transform: rotate(-14deg); }
   50% { transform: rotate(13deg); }
-  100% { transform: rotate(-14deg); }
+  /* 100% { transform: rotate(-14deg); } */
 }
 
 @keyframes moveLefts-firstLeg-secondPart {
-  0% { transform: rotate(31deg); }
+  /* 0% { transform: rotate(31deg); } */
   35% { transform: rotate(-25deg); }
   50% { transform: rotate(-25deg); }
-  100% { transform: rotate(31deg); }
+  /* 100% { transform: rotate(31deg); } */
 }
 
 @keyframes moveLefts-firstLeg-thirdPart {
-  0% { transform: rotate(-17deg); }
+  /* 0% { transform: rotate(-17deg); } */
   35% { transform: rotate(8deg); }
   50% { transform: rotate(12deg); }  
+  /* 100% { transform: rotate(-17deg); } */
+}
+
+@keyframes returnLefts-firstLeg-firstPart {
+  100% { transform: rotate(-14deg); }
+}
+
+@keyframes returnLefts-firstLeg-secondPart {
+  100% { transform: rotate(31deg); }
+}
+
+@keyframes returnLefts-firstLeg-thirdPart {
   100% { transform: rotate(-17deg); }
 }
 
 // Second Leg Animations
 @keyframes moveLefts-secondLeg-firstPart {
-  0% { transform: rotate(-15.5deg); }
+  /* 0% { transform: rotate(-15.5deg); } */
   10% { transform: rotate(-15.5deg); }
   50% { transform: rotate(10deg); }
-  100% { transform: rotate(-15.5deg); }
+  /* 100% { transform: rotate(-15.5deg); } */
 }
 
 @keyframes moveLefts-secondLeg-secondPart {
-  0% { transform: rotate(21deg); }
+  /* 0% { transform: rotate(21deg); } */
   35% { transform: rotate(-30deg); }
   50% { transform: rotate(-30deg); }
-  100% { transform: rotate(21deg); }
+  /* 100% { transform: rotate(21deg); } */
 }
 
 @keyframes moveLefts-secondLeg-thirdPart {
-  0% { transform: rotate(-16deg); }
+  /* 0% { transform: rotate(-16deg); } */
   35% { transform: rotate(8deg); }
   50% { transform: rotate(12deg); }  
-  100% { transform: rotate(-16deg); }
+  /* 100% { transform: rotate(-16deg); } */
 }
 
 // Third Leg Animations
 @keyframes moveLefts-thirdLeg-firstPart {
-  0% { transform: rotate(-15.5deg); }
+  /* 0% { transform: rotate(-15.5deg); } */
   10% { transform: rotate(-15.5deg); }
   50% { transform: rotate(10deg); }
-  100% { transform: rotate(-15.5deg); }
+  /* 100% { transform: rotate(-15.5deg); } */
 }
 
 @keyframes moveLefts-thirdLeg-secondPart {
-  0% { transform: rotate(4deg); }
+  /* 0% { transform: rotate(4deg); } */
   35% { transform: rotate(-35deg); }
   50% { transform: rotate(-35deg); }
-  100% { transform: rotate(4deg); }
+  /* 100% { transform: rotate(4deg); } */
 }
 
 @keyframes moveLefts-thirdLeg-thirdPart {
-  0% { transform: rotate(3deg); }
+  /* 0% { transform: rotate(3deg); } */
   35% { transform: rotate(-3deg); }
   50% { transform: rotate(-3deg); }  
-  100% { transform: rotate(3deg); }
+  /* 100% { transform: rotate(3deg); } */
 }
 
 // Fourth Leg Animations
 @keyframes moveLefts-fourthLeg-firstPart {
-  0% { transform: rotate(-11deg); }
+  /* 0% { transform: rotate(-11deg); } */
   10% { transform: rotate(-11deg); }
   50% { transform: rotate(14deg); }
-  100% { transform: rotate(-11deg); }
+  /* 100% { transform: rotate(-11deg); } */
 }
 
 @keyframes moveLefts-fourthLeg-secondPart {
-  0% { transform: rotate(3.5deg); }
+  /* 0% { transform: rotate(3.5deg); } */
   35% { transform: rotate(-35deg); }
   50% { transform: rotate(-35deg); }
   100% { transform: rotate(3.5deg); }
 }
 
 @keyframes moveLefts-fourthLeg-thirdPart {
-  0% { transform: rotate(-15deg); }
+  /* 0% { transform: rotate(-15deg); } */
   35% { transform: rotate(-45deg); }
   50% { transform: rotate(-45deg); }  
-  100% { transform: rotate(-15deg); }
+  /* 100% { transform: rotate(-15deg); } */
 }
 
 //******RIGHT LEGS ANIMATIONS******//
 // First Leg Animations
 @keyframes moveRights-firstLeg-firstPart {
-  0% { transform: rotate(14deg); }
+  /* 0% { transform: rotate(14deg); } */
   10% { transform: rotate(14deg); }
   50% { transform: rotate(-13deg); }
-  100% { transform: rotate(14deg); }
+  /* 100% { transform: rotate(14deg); } */
 }
 
 @keyframes moveRights-firstLeg-secondPart {
-  0% { transform: rotate(-31deg); }
+  /* 0% { transform: rotate(-31deg); } */
   35% { transform: rotate(25deg); }
   50% { transform: rotate(25deg); }
-  100% { transform: rotate(-31deg); }
+  /* 100% { transform: rotate(-31deg); } */
 }
 
 @keyframes moveRights-firstLeg-thirdPart {
-  0% { transform: rotate(17deg); }
+  /* 0% { transform: rotate(17deg); } */
   35% { transform: rotate(-8deg); }
   50% { transform: rotate(-12deg); }  
-  100% { transform: rotate(17deg); }
+  /* 100% { transform: rotate(17deg); } */
 }
 
 // Second Leg Animations
 @keyframes moveRights-secondLeg-firstPart {
-  0% { transform: rotate(15.5deg); }
+  /* 0% { transform: rotate(15.5deg); } */
   10% { transform: rotate(15.5deg); }
   50% { transform: rotate(-10deg); }
-  100% { transform: rotate(15.5deg); }
+  /* 100% { transform: rotate(15.5deg); } */
 }
 
 @keyframes moveRights-secondLeg-secondPart {
-  0% { transform: rotate(-21deg); }
+  /* 0% { transform: rotate(-21deg); } */
   35% { transform: rotate(30deg); }
   50% { transform: rotate(30deg); }
-  100% { transform: rotate(-21deg); }
+  /* 100% { transform: rotate(-21deg); } */
 }
 
 @keyframes moveRights-secondLeg-thirdPart {
-  0% { transform: rotate(16deg); }
+  /* 0% { transform: rotate(16deg); } */
   35% { transform: rotate(-8deg); }
   50% { transform: rotate(-12deg); }  
-  100% { transform: rotate(16deg); }
+  /* 100% { transform: rotate(16deg); } */
 }
 
 // Third Leg Animations
 @keyframes moveRights-thirdLeg-firstPart {
-  0% { transform: rotate(15.5deg); }
+  /* 0% { transform: rotate(15.5deg); } */
   10% { transform: rotate(15.5deg); }
   50% { transform: rotate(-10deg); }
-  100% { transform: rotate(15.5deg); }
+  /* 100% { transform: rotate(15.5deg); } */
 }
 
 @keyframes moveRights-thirdLeg-secondPart {
-  0% { transform: rotate(-4deg); }
+  /* 0% { transform: rotate(-4deg); } */
   35% { transform: rotate(35deg); }
   50% { transform: rotate(35deg); }
-  100% { transform: rotate(-4deg); }
+  /* 100% { transform: rotate(-4deg); } */
 }
 
 @keyframes moveRights-thirdLeg-thirdPart {
-  0% { transform: rotate(-3deg); }
+  /* 0% { transform: rotate(-3deg); } */
   35% { transform: rotate(3deg); }
   50% { transform: rotate(3deg); }  
-  100% { transform: rotate(-3deg); }
+  /* 100% { transform: rotate(-3deg); } */
 }
 
 // Fourth Leg Animations
 @keyframes moveRights-fourthLeg-firstPart {
-  0% { transform: rotate(11deg); }
+  /* 0% { transform: rotate(11deg); } */
   10% { transform: rotate(11deg); }
   50% { transform: rotate(-14deg); }
-  100% { transform: rotate(11deg); }
+  /* 100% { transform: rotate(11deg); } */
 }
 
 @keyframes moveRights-fourthLeg-secondPart {
-  0% { transform: rotate(-3.5deg); }
+  /* 0% { transform: rotate(-3.5deg); } */
   35% { transform: rotate(35deg); }
   50% { transform: rotate(35deg); }
-  100% { transform: rotate(-3.5deg); }
+  /* 100% { transform: rotate(-3.5deg); } */
 }
 
 @keyframes moveRights-fourthLeg-thirdPart {
-  0% { transform: rotate(15deg); }
+  /* 0% { transform: rotate(15deg); } */
   35% { transform: rotate(45deg); }
   50% { transform: rotate(45deg); }  
-  100% { transform: rotate(15deg); }
+  /* 100% { transform: rotate(15deg); } */
 }
 
 @keyframes move-shell {
-  33.33% { transform: rotate(0.5deg); }
-  66.66% { transform: rotate(-0.5deg); }
+  33.33% { transform: rotate(1deg); }
+  66.66% { transform: rotate(-1deg); }
 }
 
 .legs {
@@ -206,14 +270,17 @@ const Crab = styled(UnstyledCrab)`
       .first-leg {
           transform: rotate(-14deg);
           transform-origin: 56.80% 61.33%;
+          animation-fill-mode: both;
 
           .second-part {
               transform: rotate(31deg);
               transform-origin: 73.13% 41.79%;
+              animation-fill-mode: both;
 
               .third-part {
                   transform: rotate(-17deg);
                   transform-origin: 88.45% 56.52%;
+                  animation-fill-mode: both;
               }
           }
       }
@@ -221,14 +288,20 @@ const Crab = styled(UnstyledCrab)`
       .second-leg {
           transform: rotate(-15.5deg);
           transform-origin: 56.20% 68.90%;
+          transition: transform 0.5;
+          animation-fill-mode: both;
 
           .second-part {
               transform: rotate(21deg);
               transform-origin: 70.03% 53.45%;
+              transition: transform 0.5;
+              animation-fill-mode: both;
 
               .third-part {
                   transform: rotate(-16deg);
                   transform-origin: 83.50% 66.55%;
+                  transition: transform 0.5;
+                  animation-fill-mode: both;
               }
           }
       }
@@ -236,14 +309,20 @@ const Crab = styled(UnstyledCrab)`
       .third-leg {
           transform: rotate(-15.5deg);
           transform-origin: 55.73% 75.86%;
+          transition: transform 0.5;
+          animation-fill-mode: both;
 
           .second-part {
               transform: rotate(4deg);
               transform-origin: 67.48% 63.48%;
+              transition: transform 0.5;
+              animation-fill-mode: both;
 
               .third-part {
                   transform: rotate(3deg);
                   transform-origin: 79.50% 75.40%;
+                  transition: transform 0.5;
+                  animation-fill-mode: both;
               }
           }
       }
@@ -251,14 +330,20 @@ const Crab = styled(UnstyledCrab)`
       .fourth-leg {
           transform: rotate(-11deg);
           transform-origin: 55.18% 81.89%;
+          transition: transform 0.5;
+          animation-fill-mode: both;
 
           .second-part {
               transform: rotate(3.5deg);
               transform-origin: 65.50% 71.61%;
+              transition: transform 0.5;
+              animation-fill-mode: both;
 
               .third-part {
                   transform: rotate(-15deg);
                   transform-origin: 76.55% 82.51%;
+                  transition: transform 0.5;
+                  animation-fill-mode: both;
               }
           }
       }
@@ -268,14 +353,17 @@ const Crab = styled(UnstyledCrab)`
       .first-leg {
           transform: rotate(14deg);
           transform-origin: 43.20% 61.33%;
+          animation-fill-mode: both;
 
           .second-part {
               transform: rotate(-31deg);
               transform-origin: 26.87% 41.79%;
+              animation-fill-mode: both;
 
               .third-part {
                   transform: rotate(17deg);
                   transform-origin: 11.55% 56.52%;
+                  animation-fill-mode: both;
               }
           }
       }
@@ -283,14 +371,17 @@ const Crab = styled(UnstyledCrab)`
       .second-leg {
           transform: rotate(15.5deg);
           transform-origin: 43.80% 68.90%;
+          animation-fill-mode: both;
 
           .second-part {
               transform: rotate(-21deg);
               transform-origin: 29.97% 53.45%;
+              animation-fill-mode: both;
 
               .third-part {
                   transform: rotate(16deg);
                   transform-origin: 16.50% 66.55%;
+                  animation-fill-mode: both;
               }
           }
       }
@@ -298,14 +389,17 @@ const Crab = styled(UnstyledCrab)`
       .third-leg {
           transform: rotate(15.5deg);
           transform-origin: 44.27% 75.86%;
+          animation-fill-mode: both;
 
           .second-part {
               transform: rotate(-4deg);
               transform-origin: 32.52% 63.48%;
+              animation-fill-mode: both;
 
               .third-part {
                   transform: rotate(-3deg);
                   transform-origin: 20.50% 75.40%;
+                  animation-fill-mode: both;
               }
           }
       }
@@ -313,14 +407,17 @@ const Crab = styled(UnstyledCrab)`
       .fourth-leg {
           transform: rotate(11deg);
           transform-origin: 44.82% 81.89%;
+          animation-fill-mode: both;
 
           .second-part {
               transform: rotate(-3.5deg);
               transform-origin: 34.50% 71.61%;
+              animation-fill-mode: both;
 
               .third-part {
                   transform: rotate(15deg);
                   transform-origin: 23.45% 82.51%;
+                  animation-fill-mode: both;
               }
           }
       }
@@ -329,194 +426,119 @@ const Crab = styled(UnstyledCrab)`
 
 &.walking {
     .legs {
+      .left-legs *, .right-legs * {
+        animation-duration: 1s;
+        animation-iteration-count: infinite;
+      }
       .left-legs {
+          * {
+            animation-direction: ${props => (props.direction === 'right' ? 'normal' : 'reverse')};
+          }
           .first-leg {
               animation-name: moveLefts-firstLeg-firstPart;
-              animation-duration: 1s;
               animation-delay:0.125s;
-              animation-iteration-count: infinite;
-              animation-direction: ${props => (props.direction === 'right' ? 'normal' : 'reverse')};
-
+              * {
+                animation-delay:0.125s;
+              }
               .second-part {
                   animation-name: moveLefts-firstLeg-secondPart;
-                  animation-duration: 1s;
-                  animation-delay:0.125s;
-                  animation-iteration-count: infinite;
-                  animation-direction: ${props => (props.direction === 'right' ? 'normal' : 'reverse')};
-
                   .third-part {
                       animation-name: moveLefts-firstLeg-thirdPart;
-                      animation-duration: 1s;
-                      animation-delay:0.125s;
-                      animation-iteration-count: infinite;
-                      animation-direction: ${props => (props.direction === 'right' ? 'normal' : 'reverse')};
                   }
               }
           }
-
           .second-leg {
               animation-name: moveLefts-secondLeg-firstPart;
-              animation-duration: 1s;
               animation-delay:0.375s;
-              animation-iteration-count: infinite;
-              animation-direction: ${props => (props.direction === 'right' ? 'normal' : 'reverse')};
-
+              * {
+                animation-delay:0.375s;
+              }
               .second-part {
                   animation-name: moveLefts-secondLeg-secondPart;
-                  animation-duration: 1s;
-                  animation-delay:0.375s;
-                  animation-iteration-count: infinite;
-                  animation-direction: ${props => (props.direction === 'right' ? 'normal' : 'reverse')};
-
                   .third-part {
                       animation-name: moveLefts-secondLeg-thirdPart;
-                      animation-duration: 1s;
-                      animation-delay:0.375s;
-                      animation-iteration-count: infinite;
-                      animation-direction: ${props => (props.direction === 'right' ? 'normal' : 'reverse')};
                   }
               }
           }
-
           .third-leg {
               animation-name: moveLefts-thirdLeg-firstPart;
-              animation-duration: 1s;
-              animation-iteration-count: infinite;
-              animation-direction: ${props => (props.direction === 'right' ? 'normal' : 'reverse')};
-
               .second-part {
                   animation-name: moveLefts-thirdLeg-secondPart;
-                  animation-duration: 1s;
-                  animation-iteration-count: infinite;
-                  animation-direction: ${props => (props.direction === 'right' ? 'normal' : 'reverse')};
-
                   .third-part {
                       animation-name: moveLefts-thirdLeg-thirdPart;
-                      animation-duration: 1s;
-                      animation-iteration-count: infinite;
-                      animation-direction: ${props => (props.direction === 'right' ? 'normal' : 'reverse')};
                   }
               }
           }
 
           .fourth-leg {
               animation-name: moveLefts-fourthLeg-firstPart;
-              animation-duration: 1s;
               animation-delay:0.25s;
-              animation-iteration-count: infinite;
-              animation-direction: ${props => (props.direction === 'right' ? 'normal' : 'reverse')};
-
+              * {
+                animation-delay:0.25s;
+              }
               .second-part {
                   animation-name: moveLefts-fourthLeg-secondPart;
-                  animation-duration: 1s;
-                  animation-delay:0.25s;
-                  animation-iteration-count: infinite;
-                  animation-direction: ${props => (props.direction === 'right' ? 'normal' : 'reverse')};
-
                   .third-part {
                       animation-name: moveLefts-fourthLeg-thirdPart;
-                      animation-duration: 1s;
-                      animation-delay:0.25s;
-                      animation-iteration-count: infinite;
-                      animation-direction: ${props => (props.direction === 'right' ? 'normal' : 'reverse')};
                   }
               }
           }
       }
 
       .right-legs {
+          * {
+            animation-direction: ${props => (props.direction === 'right' ? 'reverse' : 'normal')};
+          }
           .first-leg {
               animation-name: moveRights-firstLeg-firstPart;
-              animation-duration: 1s;
               animation-delay:0.255s;
-              animation-iteration-count: infinite;
-              animation-direction: ${props => (props.direction === 'right' ? 'reverse' : 'normal')};
-
+              * {
+                animation-delay:0.255s;
+              }
               .second-part {
                   animation-name: moveRights-firstLeg-secondPart;
-                  animation-duration: 1s;
-                  animation-delay:0.255s;
-                  animation-iteration-count: infinite;
-                  animation-direction: ${props => (props.direction === 'right' ? 'reverse' : 'normal')};
-
                   .third-part {
                       animation-name: moveRights-firstLeg-thirdPart;
-                      animation-duration: 1s;
-                      animation-delay:0.255s;
-                      animation-iteration-count: infinite;
-                      animation-direction: ${props => (props.direction === 'right' ? 'reverse' : 'normal')};
                   }
               }
           }
-
           .second-leg {
               animation-name: moveRights-secondLeg-firstPart;
-              animation-duration: 1s;
               animation-delay:0.12s;
-              animation-iteration-count: infinite;
-              animation-direction: ${props => (props.direction === 'right' ? 'reverse' : 'normal')};
-
+              * {
+                animation-delay:0.12s;
+              }
               .second-part {
                   animation-name: moveRights-secondLeg-secondPart;
-                  animation-duration: 1s;
-                  animation-delay:0.12s;
-                  animation-iteration-count: infinite;
-                  animation-direction: ${props => (props.direction === 'right' ? 'reverse' : 'normal')};
-
                   .third-part {
                       animation-name: moveRights-secondLeg-thirdPart;
-                      animation-duration: 1s;
-                      animation-delay:0.12s;
-                      animation-iteration-count: infinite;
-                      animation-direction: ${props => (props.direction === 'right' ? 'reverse' : 'normal')};
                   }
               }
           }
-
           .third-leg {
               animation-name: moveRights-thirdLeg-firstPart;
-              animation-duration: 1s;
               animation-delay:0.37s;
-              animation-iteration-count: infinite;
-              animation-direction: ${props => (props.direction === 'right' ? 'reverse' : 'normal')};
-
+              * {
+                animation-delay:0.37s;
+              }
               .second-part {
                   animation-name: moveRights-thirdLeg-secondPart;
-                  animation-duration: 1s;
-                  animation-delay:0.37s;
-                  animation-iteration-count: infinite;
-                  animation-direction: ${props => (props.direction === 'right' ? 'reverse' : 'normal')};
-
                   .third-part {
                       animation-name: moveRights-thirdLeg-thirdPart;
-                      animation-duration: 1s;
-                      animation-delay:0.37s;
-                      animation-iteration-count: infinite;
-                      animation-direction: ${props => (props.direction === 'right' ? 'reverse' : 'normal')};
                   }
               }
           }
 
           .fourth-leg {
               animation-name: moveRights-fourthLeg-firstPart;
-              animation-duration: 1s;
               animation-delay:0.005s;
-              animation-iteration-count: infinite;
-              animation-direction: ${props => (props.direction === 'right' ? 'reverse' : 'normal')};
-
+              * {
+                animation-delay:0.005s;
+              }
               .second-part {
                   animation-name: moveRights-fourthLeg-secondPart;
-                  animation-duration: 1s;
-                  animation-delay:0.005s;
-                  animation-iteration-count: infinite;
-                  animation-direction: ${props => (props.direction === 'right' ? 'reverse' : 'normal')};
-
                   .third-part {
                       animation-name: moveRights-fourthLeg-thirdPart;
-                      animation-duration: 1s;
-                      animation-delay:0.005s;
-                      animation-iteration-count: infinite;
-                      animation-direction: ${props => (props.direction === 'right' ? 'reverse' : 'normal')};
                   }
               }
           }
@@ -528,6 +550,12 @@ const Crab = styled(UnstyledCrab)`
       animation-name: move-shell;
       animation-duration: 2s;
       animation-iteration-count: infinite;
+  }
+
+  &.paused {
+    .legs *, .shell * {
+      animation-play-state: paused;
+    }
   }
 }
 

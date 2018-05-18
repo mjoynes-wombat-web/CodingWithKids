@@ -9,20 +9,35 @@ export default class App extends Component {
 	constructor(props) {
 		super(props);
 		this.state = {
-			pincerAction: 'eating',
+			pincerActions: ['eating', 'waving', 'snapping' ],
+			currentPincerAction: 'eating',
 			walk: false,
-			direction: 'right',
+			direction: 'left',
+			inch: null,
+			speed: 3,
+			paused: false,
+			moveTo: [50, 22],
+			currentPos: [0, 0],
 		}
 
-		this.setPincerAction = this.setPincerAction.bind(this);
+		this.componentDidMount = this.componentDidMount.bind(this);
+		this.removePincerAction = this.removePincerAction.bind(this);
 		this.walk = this.walk.bind(this);
-		this.stopWalking = this.stopWalking.bind(this);
+		this.pauseWalking = this.pauseWalking.bind(this);
+		this.changePincerAction = this.changePincerAction.bind(this);
 	}
 
-	setPincerAction(e) {
-		e.preventDefault();
-		const { value } = e.target;
-		this.setState({ pincerAction: value })
+	componentDidMount() {
+		if (inch) return null;
+		const inchDiv = document.getElementById('inch');
+		const inch = inchDiv.clientHeight;
+
+		return this.setState({ inch });
+	}
+
+	removePincerAction() {
+		console.log('this ran');
+		this.setState({ currentPincerAction: null });
 	}
 
 	walk(e) {
@@ -30,61 +45,44 @@ export default class App extends Component {
 		let direction;
 		if (this.state.direction === 'right') direction = 'left';
 		else direction = 'right';
-
-		this.setState({ walk: true, direction });
+		const moveTo = (direction === 'right' ? [50, 22] : [0, 0]);
+		this.setState({ walk: true, direction, paused: false, currentPos: this.state.moveTo, moveTo });
 	}
 
-	stopWalking(e) {
+	pauseWalking(e) {
 		e.preventDefault();
-		this.setState({ walk: false });
+		this.setState({ paused: true });
 	}
+
+	changePincerAction() {
+		let currentPincerAction = this.state.pincerActions[Math.floor(Math.random()*this.state.pincerActions.length)];
+		return this.setState({ currentPincerAction })
+	}
+
 	render() {
 		return (
 			<main>
-				<Crab walk={this.state.walk} pincerAction={this.state.pincerAction} direction={this.state.direction} />
+				<div id="inch"></div>
+				<Crab
+					walk={this.state.walk}
+					pincerAction={this.state.currentPincerAction}
+					changePincerAction={this.changePincerAction}
+					direction={this.state.direction}
+					width={this.state.inch}
+					speed={this.state.speed}
+					moveTo={this.state.moveTo}
+					currentPos={this.state.currentPos}
+					paused={this.state.paused}
+					pauseWalking={this.pauseWalking}
+					removePincerAction={this.removePincerAction} />
 				<form>
 					<button onClick={this.walk}>Walk {this.state.direction === 'right' ? 'Left' : 'Right'}</button>
-					{this.state.walk ? (
-						<button onClick={this.stopWalking}>Stop Walking</button>
-					)
-					: null }
-					<h3>Pincer Actions</h3>
-					<label HTMLFor="pincerEat">
-						<input
-							type="radio"
-							id="pincerEat"
-							name="pincerAction"
-							value="eating"
-							onChange={this.setPincerAction}
-							checked={this.state.pincerAction === 'eating'} />
-						Eating
-					</label>
-					<label HTMLFor="pincerWave">
-						<input
-							type="radio"
-							id="pincerWave"
-							name="pincerAction"
-							value="waving"
-							onChange={this.setPincerAction}
-							checked={this.state.pincerAction === 'waving'} />
-						Waving
-					</label>
-					<label HTMLFor="pincerSnap">
-						<input
-						type="radio"
-						id="pincerSnap"
-						name="pincerAction"
-						value="snapping"
-						onChange={this.setPincerAction}
-						checked={this.state.pincerAction === 'snapping'} />
-						Snapping
-					</label>
 				</form>
 				<div>
 					<h2>Crab State</h2>
 					<p>Walking: {this.state.walk.toString()}</p>
 					<p>Direction: {this.state.direction}</p>
-					<p>Pincer Action: {this.state.pincerAction}</p>
+					<p>Pincer Action: {this.state.currentPincerAction}</p>
 				</div>
 			</main>
 		);
