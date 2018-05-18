@@ -1,6 +1,8 @@
 import './style';
 import { Component } from 'preact';
 
+import './assets/styles/index.scss';
+
 import Crab from './components/crab';
 
 export default class App extends Component {
@@ -12,19 +14,19 @@ export default class App extends Component {
 			direction: 'right',
 		}
 
-		this.movePincers = this.movePincers.bind(this);
+		this.setPincerAction = this.setPincerAction.bind(this);
 		this.walk = this.walk.bind(this);
 		this.stopWalking = this.stopWalking.bind(this);
 	}
 
-	movePincers() {
-		if (this.state.pincerAction === 'eating') return this.setState({ pincerAction: 'waving' });
-		if(this.state.pincerAction === 'waving') return this.setState({ pincerAction: 'snapping' });
-
-		return this.setState({ pincerAction: 'eating' })
+	setPincerAction(e) {
+		e.preventDefault();
+		const { value } = e.target;
+		this.setState({ pincerAction: value })
 	}
 
-	walk() {
+	walk(e) {
+		e.preventDefault();
 		let direction;
 		if (this.state.direction === 'right') direction = 'left';
 		else direction = 'right';
@@ -32,26 +34,59 @@ export default class App extends Component {
 		this.setState({ walk: true, direction });
 	}
 
-	stopWalking() {
+	stopWalking(e) {
+		e.preventDefault();
 		this.setState({ walk: false });
 	}
 	render() {
 		return (
-			<div>
+			<main>
 				<Crab walk={this.state.walk} pincerAction={this.state.pincerAction} direction={this.state.direction} />
-				<button onClick={this.movePincers}>Change Pincer Movement</button>
-				<button onClick={this.walk}>Walk {this.state.direction === 'right' ? 'Left' : 'Right'}</button>
-				{this.state.walk ? (
-					<button onClick={this.stopWalking}>Stop Walking</button>
-				)
-				: null }
+				<form>
+					<button onClick={this.walk}>Walk {this.state.direction === 'right' ? 'Left' : 'Right'}</button>
+					{this.state.walk ? (
+						<button onClick={this.stopWalking}>Stop Walking</button>
+					)
+					: null }
+					<h3>Pincer Actions</h3>
+					<label HTMLFor="pincerEat">
+						<input
+							type="radio"
+							id="pincerEat"
+							name="pincerAction"
+							value="eating"
+							onChange={this.setPincerAction}
+							checked={this.state.pincerAction === 'eating'} />
+						Eating
+					</label>
+					<label HTMLFor="pincerWave">
+						<input
+							type="radio"
+							id="pincerWave"
+							name="pincerAction"
+							value="waving"
+							onChange={this.setPincerAction}
+							checked={this.state.pincerAction === 'waving'} />
+						Waving
+					</label>
+					<label HTMLFor="pincerSnap">
+						<input
+						type="radio"
+						id="pincerSnap"
+						name="pincerAction"
+						value="snapping"
+						onChange={this.setPincerAction}
+						checked={this.state.pincerAction === 'snapping'} />
+						Snapping
+					</label>
+				</form>
 				<div>
 					<h2>Crab State</h2>
 					<p>Walking: {this.state.walk.toString()}</p>
 					<p>Direction: {this.state.direction}</p>
 					<p>Pincer Action: {this.state.pincerAction}</p>
 				</div>
-			</div>
+			</main>
 		);
 	}
 }
