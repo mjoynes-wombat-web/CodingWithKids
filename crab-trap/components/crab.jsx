@@ -3,12 +3,12 @@ import styled from 'styled-components';
 
 import CrabSVG from '-!svg-react-loader!../assets/design/crab-final.svg';
 
-const UnstyledCrab = ({ className, walk, direction='right', eat }) => (
+const UnstyledCrab = ({ className, walk, direction='right', pincerAction }) => (
     <CrabSVG
       className={`
         ${className}
-        ${walk === true ? 'walking' : null}
-        ${eat === true ? 'eating' : null}
+        ${pincerAction || ''}
+        ${walk ? 'walking' : ''}
         ${direction}
       `} />
 );
@@ -16,447 +16,184 @@ const UnstyledCrab = ({ className, walk, direction='right', eat }) => (
 const Crab = styled(UnstyledCrab)`
   max-width: 400px;
   overflow: visible;
+  cursor: pointer;
 
 //******LEFT LEGS ANIMATIONS******//
 // First Leg Animations
 @keyframes moveLefts-firstLeg-firstPart {
-  0% {
-    transform: rotate(-14deg);
-  }
-
-  10% {
-    transform: rotate(-14deg);
-  }
-
-  50% {
-    transform: rotate(13deg);
-  }
-
-  100% {
-    transform: rotate(-14deg);
-  }
+  0% { transform: rotate(-14deg); }
+  10% { transform: rotate(-14deg); }
+  50% { transform: rotate(13deg); }
+  100% { transform: rotate(-14deg); }
 }
 
 @keyframes moveLefts-firstLeg-secondPart {
-  0% {
-    transform: rotate(31deg);
-  }
-
-  35% {
-    transform: rotate(-25deg);
-  }
-
-  50% {
-    transform: rotate(-25deg);
-  }
-
-  100% {
-    transform: rotate(31deg);
-  }
+  0% { transform: rotate(31deg); }
+  35% { transform: rotate(-25deg); }
+  50% { transform: rotate(-25deg); }
+  100% { transform: rotate(31deg); }
 }
 
 @keyframes moveLefts-firstLeg-thirdPart {
-  0% {
-    transform: rotate(-17deg);
-  }
-
-  35% {
-    transform: rotate(8deg);
-  }
-
-  50% {
-    transform: rotate(12deg);
-  }
-  
-  100% {
-    transform: rotate(-17deg);
-  }
+  0% { transform: rotate(-17deg); }
+  35% { transform: rotate(8deg); }
+  50% { transform: rotate(12deg); }  
+  100% { transform: rotate(-17deg); }
 }
 
 // Second Leg Animations
 @keyframes moveLefts-secondLeg-firstPart {
-  0% {
-    transform: rotate(-15.5deg);
-  }
-
-  10% {
-    transform: rotate(-15.5deg);
-  }
-
-  50% {
-    transform: rotate(10deg);
-  }
-
-  100% {
-    transform: rotate(-15.5deg);
-  }
+  0% { transform: rotate(-15.5deg); }
+  10% { transform: rotate(-15.5deg); }
+  50% { transform: rotate(10deg); }
+  100% { transform: rotate(-15.5deg); }
 }
 
 @keyframes moveLefts-secondLeg-secondPart {
-  0% {
-    transform: rotate(21deg);
-  }
-
-  35% {
-    transform: rotate(-30deg);
-  }
-
-  50% {
-    transform: rotate(-30deg);
-  }
-
-  100% {
-    transform: rotate(21deg);
-  }
+  0% { transform: rotate(21deg); }
+  35% { transform: rotate(-30deg); }
+  50% { transform: rotate(-30deg); }
+  100% { transform: rotate(21deg); }
 }
 
 @keyframes moveLefts-secondLeg-thirdPart {
-  0% {
-    transform: rotate(-16deg);
-  }
-
-  35% {
-    transform: rotate(8deg);
-  }
-
-  50% {
-    transform: rotate(12deg);
-  }
-  
-  100% {
-    transform: rotate(-16deg);
-  }
+  0% { transform: rotate(-16deg); }
+  35% { transform: rotate(8deg); }
+  50% { transform: rotate(12deg); }  
+  100% { transform: rotate(-16deg); }
 }
 
 // Third Leg Animations
 @keyframes moveLefts-thirdLeg-firstPart {
-  0% {
-    transform: rotate(-15.5deg);
-  }
-
-  10% {
-    transform: rotate(-15.5deg);
-  }
-
-  50% {
-    transform: rotate(10deg);
-  }
-
-  100% {
-    transform: rotate(-15.5deg);
-  }
+  0% { transform: rotate(-15.5deg); }
+  10% { transform: rotate(-15.5deg); }
+  50% { transform: rotate(10deg); }
+  100% { transform: rotate(-15.5deg); }
 }
 
 @keyframes moveLefts-thirdLeg-secondPart {
-  0% {
-    transform: rotate(4deg);
-  }
-
-  35% {
-    transform: rotate(-35deg);
-  }
-
-  50% {
-    transform: rotate(-35deg);
-  }
-
-  100% {
-    transform: rotate(4deg);
-  }
+  0% { transform: rotate(4deg); }
+  35% { transform: rotate(-35deg); }
+  50% { transform: rotate(-35deg); }
+  100% { transform: rotate(4deg); }
 }
 
 @keyframes moveLefts-thirdLeg-thirdPart {
-  0% {
-    transform: rotate(3deg);
-  }
-
-  35% {
-    transform: rotate(-3deg);
-  }
-
-  50% {
-    transform: rotate(-3deg);
-  }
-  
-  100% {
-    transform: rotate(3deg);
-  }
+  0% { transform: rotate(3deg); }
+  35% { transform: rotate(-3deg); }
+  50% { transform: rotate(-3deg); }  
+  100% { transform: rotate(3deg); }
 }
 
 // Fourth Leg Animations
 @keyframes moveLefts-fourthLeg-firstPart {
-  0% {
-    transform: rotate(-11deg);
-  }
-
-  10% {
-    transform: rotate(-11deg);
-  }
-
-  50% {
-    transform: rotate(14deg);
-  }
-
-  100% {
-    transform: rotate(-11deg);
-  }
+  0% { transform: rotate(-11deg); }
+  10% { transform: rotate(-11deg); }
+  50% { transform: rotate(14deg); }
+  100% { transform: rotate(-11deg); }
 }
 
 @keyframes moveLefts-fourthLeg-secondPart {
-  0% {
-    transform: rotate(3.5deg);
-  }
-
-  35% {
-    transform: rotate(-35deg);
-  }
-
-  50% {
-    transform: rotate(-35deg);
-  }
-
-  100% {
-    transform: rotate(3.5deg);
-  }
+  0% { transform: rotate(3.5deg); }
+  35% { transform: rotate(-35deg); }
+  50% { transform: rotate(-35deg); }
+  100% { transform: rotate(3.5deg); }
 }
 
 @keyframes moveLefts-fourthLeg-thirdPart {
-  0% {
-    transform: rotate(-15deg);
-  }
-
-  35% {
-    transform: rotate(-45deg);
-  }
-
-  50% {
-    transform: rotate(-45deg);
-  }
-  
-  100% {
-    transform: rotate(-15deg);
-  }
+  0% { transform: rotate(-15deg); }
+  35% { transform: rotate(-45deg); }
+  50% { transform: rotate(-45deg); }  
+  100% { transform: rotate(-15deg); }
 }
 
 //******RIGHT LEGS ANIMATIONS******//
 // First Leg Animations
 @keyframes moveRights-firstLeg-firstPart {
-  0% {
-    transform: rotate(14deg);
-  }
-
-  10% {
-    transform: rotate(14deg);
-  }
-
-  50% {
-    transform: rotate(-13deg);
-  }
-
-  100% {
-    transform: rotate(14deg);
-  }
+  0% { transform: rotate(14deg); }
+  10% { transform: rotate(14deg); }
+  50% { transform: rotate(-13deg); }
+  100% { transform: rotate(14deg); }
 }
 
 @keyframes moveRights-firstLeg-secondPart {
-  0% {
-    transform: rotate(-31deg);
-  }
-
-  35% {
-    transform: rotate(25deg);
-  }
-
-  50% {
-    transform: rotate(25deg);
-  }
-
-  100% {
-    transform: rotate(-31deg);
-  }
+  0% { transform: rotate(-31deg); }
+  35% { transform: rotate(25deg); }
+  50% { transform: rotate(25deg); }
+  100% { transform: rotate(-31deg); }
 }
 
 @keyframes moveRights-firstLeg-thirdPart {
-  0% {
-    transform: rotate(17deg);
-  }
-
-  35% {
-    transform: rotate(-8deg);
-  }
-
-  50% {
-    transform: rotate(-12deg);
-  }
-  
-  100% {
-    transform: rotate(17deg);
-  }
+  0% { transform: rotate(17deg); }
+  35% { transform: rotate(-8deg); }
+  50% { transform: rotate(-12deg); }  
+  100% { transform: rotate(17deg); }
 }
 
 // Second Leg Animations
 @keyframes moveRights-secondLeg-firstPart {
-  0% {
-    transform: rotate(15.5deg);
-  }
-
-  10% {
-    transform: rotate(15.5deg);
-  }
-
-  50% {
-    transform: rotate(-10deg);
-  }
-
-  100% {
-    transform: rotate(15.5deg);
-  }
+  0% { transform: rotate(15.5deg); }
+  10% { transform: rotate(15.5deg); }
+  50% { transform: rotate(-10deg); }
+  100% { transform: rotate(15.5deg); }
 }
 
 @keyframes moveRights-secondLeg-secondPart {
-  0% {
-    transform: rotate(-21deg);
-  }
-
-  35% {
-    transform: rotate(30deg);
-  }
-
-  50% {
-    transform: rotate(30deg);
-  }
-
-  100% {
-    transform: rotate(-21deg);
-  }
+  0% { transform: rotate(-21deg); }
+  35% { transform: rotate(30deg); }
+  50% { transform: rotate(30deg); }
+  100% { transform: rotate(-21deg); }
 }
 
 @keyframes moveRights-secondLeg-thirdPart {
-  0% {
-    transform: rotate(16deg);
-  }
-
-  35% {
-    transform: rotate(-8deg);
-  }
-
-  50% {
-    transform: rotate(-12deg);
-  }
-  
-  100% {
-    transform: rotate(16deg);
-  }
+  0% { transform: rotate(16deg); }
+  35% { transform: rotate(-8deg); }
+  50% { transform: rotate(-12deg); }  
+  100% { transform: rotate(16deg); }
 }
 
 // Third Leg Animations
 @keyframes moveRights-thirdLeg-firstPart {
-  0% {
-    transform: rotate(15.5deg);
-  }
-
-  10% {
-    transform: rotate(15.5deg);
-  }
-
-  50% {
-    transform: rotate(-10deg);
-  }
-
-  100% {
-    transform: rotate(15.5deg);
-  }
+  0% { transform: rotate(15.5deg); }
+  10% { transform: rotate(15.5deg); }
+  50% { transform: rotate(-10deg); }
+  100% { transform: rotate(15.5deg); }
 }
 
 @keyframes moveRights-thirdLeg-secondPart {
-  0% {
-    transform: rotate(-4deg);
-  }
-
-  35% {
-    transform: rotate(35deg);
-  }
-
-  50% {
-    transform: rotate(35deg);
-  }
-
-  100% {
-    transform: rotate(-4deg);
-  }
+  0% { transform: rotate(-4deg); }
+  35% { transform: rotate(35deg); }
+  50% { transform: rotate(35deg); }
+  100% { transform: rotate(-4deg); }
 }
 
 @keyframes moveRights-thirdLeg-thirdPart {
-  0% {
-    transform: rotate(-3deg);
-  }
-
-  35% {
-    transform: rotate(3deg);
-  }
-
-  50% {
-    transform: rotate(3deg);
-  }
-  
-  100% {
-    transform: rotate(-3deg);
-  }
+  0% { transform: rotate(-3deg); }
+  35% { transform: rotate(3deg); }
+  50% { transform: rotate(3deg); }  
+  100% { transform: rotate(-3deg); }
 }
 
 // Fourth Leg Animations
 @keyframes moveRights-fourthLeg-firstPart {
-  0% {
-    transform: rotate(11deg);
-  }
-
-  10% {
-    transform: rotate(11deg);
-  }
-
-  50% {
-    transform: rotate(-14deg);
-  }
-
-  100% {
-    transform: rotate(11deg);
-  }
+  0% { transform: rotate(11deg); }
+  10% { transform: rotate(11deg); }
+  50% { transform: rotate(-14deg); }
+  100% { transform: rotate(11deg); }
 }
 
 @keyframes moveRights-fourthLeg-secondPart {
-  0% {
-    transform: rotate(-3.5deg);
-  }
-
-  35% {
-    transform: rotate(35deg);
-  }
-
-  50% {
-    transform: rotate(35deg);
-  }
-
-  100% {
-    transform: rotate(-3.5deg);
-  }
+  0% { transform: rotate(-3.5deg); }
+  35% { transform: rotate(35deg); }
+  50% { transform: rotate(35deg); }
+  100% { transform: rotate(-3.5deg); }
 }
 
 @keyframes moveRights-fourthLeg-thirdPart {
-  0% {
-    transform: rotate(15deg);
-  }
-
-  35% {
-    transform: rotate(45deg);
-  }
-
-  50% {
-    transform: rotate(45deg);
-  }
-  
-  100% {
-    transform: rotate(15deg);
-  }
+  0% { transform: rotate(15deg); }
+  35% { transform: rotate(45deg); }
+  50% { transform: rotate(45deg); }  
+  100% { transform: rotate(15deg); }
 }
 
 .legs {
@@ -886,10 +623,7 @@ const Crab = styled(UnstyledCrab)`
   }
 }
 
-&.snapping {
-
-}
-
+// EATING ANIMATION
 @keyframes eating-right-pincer {
   0% { transform: rotate(-20deg); }
   25% { transform: rotate(40deg); }
@@ -1049,6 +783,224 @@ const Crab = styled(UnstyledCrab)`
         animation-duration: 1s;
         animation-delay: 2.5s;
         animation-timing-function: ease-in-out;
+      }
+    }
+  }
+}
+
+//WAVING ANIMATION
+@keyframes waving-right-pincer {
+  0% { transform: rotate(-20deg); }
+  25% { transform: rotate(40deg); }
+  45% { transform: rotate(-40deg); }
+  65% { transform: rotate(50deg); }
+}
+
+@keyframes waving-right-pincer-secondPart {
+  0% { transform: rotate(20deg); }
+  25% { transform: rotate(0deg); }
+  90% { transform: rotate(0deg); }
+}
+
+@keyframes waving-right-pincer-thirdPart {
+  0% { transform: rotate(20deg); }
+  25% { transform: rotate(5deg); }
+  90% { transform: rotate(5deg); }
+}
+
+@keyframes waving-left-pincer {
+  0% { transform: rotate(20deg); }
+  25% { transform: rotate(-30deg); }
+  45% { transform: rotate(40deg); }
+  65% { transform: rotate(-50deg); }
+}
+
+@keyframes waving-left-pincer-secondPart {
+  0% { transform: rotate(-20deg); }
+  25% { transform: rotate(5deg); }
+  80% { transform: rotate(5deg); }
+}
+
+@keyframes waving-left-pincer-thirdPart {
+  0% { transform: rotate(-75deg); }
+  25% { transform: rotate(0deg); }
+  80% { transform: rotate(0deg); }
+}
+
+&.waving {
+  .pincers {
+    .right-pincer {
+      animation-name: waving-right-pincer;
+      animation-duration: 2.5s;
+      animation-delay: 0.5s;
+      animation-timing-function: ease-in-out;
+
+      .second-part {
+        animation-name: waving-right-pincer-secondPart;
+        animation-duration: 2.5s;
+        animation-delay: 0.5s;
+        animation-timing-function: ease-in-out;
+
+        .third-part {
+          animation-name: waving-right-pincer-thirdPart;
+          animation-duration: 2.5s;
+          animation-delay: 0.5s;
+          animation-timing-function: ease-in-out;
+        }
+      }
+    }
+
+    .left-pincer {
+      animation-name: waving-left-pincer;
+      animation-duration: 2.5s;
+      animation-delay: 1s;
+      animation-timing-function: ease-in-out;
+
+      .second-part {
+        animation-name: waving-left-pincer-secondPart;
+        animation-duration: 2.5s;
+        animation-delay: 1s;
+        animation-timing-function: ease-in-out;
+
+        .third-part {
+          animation-name: waving-left-pincer-thirdPart;
+          animation-duration: 2.5s;
+          animation-delay: 1s;
+          animation-timing-function: ease-in-out;
+        }
+      }
+    }
+  }
+}
+
+//SNAPPING ANIMATION
+@keyframes snapping-right-pincer {
+  0% { transform: rotate(-20deg); }
+  10% { transform: rotate(-30deg); }
+  90% { transform: rotate(-30deg); }
+}
+
+@keyframes snapping-right-pincer-secondPart {
+  0% { transform: rotate(20deg); }
+  10% { transform: rotate(0deg); }
+  90% { transform: rotate(0deg); }
+}
+
+@keyframes snapping-right-pincer-thirdPart {
+  0% { transform: rotate(20deg); }
+  10% { transform: rotate(10deg); }
+  90% { transform: rotate(10deg); }
+}
+
+@keyframes snapping-right-pincer-close {
+  0% { transform: rotate(5deg); }
+  17.43% { transform: rotate(5deg); }
+  21.43% { transform: rotate(35deg); }
+  25.43% { transform: rotate(5deg); }
+  40.29% { transform: rotate(5deg); }
+  44.29% { transform: rotate(35deg); }
+  48.29% { transform: rotate(5deg); }
+  63.15% { transform: rotate(5deg); }
+  67.15% { transform: rotate(35deg); }
+  71.15% { transform: rotate(5deg); }
+  74.58% { transform: rotate(5deg); }
+  78.58% { transform: rotate(35deg); }
+  82.58% { transform: rotate(5deg); }
+}
+
+@keyframes snapping-left-pincer {
+  0% { transform: rotate(20deg); }
+  10% { transform: rotate(30deg); }
+  90% { transform: rotate(30deg); }
+}
+
+@keyframes snapping-left-pincer-secondPart {
+  0% { transform: rotate(-20deg); }
+  10% { transform: rotate(0deg); }
+  90% { transform: rotate(0deg); }
+}
+
+@keyframes snapping-left-pincer-thirdPart {
+  0% { transform: rotate(-75deg); }
+  10% { transform: rotate(-10deg); }
+  90% { transform: rotate(-10deg); }
+}
+
+/*
+R-LLR-L---B-B-
+11.43 beat split */
+
+@keyframes snapping-left-pincer-close {
+  0% { transform: rotate(-5deg); }
+  28.86% { transform: rotate(-5deg); }
+  32.86% { transform: rotate(-35deg); }
+  35.72% { transform: rotate(-5deg); }
+  38.58% { transform: rotate(-35deg); }
+  42.58% { transform: rotate(-5deg); }
+  51.72% { transform: rotate(-5deg); }
+  55.72% { transform: rotate(-35deg); }
+  59.72% { transform: rotate(-5deg); }
+  63.15% { transform: rotate(-5deg); }
+  67.15% { transform: rotate(-35deg); }
+  71.15% { transform: rotate(-5deg); }
+  74.58% { transform: rotate(-5deg); }
+  78.58% { transform: rotate(-35deg); }
+  82.58% { transform: rotate(-5deg); }
+}
+
+&.snapping {
+  .pincers {
+    .right-pincer {
+      animation-name: snapping-right-pincer;
+      animation-duration: 3s;
+      animation-delay: 0.5s;
+      animation-timing-function: ease-in-out;
+
+      .second-part {
+        animation-name: snapping-right-pincer-secondPart;
+        animation-duration: 3s;
+        animation-delay: 0.5s;
+        animation-timing-function: ease-in-out;
+
+        .third-part {
+          animation-name: snapping-right-pincer-thirdPart;
+          animation-duration: 3s;
+          animation-delay: 0.5s;
+          animation-timing-function: ease-in-out;
+
+          .moving-pincer {
+            animation-name: snapping-right-pincer-close;
+            animation-duration: 3s;
+            animation-delay: 0.5s;
+          }
+        }
+      }
+    }
+
+    .left-pincer {
+      animation-name: snapping-left-pincer;
+      animation-duration: 3s;
+      animation-delay: 0.5s;
+      animation-timing-function: ease-in-out;
+
+      .second-part {
+        animation-name: snapping-left-pincer-secondPart;
+        animation-duration: 3s;
+        animation-delay: 0.5s;
+        animation-timing-function: ease-in-out;
+
+        .third-part {
+          animation-name: snapping-left-pincer-thirdPart;
+          animation-duration: 3s;
+          animation-delay: 0.5s;
+          animation-timing-function: ease-in-out;
+
+          .moving-pincer {
+            animation-name: snapping-left-pincer-close;
+            animation-duration: 3s;
+            animation-delay: 0.5s;
+          }
+        }
       }
     }
   }
