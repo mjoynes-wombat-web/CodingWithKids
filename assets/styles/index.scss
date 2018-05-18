@@ -1,10 +1,17 @@
 main {
   display: flex;
   flex-direction: column;
-  width: 50%;
   
   > * {
     flex: 0 1;
+  }
+
+  #inch {
+    width: 1in;
+    height: 1in;
+    pointer-events: none;
+    position: absolute;
+    z-index: -100;
   }
 
   form {
