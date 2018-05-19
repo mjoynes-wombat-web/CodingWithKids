@@ -15,7 +15,7 @@ export default class App extends Component {
 			walk: false,
 			direction: 'left',
 			inch: null,
-			speed: 3,
+			speed: 1,
 			paused: false,
 			currentPos: [0, 0],
 			fullscreen: false,

@@ -64,7 +64,7 @@ const Crab = styled(UnstyledCrab)`
           Math.abs(props.currentPos[1] - (props.moveTo ? props.moveTo[1] : 0 )),
         2),
         0.5)
-        / 10 / props.speed}s;
+        / 20 / props.speed}s;
   transition-timing-function: cubic-bezier(1, 1.02, 0.76, 0.99);
 
   &.walking {
@@ -289,19 +289,16 @@ const Crab = styled(UnstyledCrab)`
       .second-leg {
           transform: rotate(-15.5deg);
           transform-origin: 56.20% 68.90%;
-          transition: transform 0.5;
           animation-fill-mode: both;
 
           .second-part {
               transform: rotate(21deg);
               transform-origin: 70.03% 53.45%;
-              transition: transform 0.5;
               animation-fill-mode: both;
 
               .third-part {
                   transform: rotate(-16deg);
                   transform-origin: 83.50% 66.55%;
-                  transition: transform 0.5;
                   animation-fill-mode: both;
               }
           }
@@ -310,19 +307,16 @@ const Crab = styled(UnstyledCrab)`
       .third-leg {
           transform: rotate(-15.5deg);
           transform-origin: 55.73% 75.86%;
-          transition: transform 0.5;
           animation-fill-mode: both;
 
           .second-part {
               transform: rotate(4deg);
               transform-origin: 67.48% 63.48%;
-              transition: transform 0.5;
               animation-fill-mode: both;
 
               .third-part {
                   transform: rotate(3deg);
                   transform-origin: 79.50% 75.40%;
-                  transition: transform 0.5;
                   animation-fill-mode: both;
               }
           }
@@ -331,19 +325,16 @@ const Crab = styled(UnstyledCrab)`
       .fourth-leg {
           transform: rotate(-11deg);
           transform-origin: 55.18% 81.89%;
-          transition: transform 0.5;
           animation-fill-mode: both;
 
           .second-part {
               transform: rotate(3.5deg);
               transform-origin: 65.50% 71.61%;
-              transition: transform 0.5;
               animation-fill-mode: both;
 
               .third-part {
                   transform: rotate(-15deg);
                   transform-origin: 76.55% 82.51%;
-                  transition: transform 0.5;
                   animation-fill-mode: both;
               }
           }
@@ -428,7 +419,7 @@ const Crab = styled(UnstyledCrab)`
 &.walking {
     .legs {
       .left-legs *, .right-legs * {
-        animation-duration: 1s;
+        animation-duration: ${props => 1 / props.speed * 1.5}s;
         animation-iteration-count: infinite;
       }
       .left-legs {
@@ -549,7 +540,7 @@ const Crab = styled(UnstyledCrab)`
   .shell {
       transform-origin: 50% 85.07%;
       animation-name: move-shell;
-      animation-duration: 2s;
+      animation-duration: ${props => 2 / props.speed * 1.25}s;
       animation-iteration-count: infinite;
       pointer-events: all;
   }
