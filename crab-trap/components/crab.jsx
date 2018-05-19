@@ -12,22 +12,14 @@ class UnstyledCrab extends Preact.Component {
     }
 
     this.componentDidMount = this.componentDidMount.bind(this);
-    this.componentDidUpdate = this.componentDidUpdate.bind(this)
     this.componentWillUnmount = this.componentWillUnmount.bind(this);
   }
 
   componentDidMount() {
     this.base.addEventListener('transitionend', this.props.pauseWalking);
     this.base.querySelector('.left-pincer').addEventListener('animationend', this.props.removePincerAction);
-    this.base.style.transform = `translate(${this.props.currentPos[0]}vw, ${this.props.currentPos[1]}vh)`;
 
     this.setState({ changePincerInterval: setInterval(this.props.changePincerAction, 8000) });
-  }
-
-  componentDidUpdate() {
-    if(this.props.walk) {
-      this.base.style.transform = `translate(${this.props.moveTo[0]}vw, ${this.props.moveTo[1]}vh)`;
-    }
   }
 
   componentWillUnmount() {
@@ -66,14 +58,18 @@ const Crab = styled(UnstyledCrab)`
   transition: transform ${props =>
       Math.pow(
         Math.pow(
-          Math.abs(props.currentPos[0] - props.moveTo[0]),
+          Math.abs(props.currentPos[0] - (props.moveTo ? props.moveTo[0] : 0)),
           2)
         + Math.pow(
-          Math.abs(props.currentPos[1] - props.moveTo[1]),
+          Math.abs(props.currentPos[1] - (props.moveTo ? props.moveTo[1] : 0 )),
         2),
         0.5)
         / 10 / props.speed}s;
   transition-timing-function: cubic-bezier(1, 1.02, 0.76, 0.99);
+
+  &.walking {
+    transform: translate(${props => (props.moveTo ? `${props.moveTo[0]}vw, ${props.moveTo[1]}vh` : '0, 0')});
+  }
 
 //******LEFT LEGS ANIMATIONS******//
 // First Leg Animations

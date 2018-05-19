@@ -17,7 +17,6 @@ export default class App extends Component {
 			inch: null,
 			speed: 3,
 			paused: false,
-			moveTo: [50, 22],
 			currentPos: [0, 0],
 			fullscreen: false,
 		}
@@ -84,7 +83,7 @@ export default class App extends Component {
 		if (this.state.direction === 'right') direction = 'left';
 		else direction = 'right';
 		const moveTo = (direction === 'right' ? [50, 22] : [0, 0]);
-		this.setState({ walk: true, direction, paused: false, currentPos: this.state.moveTo, moveTo });
+		this.setState({ walk: true, direction, paused: false, currentPos: this.state.moveTo || this.state.currentPos, moveTo });
 	}
 
 	pauseWalking(e) {
