@@ -109,6 +109,21 @@ module.exports = function isPlainObject(o) {
 
 /***/ }),
 
+/***/ "922s":
+/***/ (function(module, exports) {
+
+exports = module.exports = typeof Object.keys === 'function' ? Object.keys : shim;
+
+exports.shim = shim;
+function shim(obj) {
+  var keys = [];
+  for (var key in obj) {
+    keys.push(key);
+  }return keys;
+}
+
+/***/ }),
+
 /***/ "97RM":
 /***/ (function(module, exports) {
 
@@ -1017,6 +1032,150 @@ var index = {
 
 /***/ }),
 
+/***/ "I+62":
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var _preact = __webpack_require__("EBst");
+
+function _objectWithoutProperties(obj, keys) {
+  var target = {};for (var i in obj) {
+    if (keys.indexOf(i) >= 0) continue;if (!Object.prototype.hasOwnProperty.call(obj, i)) continue;target[i] = obj[i];
+  }return target;
+}
+
+function _classCallCheck(instance, Constructor) {
+  if (!(instance instanceof Constructor)) {
+    throw new TypeError("Cannot call a class as a function");
+  }
+}
+
+function _possibleConstructorReturn(self, call) {
+  if (!self) {
+    throw new ReferenceError("this hasn't been initialised - super() hasn't been called");
+  }return call && (typeof call === "object" || typeof call === "function") ? call : self;
+}
+
+function _inherits(subClass, superClass) {
+  if (typeof superClass !== "function" && superClass !== null) {
+    throw new TypeError("Super expression must either be null or a function, not " + typeof superClass);
+  }subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } });if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass;
+} /** @jsx h */
+
+module.exports = function withSideEffect(reducePropsToState, handleStateChangeOnClient, mapStateOnServer) {
+  if (typeof reducePropsToState !== 'function') {
+    throw new Error('Expected reducePropsToState to be a function.');
+  }
+  if (typeof handleStateChangeOnClient !== 'function') {
+    throw new Error('Expected handleStateChangeOnClient to be a function.');
+  }
+  if (typeof mapStateOnServer !== 'undefined' && typeof mapStateOnServer !== 'function') {
+    throw new Error('Expected mapStateOnServer to either be undefined or a function.');
+  }
+
+  function getDisplayName(WrappedComponent) {
+    return WrappedComponent.displayName || WrappedComponent.name || 'Component';
+  }
+
+  return function wrap(WrappedComponent) {
+    if (typeof WrappedComponent !== 'function') {
+      throw new Error('Expected WrappedComponent to be a React component.');
+    }
+
+    var mountedInstances = [];
+    var state = void 0;
+
+    function emitChange() {
+      state = reducePropsToState(mountedInstances.map(function (instance) {
+        return instance.props;
+      }));
+
+      if (SideEffect.canUseDOM) {
+        handleStateChangeOnClient(state);
+      } else if (mapStateOnServer) {
+        state = mapStateOnServer(state);
+      }
+    }
+
+    var SideEffect = function (_Component) {
+      _inherits(SideEffect, _Component);
+
+      function SideEffect() {
+        _classCallCheck(this, SideEffect);
+
+        return _possibleConstructorReturn(this, _Component.apply(this, arguments));
+      }
+
+      // Try to use displayName of wrapped component
+      SideEffect.peek = function peek() {
+        return state;
+      };
+
+      // Expose canUseDOM so tests can monkeypatch it
+
+
+      SideEffect.rewind = function rewind() {
+        if (SideEffect.canUseDOM) {
+          throw new Error('You may only call rewind() on the server. Call peek() to read the current state.');
+        }
+
+        var recordedState = state;
+        state = undefined;
+        mountedInstances = [];
+        return recordedState;
+      };
+
+      SideEffect.prototype.shouldComponentUpdate = function shouldComponentUpdate(nextProps) {
+        // preact-compat normally does this
+        var children = nextProps.children,
+            props = _objectWithoutProperties(nextProps, ['children']);
+
+        if (children && children.length) props.children = children;
+        return shallowDiffers(props, this.props);
+      };
+
+      SideEffect.prototype.componentWillMount = function componentWillMount() {
+        mountedInstances.push(this);
+        emitChange();
+      };
+
+      SideEffect.prototype.componentDidUpdate = function componentDidUpdate() {
+        emitChange();
+      };
+
+      SideEffect.prototype.componentWillUnmount = function componentWillUnmount() {
+        var index = mountedInstances.indexOf(this);
+        mountedInstances.splice(index, 1);
+        emitChange();
+      };
+
+      SideEffect.prototype.render = function render() {
+        return (0, _preact.h)(WrappedComponent, this.props);
+      };
+
+      return SideEffect;
+    }(_preact.Component);
+
+    SideEffect.displayName = 'SideEffect(' + getDisplayName(WrappedComponent) + ')';
+    SideEffect.canUseDOM = !!(typeof window !== 'undefined' && window.document && window.document.createElement);
+
+    return SideEffect;
+  };
+
+  // Pulled from react-compat
+  function shallowDiffers(a, b) {
+    for (var i in a) {
+      if (!(i in b)) return true;
+    }for (var _i in b) {
+      if (a[_i] !== b[_i]) return true;
+    }return false;
+  }
+};
+
+/***/ }),
+
 /***/ "IM/B":
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -1080,6 +1239,10 @@ var preact_min_default = /*#__PURE__*/__webpack_require__.n(preact_min);
 var style = __webpack_require__("FWi5");
 var style_default = /*#__PURE__*/__webpack_require__.n(style);
 
+// EXTERNAL MODULE: /Users/Simeon/node_modules/preact-helmet/lib/Helmet.js
+var Helmet = __webpack_require__("q5Bp");
+var Helmet_default = /*#__PURE__*/__webpack_require__.n(Helmet);
+
 // EXTERNAL MODULE: ./assets/styles/index.scss
 var styles = __webpack_require__("kxo5");
 var styles_default = /*#__PURE__*/__webpack_require__.n(styles);
@@ -1092,7 +1255,7 @@ var crab_final = __webpack_require__("v93/");
 var crab_final_default = /*#__PURE__*/__webpack_require__.n(crab_final);
 
 // CONCATENATED MODULE: ./components/crab.jsx
-var _templateObject = _taggedTemplateLiteralLoose(['\n  min-width: ', 'px;\n  min-height: ', 'px;\n  width: 12%;\n  overflow: visible;\n  cursor: pointer;\n  animation-fill-mode: both;\n  transition: transform ', 's;\n  transition-timing-function: cubic-bezier(1, 1.02, 0.76, 0.99);\n\n//******LEFT LEGS ANIMATIONS******//\n// First Leg Animations\n@keyframes moveLefts-firstLeg-firstPart {\n  /* 0% { transform: rotate(-14deg); } */\n  10% { transform: rotate(-14deg); }\n  50% { transform: rotate(13deg); }\n  /* 100% { transform: rotate(-14deg); } */\n}\n\n@keyframes moveLefts-firstLeg-secondPart {\n  /* 0% { transform: rotate(31deg); } */\n  35% { transform: rotate(-25deg); }\n  50% { transform: rotate(-25deg); }\n  /* 100% { transform: rotate(31deg); } */\n}\n\n@keyframes moveLefts-firstLeg-thirdPart {\n  /* 0% { transform: rotate(-17deg); } */\n  35% { transform: rotate(8deg); }\n  50% { transform: rotate(12deg); }  \n  /* 100% { transform: rotate(-17deg); } */\n}\n\n@keyframes returnLefts-firstLeg-firstPart {\n  100% { transform: rotate(-14deg); }\n}\n\n@keyframes returnLefts-firstLeg-secondPart {\n  100% { transform: rotate(31deg); }\n}\n\n@keyframes returnLefts-firstLeg-thirdPart {\n  100% { transform: rotate(-17deg); }\n}\n\n// Second Leg Animations\n@keyframes moveLefts-secondLeg-firstPart {\n  /* 0% { transform: rotate(-15.5deg); } */\n  10% { transform: rotate(-15.5deg); }\n  50% { transform: rotate(10deg); }\n  /* 100% { transform: rotate(-15.5deg); } */\n}\n\n@keyframes moveLefts-secondLeg-secondPart {\n  /* 0% { transform: rotate(21deg); } */\n  35% { transform: rotate(-30deg); }\n  50% { transform: rotate(-30deg); }\n  /* 100% { transform: rotate(21deg); } */\n}\n\n@keyframes moveLefts-secondLeg-thirdPart {\n  /* 0% { transform: rotate(-16deg); } */\n  35% { transform: rotate(8deg); }\n  50% { transform: rotate(12deg); }  \n  /* 100% { transform: rotate(-16deg); } */\n}\n\n// Third Leg Animations\n@keyframes moveLefts-thirdLeg-firstPart {\n  /* 0% { transform: rotate(-15.5deg); } */\n  10% { transform: rotate(-15.5deg); }\n  50% { transform: rotate(10deg); }\n  /* 100% { transform: rotate(-15.5deg); } */\n}\n\n@keyframes moveLefts-thirdLeg-secondPart {\n  /* 0% { transform: rotate(4deg); } */\n  35% { transform: rotate(-35deg); }\n  50% { transform: rotate(-35deg); }\n  /* 100% { transform: rotate(4deg); } */\n}\n\n@keyframes moveLefts-thirdLeg-thirdPart {\n  /* 0% { transform: rotate(3deg); } */\n  35% { transform: rotate(-3deg); }\n  50% { transform: rotate(-3deg); }  \n  /* 100% { transform: rotate(3deg); } */\n}\n\n// Fourth Leg Animations\n@keyframes moveLefts-fourthLeg-firstPart {\n  /* 0% { transform: rotate(-11deg); } */\n  10% { transform: rotate(-11deg); }\n  50% { transform: rotate(14deg); }\n  /* 100% { transform: rotate(-11deg); } */\n}\n\n@keyframes moveLefts-fourthLeg-secondPart {\n  /* 0% { transform: rotate(3.5deg); } */\n  35% { transform: rotate(-35deg); }\n  50% { transform: rotate(-35deg); }\n  100% { transform: rotate(3.5deg); }\n}\n\n@keyframes moveLefts-fourthLeg-thirdPart {\n  /* 0% { transform: rotate(-15deg); } */\n  35% { transform: rotate(-45deg); }\n  50% { transform: rotate(-45deg); }  \n  /* 100% { transform: rotate(-15deg); } */\n}\n\n//******RIGHT LEGS ANIMATIONS******//\n// First Leg Animations\n@keyframes moveRights-firstLeg-firstPart {\n  /* 0% { transform: rotate(14deg); } */\n  10% { transform: rotate(14deg); }\n  50% { transform: rotate(-13deg); }\n  /* 100% { transform: rotate(14deg); } */\n}\n\n@keyframes moveRights-firstLeg-secondPart {\n  /* 0% { transform: rotate(-31deg); } */\n  35% { transform: rotate(25deg); }\n  50% { transform: rotate(25deg); }\n  /* 100% { transform: rotate(-31deg); } */\n}\n\n@keyframes moveRights-firstLeg-thirdPart {\n  /* 0% { transform: rotate(17deg); } */\n  35% { transform: rotate(-8deg); }\n  50% { transform: rotate(-12deg); }  \n  /* 100% { transform: rotate(17deg); } */\n}\n\n// Second Leg Animations\n@keyframes moveRights-secondLeg-firstPart {\n  /* 0% { transform: rotate(15.5deg); } */\n  10% { transform: rotate(15.5deg); }\n  50% { transform: rotate(-10deg); }\n  /* 100% { transform: rotate(15.5deg); } */\n}\n\n@keyframes moveRights-secondLeg-secondPart {\n  /* 0% { transform: rotate(-21deg); } */\n  35% { transform: rotate(30deg); }\n  50% { transform: rotate(30deg); }\n  /* 100% { transform: rotate(-21deg); } */\n}\n\n@keyframes moveRights-secondLeg-thirdPart {\n  /* 0% { transform: rotate(16deg); } */\n  35% { transform: rotate(-8deg); }\n  50% { transform: rotate(-12deg); }  \n  /* 100% { transform: rotate(16deg); } */\n}\n\n// Third Leg Animations\n@keyframes moveRights-thirdLeg-firstPart {\n  /* 0% { transform: rotate(15.5deg); } */\n  10% { transform: rotate(15.5deg); }\n  50% { transform: rotate(-10deg); }\n  /* 100% { transform: rotate(15.5deg); } */\n}\n\n@keyframes moveRights-thirdLeg-secondPart {\n  /* 0% { transform: rotate(-4deg); } */\n  35% { transform: rotate(35deg); }\n  50% { transform: rotate(35deg); }\n  /* 100% { transform: rotate(-4deg); } */\n}\n\n@keyframes moveRights-thirdLeg-thirdPart {\n  /* 0% { transform: rotate(-3deg); } */\n  35% { transform: rotate(3deg); }\n  50% { transform: rotate(3deg); }  \n  /* 100% { transform: rotate(-3deg); } */\n}\n\n// Fourth Leg Animations\n@keyframes moveRights-fourthLeg-firstPart {\n  /* 0% { transform: rotate(11deg); } */\n  10% { transform: rotate(11deg); }\n  50% { transform: rotate(-14deg); }\n  /* 100% { transform: rotate(11deg); } */\n}\n\n@keyframes moveRights-fourthLeg-secondPart {\n  /* 0% { transform: rotate(-3.5deg); } */\n  35% { transform: rotate(35deg); }\n  50% { transform: rotate(35deg); }\n  /* 100% { transform: rotate(-3.5deg); } */\n}\n\n@keyframes moveRights-fourthLeg-thirdPart {\n  /* 0% { transform: rotate(15deg); } */\n  35% { transform: rotate(45deg); }\n  50% { transform: rotate(45deg); }  \n  /* 100% { transform: rotate(15deg); } */\n}\n\n@keyframes move-shell {\n  33.33% { transform: rotate(1deg); }\n  66.66% { transform: rotate(-1deg); }\n}\n\n.legs {\n  .left-legs {\n      .first-leg {\n          transform: rotate(-14deg);\n          transform-origin: 56.80% 61.33%;\n          animation-fill-mode: both;\n\n          .second-part {\n              transform: rotate(31deg);\n              transform-origin: 73.13% 41.79%;\n              animation-fill-mode: both;\n\n              .third-part {\n                  transform: rotate(-17deg);\n                  transform-origin: 88.45% 56.52%;\n                  animation-fill-mode: both;\n              }\n          }\n      }\n\n      .second-leg {\n          transform: rotate(-15.5deg);\n          transform-origin: 56.20% 68.90%;\n          transition: transform 0.5;\n          animation-fill-mode: both;\n\n          .second-part {\n              transform: rotate(21deg);\n              transform-origin: 70.03% 53.45%;\n              transition: transform 0.5;\n              animation-fill-mode: both;\n\n              .third-part {\n                  transform: rotate(-16deg);\n                  transform-origin: 83.50% 66.55%;\n                  transition: transform 0.5;\n                  animation-fill-mode: both;\n              }\n          }\n      }\n\n      .third-leg {\n          transform: rotate(-15.5deg);\n          transform-origin: 55.73% 75.86%;\n          transition: transform 0.5;\n          animation-fill-mode: both;\n\n          .second-part {\n              transform: rotate(4deg);\n              transform-origin: 67.48% 63.48%;\n              transition: transform 0.5;\n              animation-fill-mode: both;\n\n              .third-part {\n                  transform: rotate(3deg);\n                  transform-origin: 79.50% 75.40%;\n                  transition: transform 0.5;\n                  animation-fill-mode: both;\n              }\n          }\n      }\n\n      .fourth-leg {\n          transform: rotate(-11deg);\n          transform-origin: 55.18% 81.89%;\n          transition: transform 0.5;\n          animation-fill-mode: both;\n\n          .second-part {\n              transform: rotate(3.5deg);\n              transform-origin: 65.50% 71.61%;\n              transition: transform 0.5;\n              animation-fill-mode: both;\n\n              .third-part {\n                  transform: rotate(-15deg);\n                  transform-origin: 76.55% 82.51%;\n                  transition: transform 0.5;\n                  animation-fill-mode: both;\n              }\n          }\n      }\n  }\n\n  .right-legs {\n      .first-leg {\n          transform: rotate(14deg);\n          transform-origin: 43.20% 61.33%;\n          animation-fill-mode: both;\n\n          .second-part {\n              transform: rotate(-31deg);\n              transform-origin: 26.87% 41.79%;\n              animation-fill-mode: both;\n\n              .third-part {\n                  transform: rotate(17deg);\n                  transform-origin: 11.55% 56.52%;\n                  animation-fill-mode: both;\n              }\n          }\n      }\n\n      .second-leg {\n          transform: rotate(15.5deg);\n          transform-origin: 43.80% 68.90%;\n          animation-fill-mode: both;\n\n          .second-part {\n              transform: rotate(-21deg);\n              transform-origin: 29.97% 53.45%;\n              animation-fill-mode: both;\n\n              .third-part {\n                  transform: rotate(16deg);\n                  transform-origin: 16.50% 66.55%;\n                  animation-fill-mode: both;\n              }\n          }\n      }\n\n      .third-leg {\n          transform: rotate(15.5deg);\n          transform-origin: 44.27% 75.86%;\n          animation-fill-mode: both;\n\n          .second-part {\n              transform: rotate(-4deg);\n              transform-origin: 32.52% 63.48%;\n              animation-fill-mode: both;\n\n              .third-part {\n                  transform: rotate(-3deg);\n                  transform-origin: 20.50% 75.40%;\n                  animation-fill-mode: both;\n              }\n          }\n      }\n\n      .fourth-leg {\n          transform: rotate(11deg);\n          transform-origin: 44.82% 81.89%;\n          animation-fill-mode: both;\n\n          .second-part {\n              transform: rotate(-3.5deg);\n              transform-origin: 34.50% 71.61%;\n              animation-fill-mode: both;\n\n              .third-part {\n                  transform: rotate(15deg);\n                  transform-origin: 23.45% 82.51%;\n                  animation-fill-mode: both;\n              }\n          }\n      }\n  }\n}\n\n&.walking {\n    .legs {\n      .left-legs *, .right-legs * {\n        animation-duration: 1s;\n        animation-iteration-count: infinite;\n      }\n      .left-legs {\n          * {\n            animation-direction: ', ';\n          }\n          .first-leg {\n              animation-name: moveLefts-firstLeg-firstPart;\n              animation-delay:0.125s;\n              * {\n                animation-delay:0.125s;\n              }\n              .second-part {\n                  animation-name: moveLefts-firstLeg-secondPart;\n                  .third-part {\n                      animation-name: moveLefts-firstLeg-thirdPart;\n                  }\n              }\n          }\n          .second-leg {\n              animation-name: moveLefts-secondLeg-firstPart;\n              animation-delay:0.375s;\n              * {\n                animation-delay:0.375s;\n              }\n              .second-part {\n                  animation-name: moveLefts-secondLeg-secondPart;\n                  .third-part {\n                      animation-name: moveLefts-secondLeg-thirdPart;\n                  }\n              }\n          }\n          .third-leg {\n              animation-name: moveLefts-thirdLeg-firstPart;\n              .second-part {\n                  animation-name: moveLefts-thirdLeg-secondPart;\n                  .third-part {\n                      animation-name: moveLefts-thirdLeg-thirdPart;\n                  }\n              }\n          }\n\n          .fourth-leg {\n              animation-name: moveLefts-fourthLeg-firstPart;\n              animation-delay:0.25s;\n              * {\n                animation-delay:0.25s;\n              }\n              .second-part {\n                  animation-name: moveLefts-fourthLeg-secondPart;\n                  .third-part {\n                      animation-name: moveLefts-fourthLeg-thirdPart;\n                  }\n              }\n          }\n      }\n\n      .right-legs {\n          * {\n            animation-direction: ', ';\n          }\n          .first-leg {\n              animation-name: moveRights-firstLeg-firstPart;\n              animation-delay:0.255s;\n              * {\n                animation-delay:0.255s;\n              }\n              .second-part {\n                  animation-name: moveRights-firstLeg-secondPart;\n                  .third-part {\n                      animation-name: moveRights-firstLeg-thirdPart;\n                  }\n              }\n          }\n          .second-leg {\n              animation-name: moveRights-secondLeg-firstPart;\n              animation-delay:0.12s;\n              * {\n                animation-delay:0.12s;\n              }\n              .second-part {\n                  animation-name: moveRights-secondLeg-secondPart;\n                  .third-part {\n                      animation-name: moveRights-secondLeg-thirdPart;\n                  }\n              }\n          }\n          .third-leg {\n              animation-name: moveRights-thirdLeg-firstPart;\n              animation-delay:0.37s;\n              * {\n                animation-delay:0.37s;\n              }\n              .second-part {\n                  animation-name: moveRights-thirdLeg-secondPart;\n                  .third-part {\n                      animation-name: moveRights-thirdLeg-thirdPart;\n                  }\n              }\n          }\n\n          .fourth-leg {\n              animation-name: moveRights-fourthLeg-firstPart;\n              animation-delay:0.005s;\n              * {\n                animation-delay:0.005s;\n              }\n              .second-part {\n                  animation-name: moveRights-fourthLeg-secondPart;\n                  .third-part {\n                      animation-name: moveRights-fourthLeg-thirdPart;\n                  }\n              }\n          }\n      }\n    }\n\n  .shell {\n      transform-origin: 50% 85.07%;\n      animation-name: move-shell;\n      animation-duration: 2s;\n      animation-iteration-count: infinite;\n  }\n\n  &.paused {\n    .legs *, .shell * {\n      animation-play-state: paused;\n    }\n  }\n}\n\n.pincers {\n  .left-pincer {\n    transform: rotate(20deg);\n    transform-origin: 55.28% 54.88%;\n\n    .second-part {\n      transform: rotate(-20deg);\n      transform-origin: 62.03% 43.22%;\n\n      .third-part {\n        transform: rotate(-75deg);\n        transform-origin: 64.93% 32.28%;\n\n        .moving-pincer {\n          transform: rotate(5deg);\n          transform-origin: 68.85% 19.08%;\n        }\n      }\n    }\n  }\n\n  .right-pincer {\n    transform: rotate(-20deg);\n    transform-origin: 44.70% 54.88%;\n\n    .second-part {\n      transform: rotate(20deg);\n      transform-origin: 37.65% 42.20%;\n\n      .third-part {\n        transform: rotate(20deg);\n        transform-origin: 34.38% 29.77%;\n\n        .moving-pincer {\n          transform: rotate(5deg);\n          transform-origin: 29.90% 14.78%;\n        }\n      }\n    }\n  }\n}\n\n.mouth {\n  .outer-mouth {\n    .right-mouth {\n      transform-origin: 50% 45.01%;\n    }\n\n    .left-mouth {\n      transform-origin: 50% 45.01%;\n    }\n  }\n}\n\n@keyframes left-eye {\n  0% { transform: rotate(23deg); }\n  5% { transform: rotate(23deg); }\n  7% { transform: rotate(27deg); }\n  10% { transform: rotate(20deg); }\n  25% { transform: rotate(20deg); }\n  30% { transform: rotate(-10deg); }\n  45% { transform: rotate(-10deg); }\n  55% { transform: rotate(10deg); }\n  75% { transform: rotate(-10deg); }\n  80% { transform: rotate(-20deg); }\n  85% { transform: rotate(23deg); }\n  100% { transform: rotate(23deg); }\n}\n\n@keyframes right-eye {\n  0% { transform: rotate(-10deg); }\n  7% { transform: rotate(-15deg); }\n  10% { transform: rotate(10deg); }\n  14% { transform: rotate(29deg); }\n  29% { transform: rotate(2deg); }\n  33% { transform: rotate(-20deg); }\n  44% { transform: rotate(10deg); }\n  51% { transform: rotate(-20deg); }\n  73% { transform: rotate(-25deg); }\n  81% { transform: rotate(-4deg); }\n  86% { transform: rotate(-10deg); }\n  100% { transform: rotate(-10deg); }\n}\n\n.eyes {\n  .left-eye {\n    transform: rotate(23deg);\n    transform-origin: 59.88% 28.34%;\n    animation-name: left-eye;\n    animation-duration: 9s;\n    animation-iteration-count: infinite;\n    animation-direction: normal;\n  }\n\n  .right-eye {\n    transform: rotate(-10deg);\n    transform-origin: 40.13% 28.34%;\n    animation-name: right-eye;\n    animation-duration: 8.5s;\n    animation-iteration-count: infinite;\n    animation-direction: normal;\n  }\n}\n\n// EATING ANIMATION\n@keyframes eating-right-pincer {\n  0% { transform: rotate(-20deg); }\n  25% { transform: rotate(40deg); }\n  50% { transform: rotate(-20deg); }\n}\n\n@keyframes eating-right-pincer-secondPart {\n  0% { transform: rotate(20deg); }\n  25% { transform: rotate(-30deg); }\n  50% { transform: rotate(20deg); }\n  70% { transform: rotate(70deg); }\n  75% { transform: rotate(70deg); }\n  100% { transform: rotate(20deg); }\n}\n\n@keyframes eating-right-pincer-thirdPart {\n  0% { transform: rotate(20deg); }\n  25% { transform: rotate(-10deg); }\n  50% { transform: rotate(20deg); }\n  70% { transform: rotate(40deg); }\n  75% { transform: rotate(40deg); }\n  100% { transform: rotate(20deg); }\n}\n\n@keyframes eating-right-pincer-close {\n  0% { transform: rotate(5deg); }\n  17% { transform: rotate(-5deg); }\n  20% { transform: rotate(35deg); }\n  50% { transform: rotate(35deg); }\n  70% { transform: rotate(35deg); }\n  75% { transform: rotate(-5deg); }\n  100% { transform: rotate(5deg); }\n}\n\n@keyframes eating-left-pincer {\n  0% { transform: rotate(20deg); }\n  33.33% { transform: rotate(20deg); }\n  46.66% { transform: rotate(5deg); }\n  50% { transform: rotate(5deg); }\n  60% { transform: rotate(0deg); }\n  90% { transform: rotate(0deg); }\n}\n\n@keyframes eating-left-pincer-secondPart {\n  0% { transform: rotate(-20deg); }\n  33.33% { transform: rotate(-20deg); }\n  46.66% { transform: rotate(-24deg); }\n  50% { transform: rotate(-24deg); }\n  60% { transform: rotate(-30deg); }\n  90% { transform: rotate(-30deg); }\n}\n\n@keyframes eating-left-pincer-thirdPart {\n  0% { transform: rotate(-75deg); }\n  33.33% { transform: rotate(-75deg); }\n  46.66% { transform: rotate(-75deg); }\n  50% { transform: rotate(-75deg); }\n  60% { transform: rotate(-80deg); }\n  90% { transform: rotate(-80deg); }\n}\n\n@keyframes eating-left-pincer-close {\n  0% { transform: rotate(5deg); }\n  46.66% { transform: rotate(5deg); }\n  50% { transform: rotate(-25deg); }\n  90% { transform: rotate(-25deg); }\n}\n\n@keyframes eating-right-mouth {\n  10% { transform: rotate(-4deg) skewX(4deg); }\n  20% { transform: rotate(-2deg) skewX(2deg); }\n  35% { transform: rotate(-4deg) skewX(4deg); }\n  45% { transform: rotate(-2deg) skewX(2deg); }\n  60% { transform: rotate(-4deg) skewX(4deg); }\n  65% { transform: rotate(-2deg) skewX(2deg); }\n  70% { transform: rotate(-4deg) skewX(4deg); }\n  80% { transform: rotate(-2deg) skewX(2deg); }\n  90% { transform: rotate(-4deg) skewX(4deg); }\n}\n\n@keyframes eating-left-mouth {\n  12% { transform: rotate(10deg) skewX(-10deg); }\n  22% { transform: rotate(2deg) skewX(-2deg); }\n  62% { transform: rotate(10deg) skewX(-10deg); }\n  67% { transform: rotate(2deg) skewX(-2deg); }\n  92% { transform: rotate(10deg) skewX(-10deg); }\n}\n\n&.eating {\n  .pincers {\n    .right-pincer {\n      animation-name: eating-right-pincer;\n      animation-duration: 2s;\n      animation-delay: 0.5s;\n      animation-timing-function: ease-in-out;\n\n      .second-part {\n        animation-name: eating-right-pincer-secondPart;\n        animation-duration: 2s;\n        animation-delay: 0.5s;\n        animation-timing-function: ease-in-out;\n\n        .third-part {\n          animation-name: eating-right-pincer-thirdPart;\n          animation-duration: 2s;\n          animation-delay: 0.5s;\n          animation-timing-function: ease-in-out;\n\n          .moving-pincer {\n            animation-name: eating-right-pincer-close;\n            animation-duration: 2s;\n            animation-delay: 0.5s;\n          }\n        }\n      }\n    }\n\n    .left-pincer {\n      animation-name: eating-left-pincer;\n      animation-duration: 3s;\n      animation-delay: 0.5s;\n      animation-timing-function: ease-in-out;\n\n      .second-part {\n        animation-name: eating-left-pincer-secondPart;\n        animation-duration: 3s;\n        animation-delay: 0.5s;\n        animation-timing-function: ease-in-out;\n\n        .third-part {\n          animation-name: eating-left-pincer-thirdPart;\n          animation-duration: 3s;\n          animation-delay: 0.5s;\n          animation-timing-function: ease-in-out;\n\n          .moving-pincer {\n            animation-name: eating-left-pincer-close;\n            animation-duration: 3s;\n            animation-delay: 0.5s;\n          }\n        }\n      }\n    }\n  }\n\n  .mouth {\n    .outer-mouth {\n      .right-mouth {\n        animation-name: eating-right-mouth;\n        animation-duration: 1s;\n        animation-delay: 2.5s;\n        animation-timing-function: ease-in-out;\n      }\n\n      .left-mouth {\n        animation-name: eating-left-mouth;\n        animation-duration: 1s;\n        animation-delay: 2.5s;\n        animation-timing-function: ease-in-out;\n      }\n    }\n  }\n}\n\n//WAVING ANIMATION\n@keyframes waving-right-pincer {\n  0% { transform: rotate(-20deg); }\n  25% { transform: rotate(40deg); }\n  45% { transform: rotate(-40deg); }\n  65% { transform: rotate(50deg); }\n}\n\n@keyframes waving-right-pincer-secondPart {\n  0% { transform: rotate(20deg); }\n  25% { transform: rotate(0deg); }\n  90% { transform: rotate(0deg); }\n}\n\n@keyframes waving-right-pincer-thirdPart {\n  0% { transform: rotate(20deg); }\n  25% { transform: rotate(5deg); }\n  90% { transform: rotate(5deg); }\n}\n\n@keyframes waving-left-pincer {\n  0% { transform: rotate(20deg); }\n  25% { transform: rotate(-30deg); }\n  45% { transform: rotate(40deg); }\n  65% { transform: rotate(-50deg); }\n}\n\n@keyframes waving-left-pincer-secondPart {\n  0% { transform: rotate(-20deg); }\n  25% { transform: rotate(5deg); }\n  80% { transform: rotate(5deg); }\n}\n\n@keyframes waving-left-pincer-thirdPart {\n  0% { transform: rotate(-75deg); }\n  25% { transform: rotate(0deg); }\n  80% { transform: rotate(0deg); }\n}\n\n&.waving {\n  .pincers {\n    .right-pincer {\n      animation-name: waving-right-pincer;\n      animation-duration: 2.5s;\n      animation-delay: 0.5s;\n      animation-timing-function: ease-in-out;\n\n      .second-part {\n        animation-name: waving-right-pincer-secondPart;\n        animation-duration: 2.5s;\n        animation-delay: 0.5s;\n        animation-timing-function: ease-in-out;\n\n        .third-part {\n          animation-name: waving-right-pincer-thirdPart;\n          animation-duration: 2.5s;\n          animation-delay: 0.5s;\n          animation-timing-function: ease-in-out;\n        }\n      }\n    }\n\n    .left-pincer {\n      animation-name: waving-left-pincer;\n      animation-duration: 2.5s;\n      animation-delay: 1s;\n      animation-timing-function: ease-in-out;\n\n      .second-part {\n        animation-name: waving-left-pincer-secondPart;\n        animation-duration: 2.5s;\n        animation-delay: 1s;\n        animation-timing-function: ease-in-out;\n\n        .third-part {\n          animation-name: waving-left-pincer-thirdPart;\n          animation-duration: 2.5s;\n          animation-delay: 1s;\n          animation-timing-function: ease-in-out;\n        }\n      }\n    }\n  }\n}\n\n//SNAPPING ANIMATION\n@keyframes snapping-right-pincer {\n  0% { transform: rotate(-20deg); }\n  10% { transform: rotate(-30deg); }\n  90% { transform: rotate(-30deg); }\n}\n\n@keyframes snapping-right-pincer-secondPart {\n  0% { transform: rotate(20deg); }\n  10% { transform: rotate(0deg); }\n  90% { transform: rotate(0deg); }\n}\n\n@keyframes snapping-right-pincer-thirdPart {\n  0% { transform: rotate(20deg); }\n  10% { transform: rotate(10deg); }\n  90% { transform: rotate(10deg); }\n}\n\n@keyframes snapping-right-pincer-close {\n  0% { transform: rotate(5deg); }\n  17.43% { transform: rotate(5deg); }\n  21.43% { transform: rotate(35deg); }\n  25.43% { transform: rotate(5deg); }\n  40.29% { transform: rotate(5deg); }\n  44.29% { transform: rotate(35deg); }\n  48.29% { transform: rotate(5deg); }\n  63.15% { transform: rotate(5deg); }\n  67.15% { transform: rotate(35deg); }\n  71.15% { transform: rotate(5deg); }\n  74.58% { transform: rotate(5deg); }\n  78.58% { transform: rotate(35deg); }\n  82.58% { transform: rotate(5deg); }\n}\n\n@keyframes snapping-left-pincer {\n  0% { transform: rotate(20deg); }\n  10% { transform: rotate(30deg); }\n  90% { transform: rotate(30deg); }\n}\n\n@keyframes snapping-left-pincer-secondPart {\n  0% { transform: rotate(-20deg); }\n  10% { transform: rotate(0deg); }\n  90% { transform: rotate(0deg); }\n}\n\n@keyframes snapping-left-pincer-thirdPart {\n  0% { transform: rotate(-75deg); }\n  10% { transform: rotate(-10deg); }\n  90% { transform: rotate(-10deg); }\n}\n\n/*\nR-LLR-L---B-B-\n11.43 beat split */\n\n@keyframes snapping-left-pincer-close {\n  0% { transform: rotate(-5deg); }\n  28.86% { transform: rotate(-5deg); }\n  32.86% { transform: rotate(-35deg); }\n  35.72% { transform: rotate(-5deg); }\n  38.58% { transform: rotate(-35deg); }\n  42.58% { transform: rotate(-5deg); }\n  51.72% { transform: rotate(-5deg); }\n  55.72% { transform: rotate(-35deg); }\n  59.72% { transform: rotate(-5deg); }\n  63.15% { transform: rotate(-5deg); }\n  67.15% { transform: rotate(-35deg); }\n  71.15% { transform: rotate(-5deg); }\n  74.58% { transform: rotate(-5deg); }\n  78.58% { transform: rotate(-35deg); }\n  82.58% { transform: rotate(-5deg); }\n}\n\n&.snapping {\n  .pincers {\n    .right-pincer {\n      animation-name: snapping-right-pincer;\n      animation-duration: 3s;\n      animation-delay: 0.5s;\n      animation-timing-function: ease-in-out;\n\n      .second-part {\n        animation-name: snapping-right-pincer-secondPart;\n        animation-duration: 3s;\n        animation-delay: 0.5s;\n        animation-timing-function: ease-in-out;\n\n        .third-part {\n          animation-name: snapping-right-pincer-thirdPart;\n          animation-duration: 3s;\n          animation-delay: 0.5s;\n          animation-timing-function: ease-in-out;\n\n          .moving-pincer {\n            animation-name: snapping-right-pincer-close;\n            animation-duration: 3s;\n            animation-delay: 0.5s;\n          }\n        }\n      }\n    }\n\n    .left-pincer {\n      animation-name: snapping-left-pincer;\n      animation-duration: 3s;\n      animation-delay: 0.5s;\n      animation-timing-function: ease-in-out;\n\n      .second-part {\n        animation-name: snapping-left-pincer-secondPart;\n        animation-duration: 3s;\n        animation-delay: 0.5s;\n        animation-timing-function: ease-in-out;\n\n        .third-part {\n          animation-name: snapping-left-pincer-thirdPart;\n          animation-duration: 3s;\n          animation-delay: 0.5s;\n          animation-timing-function: ease-in-out;\n\n          .moving-pincer {\n            animation-name: snapping-left-pincer-close;\n            animation-duration: 3s;\n            animation-delay: 0.5s;\n          }\n        }\n      }\n    }\n  }\n}\n'], ['\n  min-width: ', 'px;\n  min-height: ', 'px;\n  width: 12%;\n  overflow: visible;\n  cursor: pointer;\n  animation-fill-mode: both;\n  transition: transform ', 's;\n  transition-timing-function: cubic-bezier(1, 1.02, 0.76, 0.99);\n\n//******LEFT LEGS ANIMATIONS******//\n// First Leg Animations\n@keyframes moveLefts-firstLeg-firstPart {\n  /* 0% { transform: rotate(-14deg); } */\n  10% { transform: rotate(-14deg); }\n  50% { transform: rotate(13deg); }\n  /* 100% { transform: rotate(-14deg); } */\n}\n\n@keyframes moveLefts-firstLeg-secondPart {\n  /* 0% { transform: rotate(31deg); } */\n  35% { transform: rotate(-25deg); }\n  50% { transform: rotate(-25deg); }\n  /* 100% { transform: rotate(31deg); } */\n}\n\n@keyframes moveLefts-firstLeg-thirdPart {\n  /* 0% { transform: rotate(-17deg); } */\n  35% { transform: rotate(8deg); }\n  50% { transform: rotate(12deg); }  \n  /* 100% { transform: rotate(-17deg); } */\n}\n\n@keyframes returnLefts-firstLeg-firstPart {\n  100% { transform: rotate(-14deg); }\n}\n\n@keyframes returnLefts-firstLeg-secondPart {\n  100% { transform: rotate(31deg); }\n}\n\n@keyframes returnLefts-firstLeg-thirdPart {\n  100% { transform: rotate(-17deg); }\n}\n\n// Second Leg Animations\n@keyframes moveLefts-secondLeg-firstPart {\n  /* 0% { transform: rotate(-15.5deg); } */\n  10% { transform: rotate(-15.5deg); }\n  50% { transform: rotate(10deg); }\n  /* 100% { transform: rotate(-15.5deg); } */\n}\n\n@keyframes moveLefts-secondLeg-secondPart {\n  /* 0% { transform: rotate(21deg); } */\n  35% { transform: rotate(-30deg); }\n  50% { transform: rotate(-30deg); }\n  /* 100% { transform: rotate(21deg); } */\n}\n\n@keyframes moveLefts-secondLeg-thirdPart {\n  /* 0% { transform: rotate(-16deg); } */\n  35% { transform: rotate(8deg); }\n  50% { transform: rotate(12deg); }  \n  /* 100% { transform: rotate(-16deg); } */\n}\n\n// Third Leg Animations\n@keyframes moveLefts-thirdLeg-firstPart {\n  /* 0% { transform: rotate(-15.5deg); } */\n  10% { transform: rotate(-15.5deg); }\n  50% { transform: rotate(10deg); }\n  /* 100% { transform: rotate(-15.5deg); } */\n}\n\n@keyframes moveLefts-thirdLeg-secondPart {\n  /* 0% { transform: rotate(4deg); } */\n  35% { transform: rotate(-35deg); }\n  50% { transform: rotate(-35deg); }\n  /* 100% { transform: rotate(4deg); } */\n}\n\n@keyframes moveLefts-thirdLeg-thirdPart {\n  /* 0% { transform: rotate(3deg); } */\n  35% { transform: rotate(-3deg); }\n  50% { transform: rotate(-3deg); }  \n  /* 100% { transform: rotate(3deg); } */\n}\n\n// Fourth Leg Animations\n@keyframes moveLefts-fourthLeg-firstPart {\n  /* 0% { transform: rotate(-11deg); } */\n  10% { transform: rotate(-11deg); }\n  50% { transform: rotate(14deg); }\n  /* 100% { transform: rotate(-11deg); } */\n}\n\n@keyframes moveLefts-fourthLeg-secondPart {\n  /* 0% { transform: rotate(3.5deg); } */\n  35% { transform: rotate(-35deg); }\n  50% { transform: rotate(-35deg); }\n  100% { transform: rotate(3.5deg); }\n}\n\n@keyframes moveLefts-fourthLeg-thirdPart {\n  /* 0% { transform: rotate(-15deg); } */\n  35% { transform: rotate(-45deg); }\n  50% { transform: rotate(-45deg); }  \n  /* 100% { transform: rotate(-15deg); } */\n}\n\n//******RIGHT LEGS ANIMATIONS******//\n// First Leg Animations\n@keyframes moveRights-firstLeg-firstPart {\n  /* 0% { transform: rotate(14deg); } */\n  10% { transform: rotate(14deg); }\n  50% { transform: rotate(-13deg); }\n  /* 100% { transform: rotate(14deg); } */\n}\n\n@keyframes moveRights-firstLeg-secondPart {\n  /* 0% { transform: rotate(-31deg); } */\n  35% { transform: rotate(25deg); }\n  50% { transform: rotate(25deg); }\n  /* 100% { transform: rotate(-31deg); } */\n}\n\n@keyframes moveRights-firstLeg-thirdPart {\n  /* 0% { transform: rotate(17deg); } */\n  35% { transform: rotate(-8deg); }\n  50% { transform: rotate(-12deg); }  \n  /* 100% { transform: rotate(17deg); } */\n}\n\n// Second Leg Animations\n@keyframes moveRights-secondLeg-firstPart {\n  /* 0% { transform: rotate(15.5deg); } */\n  10% { transform: rotate(15.5deg); }\n  50% { transform: rotate(-10deg); }\n  /* 100% { transform: rotate(15.5deg); } */\n}\n\n@keyframes moveRights-secondLeg-secondPart {\n  /* 0% { transform: rotate(-21deg); } */\n  35% { transform: rotate(30deg); }\n  50% { transform: rotate(30deg); }\n  /* 100% { transform: rotate(-21deg); } */\n}\n\n@keyframes moveRights-secondLeg-thirdPart {\n  /* 0% { transform: rotate(16deg); } */\n  35% { transform: rotate(-8deg); }\n  50% { transform: rotate(-12deg); }  \n  /* 100% { transform: rotate(16deg); } */\n}\n\n// Third Leg Animations\n@keyframes moveRights-thirdLeg-firstPart {\n  /* 0% { transform: rotate(15.5deg); } */\n  10% { transform: rotate(15.5deg); }\n  50% { transform: rotate(-10deg); }\n  /* 100% { transform: rotate(15.5deg); } */\n}\n\n@keyframes moveRights-thirdLeg-secondPart {\n  /* 0% { transform: rotate(-4deg); } */\n  35% { transform: rotate(35deg); }\n  50% { transform: rotate(35deg); }\n  /* 100% { transform: rotate(-4deg); } */\n}\n\n@keyframes moveRights-thirdLeg-thirdPart {\n  /* 0% { transform: rotate(-3deg); } */\n  35% { transform: rotate(3deg); }\n  50% { transform: rotate(3deg); }  \n  /* 100% { transform: rotate(-3deg); } */\n}\n\n// Fourth Leg Animations\n@keyframes moveRights-fourthLeg-firstPart {\n  /* 0% { transform: rotate(11deg); } */\n  10% { transform: rotate(11deg); }\n  50% { transform: rotate(-14deg); }\n  /* 100% { transform: rotate(11deg); } */\n}\n\n@keyframes moveRights-fourthLeg-secondPart {\n  /* 0% { transform: rotate(-3.5deg); } */\n  35% { transform: rotate(35deg); }\n  50% { transform: rotate(35deg); }\n  /* 100% { transform: rotate(-3.5deg); } */\n}\n\n@keyframes moveRights-fourthLeg-thirdPart {\n  /* 0% { transform: rotate(15deg); } */\n  35% { transform: rotate(45deg); }\n  50% { transform: rotate(45deg); }  \n  /* 100% { transform: rotate(15deg); } */\n}\n\n@keyframes move-shell {\n  33.33% { transform: rotate(1deg); }\n  66.66% { transform: rotate(-1deg); }\n}\n\n.legs {\n  .left-legs {\n      .first-leg {\n          transform: rotate(-14deg);\n          transform-origin: 56.80% 61.33%;\n          animation-fill-mode: both;\n\n          .second-part {\n              transform: rotate(31deg);\n              transform-origin: 73.13% 41.79%;\n              animation-fill-mode: both;\n\n              .third-part {\n                  transform: rotate(-17deg);\n                  transform-origin: 88.45% 56.52%;\n                  animation-fill-mode: both;\n              }\n          }\n      }\n\n      .second-leg {\n          transform: rotate(-15.5deg);\n          transform-origin: 56.20% 68.90%;\n          transition: transform 0.5;\n          animation-fill-mode: both;\n\n          .second-part {\n              transform: rotate(21deg);\n              transform-origin: 70.03% 53.45%;\n              transition: transform 0.5;\n              animation-fill-mode: both;\n\n              .third-part {\n                  transform: rotate(-16deg);\n                  transform-origin: 83.50% 66.55%;\n                  transition: transform 0.5;\n                  animation-fill-mode: both;\n              }\n          }\n      }\n\n      .third-leg {\n          transform: rotate(-15.5deg);\n          transform-origin: 55.73% 75.86%;\n          transition: transform 0.5;\n          animation-fill-mode: both;\n\n          .second-part {\n              transform: rotate(4deg);\n              transform-origin: 67.48% 63.48%;\n              transition: transform 0.5;\n              animation-fill-mode: both;\n\n              .third-part {\n                  transform: rotate(3deg);\n                  transform-origin: 79.50% 75.40%;\n                  transition: transform 0.5;\n                  animation-fill-mode: both;\n              }\n          }\n      }\n\n      .fourth-leg {\n          transform: rotate(-11deg);\n          transform-origin: 55.18% 81.89%;\n          transition: transform 0.5;\n          animation-fill-mode: both;\n\n          .second-part {\n              transform: rotate(3.5deg);\n              transform-origin: 65.50% 71.61%;\n              transition: transform 0.5;\n              animation-fill-mode: both;\n\n              .third-part {\n                  transform: rotate(-15deg);\n                  transform-origin: 76.55% 82.51%;\n                  transition: transform 0.5;\n                  animation-fill-mode: both;\n              }\n          }\n      }\n  }\n\n  .right-legs {\n      .first-leg {\n          transform: rotate(14deg);\n          transform-origin: 43.20% 61.33%;\n          animation-fill-mode: both;\n\n          .second-part {\n              transform: rotate(-31deg);\n              transform-origin: 26.87% 41.79%;\n              animation-fill-mode: both;\n\n              .third-part {\n                  transform: rotate(17deg);\n                  transform-origin: 11.55% 56.52%;\n                  animation-fill-mode: both;\n              }\n          }\n      }\n\n      .second-leg {\n          transform: rotate(15.5deg);\n          transform-origin: 43.80% 68.90%;\n          animation-fill-mode: both;\n\n          .second-part {\n              transform: rotate(-21deg);\n              transform-origin: 29.97% 53.45%;\n              animation-fill-mode: both;\n\n              .third-part {\n                  transform: rotate(16deg);\n                  transform-origin: 16.50% 66.55%;\n                  animation-fill-mode: both;\n              }\n          }\n      }\n\n      .third-leg {\n          transform: rotate(15.5deg);\n          transform-origin: 44.27% 75.86%;\n          animation-fill-mode: both;\n\n          .second-part {\n              transform: rotate(-4deg);\n              transform-origin: 32.52% 63.48%;\n              animation-fill-mode: both;\n\n              .third-part {\n                  transform: rotate(-3deg);\n                  transform-origin: 20.50% 75.40%;\n                  animation-fill-mode: both;\n              }\n          }\n      }\n\n      .fourth-leg {\n          transform: rotate(11deg);\n          transform-origin: 44.82% 81.89%;\n          animation-fill-mode: both;\n\n          .second-part {\n              transform: rotate(-3.5deg);\n              transform-origin: 34.50% 71.61%;\n              animation-fill-mode: both;\n\n              .third-part {\n                  transform: rotate(15deg);\n                  transform-origin: 23.45% 82.51%;\n                  animation-fill-mode: both;\n              }\n          }\n      }\n  }\n}\n\n&.walking {\n    .legs {\n      .left-legs *, .right-legs * {\n        animation-duration: 1s;\n        animation-iteration-count: infinite;\n      }\n      .left-legs {\n          * {\n            animation-direction: ', ';\n          }\n          .first-leg {\n              animation-name: moveLefts-firstLeg-firstPart;\n              animation-delay:0.125s;\n              * {\n                animation-delay:0.125s;\n              }\n              .second-part {\n                  animation-name: moveLefts-firstLeg-secondPart;\n                  .third-part {\n                      animation-name: moveLefts-firstLeg-thirdPart;\n                  }\n              }\n          }\n          .second-leg {\n              animation-name: moveLefts-secondLeg-firstPart;\n              animation-delay:0.375s;\n              * {\n                animation-delay:0.375s;\n              }\n              .second-part {\n                  animation-name: moveLefts-secondLeg-secondPart;\n                  .third-part {\n                      animation-name: moveLefts-secondLeg-thirdPart;\n                  }\n              }\n          }\n          .third-leg {\n              animation-name: moveLefts-thirdLeg-firstPart;\n              .second-part {\n                  animation-name: moveLefts-thirdLeg-secondPart;\n                  .third-part {\n                      animation-name: moveLefts-thirdLeg-thirdPart;\n                  }\n              }\n          }\n\n          .fourth-leg {\n              animation-name: moveLefts-fourthLeg-firstPart;\n              animation-delay:0.25s;\n              * {\n                animation-delay:0.25s;\n              }\n              .second-part {\n                  animation-name: moveLefts-fourthLeg-secondPart;\n                  .third-part {\n                      animation-name: moveLefts-fourthLeg-thirdPart;\n                  }\n              }\n          }\n      }\n\n      .right-legs {\n          * {\n            animation-direction: ', ';\n          }\n          .first-leg {\n              animation-name: moveRights-firstLeg-firstPart;\n              animation-delay:0.255s;\n              * {\n                animation-delay:0.255s;\n              }\n              .second-part {\n                  animation-name: moveRights-firstLeg-secondPart;\n                  .third-part {\n                      animation-name: moveRights-firstLeg-thirdPart;\n                  }\n              }\n          }\n          .second-leg {\n              animation-name: moveRights-secondLeg-firstPart;\n              animation-delay:0.12s;\n              * {\n                animation-delay:0.12s;\n              }\n              .second-part {\n                  animation-name: moveRights-secondLeg-secondPart;\n                  .third-part {\n                      animation-name: moveRights-secondLeg-thirdPart;\n                  }\n              }\n          }\n          .third-leg {\n              animation-name: moveRights-thirdLeg-firstPart;\n              animation-delay:0.37s;\n              * {\n                animation-delay:0.37s;\n              }\n              .second-part {\n                  animation-name: moveRights-thirdLeg-secondPart;\n                  .third-part {\n                      animation-name: moveRights-thirdLeg-thirdPart;\n                  }\n              }\n          }\n\n          .fourth-leg {\n              animation-name: moveRights-fourthLeg-firstPart;\n              animation-delay:0.005s;\n              * {\n                animation-delay:0.005s;\n              }\n              .second-part {\n                  animation-name: moveRights-fourthLeg-secondPart;\n                  .third-part {\n                      animation-name: moveRights-fourthLeg-thirdPart;\n                  }\n              }\n          }\n      }\n    }\n\n  .shell {\n      transform-origin: 50% 85.07%;\n      animation-name: move-shell;\n      animation-duration: 2s;\n      animation-iteration-count: infinite;\n  }\n\n  &.paused {\n    .legs *, .shell * {\n      animation-play-state: paused;\n    }\n  }\n}\n\n.pincers {\n  .left-pincer {\n    transform: rotate(20deg);\n    transform-origin: 55.28% 54.88%;\n\n    .second-part {\n      transform: rotate(-20deg);\n      transform-origin: 62.03% 43.22%;\n\n      .third-part {\n        transform: rotate(-75deg);\n        transform-origin: 64.93% 32.28%;\n\n        .moving-pincer {\n          transform: rotate(5deg);\n          transform-origin: 68.85% 19.08%;\n        }\n      }\n    }\n  }\n\n  .right-pincer {\n    transform: rotate(-20deg);\n    transform-origin: 44.70% 54.88%;\n\n    .second-part {\n      transform: rotate(20deg);\n      transform-origin: 37.65% 42.20%;\n\n      .third-part {\n        transform: rotate(20deg);\n        transform-origin: 34.38% 29.77%;\n\n        .moving-pincer {\n          transform: rotate(5deg);\n          transform-origin: 29.90% 14.78%;\n        }\n      }\n    }\n  }\n}\n\n.mouth {\n  .outer-mouth {\n    .right-mouth {\n      transform-origin: 50% 45.01%;\n    }\n\n    .left-mouth {\n      transform-origin: 50% 45.01%;\n    }\n  }\n}\n\n@keyframes left-eye {\n  0% { transform: rotate(23deg); }\n  5% { transform: rotate(23deg); }\n  7% { transform: rotate(27deg); }\n  10% { transform: rotate(20deg); }\n  25% { transform: rotate(20deg); }\n  30% { transform: rotate(-10deg); }\n  45% { transform: rotate(-10deg); }\n  55% { transform: rotate(10deg); }\n  75% { transform: rotate(-10deg); }\n  80% { transform: rotate(-20deg); }\n  85% { transform: rotate(23deg); }\n  100% { transform: rotate(23deg); }\n}\n\n@keyframes right-eye {\n  0% { transform: rotate(-10deg); }\n  7% { transform: rotate(-15deg); }\n  10% { transform: rotate(10deg); }\n  14% { transform: rotate(29deg); }\n  29% { transform: rotate(2deg); }\n  33% { transform: rotate(-20deg); }\n  44% { transform: rotate(10deg); }\n  51% { transform: rotate(-20deg); }\n  73% { transform: rotate(-25deg); }\n  81% { transform: rotate(-4deg); }\n  86% { transform: rotate(-10deg); }\n  100% { transform: rotate(-10deg); }\n}\n\n.eyes {\n  .left-eye {\n    transform: rotate(23deg);\n    transform-origin: 59.88% 28.34%;\n    animation-name: left-eye;\n    animation-duration: 9s;\n    animation-iteration-count: infinite;\n    animation-direction: normal;\n  }\n\n  .right-eye {\n    transform: rotate(-10deg);\n    transform-origin: 40.13% 28.34%;\n    animation-name: right-eye;\n    animation-duration: 8.5s;\n    animation-iteration-count: infinite;\n    animation-direction: normal;\n  }\n}\n\n// EATING ANIMATION\n@keyframes eating-right-pincer {\n  0% { transform: rotate(-20deg); }\n  25% { transform: rotate(40deg); }\n  50% { transform: rotate(-20deg); }\n}\n\n@keyframes eating-right-pincer-secondPart {\n  0% { transform: rotate(20deg); }\n  25% { transform: rotate(-30deg); }\n  50% { transform: rotate(20deg); }\n  70% { transform: rotate(70deg); }\n  75% { transform: rotate(70deg); }\n  100% { transform: rotate(20deg); }\n}\n\n@keyframes eating-right-pincer-thirdPart {\n  0% { transform: rotate(20deg); }\n  25% { transform: rotate(-10deg); }\n  50% { transform: rotate(20deg); }\n  70% { transform: rotate(40deg); }\n  75% { transform: rotate(40deg); }\n  100% { transform: rotate(20deg); }\n}\n\n@keyframes eating-right-pincer-close {\n  0% { transform: rotate(5deg); }\n  17% { transform: rotate(-5deg); }\n  20% { transform: rotate(35deg); }\n  50% { transform: rotate(35deg); }\n  70% { transform: rotate(35deg); }\n  75% { transform: rotate(-5deg); }\n  100% { transform: rotate(5deg); }\n}\n\n@keyframes eating-left-pincer {\n  0% { transform: rotate(20deg); }\n  33.33% { transform: rotate(20deg); }\n  46.66% { transform: rotate(5deg); }\n  50% { transform: rotate(5deg); }\n  60% { transform: rotate(0deg); }\n  90% { transform: rotate(0deg); }\n}\n\n@keyframes eating-left-pincer-secondPart {\n  0% { transform: rotate(-20deg); }\n  33.33% { transform: rotate(-20deg); }\n  46.66% { transform: rotate(-24deg); }\n  50% { transform: rotate(-24deg); }\n  60% { transform: rotate(-30deg); }\n  90% { transform: rotate(-30deg); }\n}\n\n@keyframes eating-left-pincer-thirdPart {\n  0% { transform: rotate(-75deg); }\n  33.33% { transform: rotate(-75deg); }\n  46.66% { transform: rotate(-75deg); }\n  50% { transform: rotate(-75deg); }\n  60% { transform: rotate(-80deg); }\n  90% { transform: rotate(-80deg); }\n}\n\n@keyframes eating-left-pincer-close {\n  0% { transform: rotate(5deg); }\n  46.66% { transform: rotate(5deg); }\n  50% { transform: rotate(-25deg); }\n  90% { transform: rotate(-25deg); }\n}\n\n@keyframes eating-right-mouth {\n  10% { transform: rotate(-4deg) skewX(4deg); }\n  20% { transform: rotate(-2deg) skewX(2deg); }\n  35% { transform: rotate(-4deg) skewX(4deg); }\n  45% { transform: rotate(-2deg) skewX(2deg); }\n  60% { transform: rotate(-4deg) skewX(4deg); }\n  65% { transform: rotate(-2deg) skewX(2deg); }\n  70% { transform: rotate(-4deg) skewX(4deg); }\n  80% { transform: rotate(-2deg) skewX(2deg); }\n  90% { transform: rotate(-4deg) skewX(4deg); }\n}\n\n@keyframes eating-left-mouth {\n  12% { transform: rotate(10deg) skewX(-10deg); }\n  22% { transform: rotate(2deg) skewX(-2deg); }\n  62% { transform: rotate(10deg) skewX(-10deg); }\n  67% { transform: rotate(2deg) skewX(-2deg); }\n  92% { transform: rotate(10deg) skewX(-10deg); }\n}\n\n&.eating {\n  .pincers {\n    .right-pincer {\n      animation-name: eating-right-pincer;\n      animation-duration: 2s;\n      animation-delay: 0.5s;\n      animation-timing-function: ease-in-out;\n\n      .second-part {\n        animation-name: eating-right-pincer-secondPart;\n        animation-duration: 2s;\n        animation-delay: 0.5s;\n        animation-timing-function: ease-in-out;\n\n        .third-part {\n          animation-name: eating-right-pincer-thirdPart;\n          animation-duration: 2s;\n          animation-delay: 0.5s;\n          animation-timing-function: ease-in-out;\n\n          .moving-pincer {\n            animation-name: eating-right-pincer-close;\n            animation-duration: 2s;\n            animation-delay: 0.5s;\n          }\n        }\n      }\n    }\n\n    .left-pincer {\n      animation-name: eating-left-pincer;\n      animation-duration: 3s;\n      animation-delay: 0.5s;\n      animation-timing-function: ease-in-out;\n\n      .second-part {\n        animation-name: eating-left-pincer-secondPart;\n        animation-duration: 3s;\n        animation-delay: 0.5s;\n        animation-timing-function: ease-in-out;\n\n        .third-part {\n          animation-name: eating-left-pincer-thirdPart;\n          animation-duration: 3s;\n          animation-delay: 0.5s;\n          animation-timing-function: ease-in-out;\n\n          .moving-pincer {\n            animation-name: eating-left-pincer-close;\n            animation-duration: 3s;\n            animation-delay: 0.5s;\n          }\n        }\n      }\n    }\n  }\n\n  .mouth {\n    .outer-mouth {\n      .right-mouth {\n        animation-name: eating-right-mouth;\n        animation-duration: 1s;\n        animation-delay: 2.5s;\n        animation-timing-function: ease-in-out;\n      }\n\n      .left-mouth {\n        animation-name: eating-left-mouth;\n        animation-duration: 1s;\n        animation-delay: 2.5s;\n        animation-timing-function: ease-in-out;\n      }\n    }\n  }\n}\n\n//WAVING ANIMATION\n@keyframes waving-right-pincer {\n  0% { transform: rotate(-20deg); }\n  25% { transform: rotate(40deg); }\n  45% { transform: rotate(-40deg); }\n  65% { transform: rotate(50deg); }\n}\n\n@keyframes waving-right-pincer-secondPart {\n  0% { transform: rotate(20deg); }\n  25% { transform: rotate(0deg); }\n  90% { transform: rotate(0deg); }\n}\n\n@keyframes waving-right-pincer-thirdPart {\n  0% { transform: rotate(20deg); }\n  25% { transform: rotate(5deg); }\n  90% { transform: rotate(5deg); }\n}\n\n@keyframes waving-left-pincer {\n  0% { transform: rotate(20deg); }\n  25% { transform: rotate(-30deg); }\n  45% { transform: rotate(40deg); }\n  65% { transform: rotate(-50deg); }\n}\n\n@keyframes waving-left-pincer-secondPart {\n  0% { transform: rotate(-20deg); }\n  25% { transform: rotate(5deg); }\n  80% { transform: rotate(5deg); }\n}\n\n@keyframes waving-left-pincer-thirdPart {\n  0% { transform: rotate(-75deg); }\n  25% { transform: rotate(0deg); }\n  80% { transform: rotate(0deg); }\n}\n\n&.waving {\n  .pincers {\n    .right-pincer {\n      animation-name: waving-right-pincer;\n      animation-duration: 2.5s;\n      animation-delay: 0.5s;\n      animation-timing-function: ease-in-out;\n\n      .second-part {\n        animation-name: waving-right-pincer-secondPart;\n        animation-duration: 2.5s;\n        animation-delay: 0.5s;\n        animation-timing-function: ease-in-out;\n\n        .third-part {\n          animation-name: waving-right-pincer-thirdPart;\n          animation-duration: 2.5s;\n          animation-delay: 0.5s;\n          animation-timing-function: ease-in-out;\n        }\n      }\n    }\n\n    .left-pincer {\n      animation-name: waving-left-pincer;\n      animation-duration: 2.5s;\n      animation-delay: 1s;\n      animation-timing-function: ease-in-out;\n\n      .second-part {\n        animation-name: waving-left-pincer-secondPart;\n        animation-duration: 2.5s;\n        animation-delay: 1s;\n        animation-timing-function: ease-in-out;\n\n        .third-part {\n          animation-name: waving-left-pincer-thirdPart;\n          animation-duration: 2.5s;\n          animation-delay: 1s;\n          animation-timing-function: ease-in-out;\n        }\n      }\n    }\n  }\n}\n\n//SNAPPING ANIMATION\n@keyframes snapping-right-pincer {\n  0% { transform: rotate(-20deg); }\n  10% { transform: rotate(-30deg); }\n  90% { transform: rotate(-30deg); }\n}\n\n@keyframes snapping-right-pincer-secondPart {\n  0% { transform: rotate(20deg); }\n  10% { transform: rotate(0deg); }\n  90% { transform: rotate(0deg); }\n}\n\n@keyframes snapping-right-pincer-thirdPart {\n  0% { transform: rotate(20deg); }\n  10% { transform: rotate(10deg); }\n  90% { transform: rotate(10deg); }\n}\n\n@keyframes snapping-right-pincer-close {\n  0% { transform: rotate(5deg); }\n  17.43% { transform: rotate(5deg); }\n  21.43% { transform: rotate(35deg); }\n  25.43% { transform: rotate(5deg); }\n  40.29% { transform: rotate(5deg); }\n  44.29% { transform: rotate(35deg); }\n  48.29% { transform: rotate(5deg); }\n  63.15% { transform: rotate(5deg); }\n  67.15% { transform: rotate(35deg); }\n  71.15% { transform: rotate(5deg); }\n  74.58% { transform: rotate(5deg); }\n  78.58% { transform: rotate(35deg); }\n  82.58% { transform: rotate(5deg); }\n}\n\n@keyframes snapping-left-pincer {\n  0% { transform: rotate(20deg); }\n  10% { transform: rotate(30deg); }\n  90% { transform: rotate(30deg); }\n}\n\n@keyframes snapping-left-pincer-secondPart {\n  0% { transform: rotate(-20deg); }\n  10% { transform: rotate(0deg); }\n  90% { transform: rotate(0deg); }\n}\n\n@keyframes snapping-left-pincer-thirdPart {\n  0% { transform: rotate(-75deg); }\n  10% { transform: rotate(-10deg); }\n  90% { transform: rotate(-10deg); }\n}\n\n/*\nR-LLR-L---B-B-\n11.43 beat split */\n\n@keyframes snapping-left-pincer-close {\n  0% { transform: rotate(-5deg); }\n  28.86% { transform: rotate(-5deg); }\n  32.86% { transform: rotate(-35deg); }\n  35.72% { transform: rotate(-5deg); }\n  38.58% { transform: rotate(-35deg); }\n  42.58% { transform: rotate(-5deg); }\n  51.72% { transform: rotate(-5deg); }\n  55.72% { transform: rotate(-35deg); }\n  59.72% { transform: rotate(-5deg); }\n  63.15% { transform: rotate(-5deg); }\n  67.15% { transform: rotate(-35deg); }\n  71.15% { transform: rotate(-5deg); }\n  74.58% { transform: rotate(-5deg); }\n  78.58% { transform: rotate(-35deg); }\n  82.58% { transform: rotate(-5deg); }\n}\n\n&.snapping {\n  .pincers {\n    .right-pincer {\n      animation-name: snapping-right-pincer;\n      animation-duration: 3s;\n      animation-delay: 0.5s;\n      animation-timing-function: ease-in-out;\n\n      .second-part {\n        animation-name: snapping-right-pincer-secondPart;\n        animation-duration: 3s;\n        animation-delay: 0.5s;\n        animation-timing-function: ease-in-out;\n\n        .third-part {\n          animation-name: snapping-right-pincer-thirdPart;\n          animation-duration: 3s;\n          animation-delay: 0.5s;\n          animation-timing-function: ease-in-out;\n\n          .moving-pincer {\n            animation-name: snapping-right-pincer-close;\n            animation-duration: 3s;\n            animation-delay: 0.5s;\n          }\n        }\n      }\n    }\n\n    .left-pincer {\n      animation-name: snapping-left-pincer;\n      animation-duration: 3s;\n      animation-delay: 0.5s;\n      animation-timing-function: ease-in-out;\n\n      .second-part {\n        animation-name: snapping-left-pincer-secondPart;\n        animation-duration: 3s;\n        animation-delay: 0.5s;\n        animation-timing-function: ease-in-out;\n\n        .third-part {\n          animation-name: snapping-left-pincer-thirdPart;\n          animation-duration: 3s;\n          animation-delay: 0.5s;\n          animation-timing-function: ease-in-out;\n\n          .moving-pincer {\n            animation-name: snapping-left-pincer-close;\n            animation-duration: 3s;\n            animation-delay: 0.5s;\n          }\n        }\n      }\n    }\n  }\n}\n']);
+var _templateObject = _taggedTemplateLiteralLoose(['\n  min-width: ', 'px;\n  width: 12%;\n  height: fit-content;\n  overflow: visible;\n  cursor: pointer;\n  pointer-events: none;\n  position: absolute;\n  top: 0;\n  left: 0;\n  animation-fill-mode: both;\n  transition: transform ', 's;\n  transition-timing-function: cubic-bezier(1, 1.02, 0.76, 0.99);\n\n  &.walking {\n    transform: translate(', ');\n  }\n\n//******LEFT LEGS ANIMATIONS******//\n// First Leg Animations\n@keyframes moveLefts-firstLeg-firstPart {\n  /* 0% { transform: rotate(-14deg); } */\n  10% { transform: rotate(-14deg); }\n  50% { transform: rotate(13deg); }\n  /* 100% { transform: rotate(-14deg); } */\n}\n\n@keyframes moveLefts-firstLeg-secondPart {\n  /* 0% { transform: rotate(31deg); } */\n  35% { transform: rotate(-25deg); }\n  50% { transform: rotate(-25deg); }\n  /* 100% { transform: rotate(31deg); } */\n}\n\n@keyframes moveLefts-firstLeg-thirdPart {\n  /* 0% { transform: rotate(-17deg); } */\n  35% { transform: rotate(8deg); }\n  50% { transform: rotate(12deg); }  \n  /* 100% { transform: rotate(-17deg); } */\n}\n\n@keyframes returnLefts-firstLeg-firstPart {\n  100% { transform: rotate(-14deg); }\n}\n\n@keyframes returnLefts-firstLeg-secondPart {\n  100% { transform: rotate(31deg); }\n}\n\n@keyframes returnLefts-firstLeg-thirdPart {\n  100% { transform: rotate(-17deg); }\n}\n\n// Second Leg Animations\n@keyframes moveLefts-secondLeg-firstPart {\n  /* 0% { transform: rotate(-15.5deg); } */\n  10% { transform: rotate(-15.5deg); }\n  50% { transform: rotate(10deg); }\n  /* 100% { transform: rotate(-15.5deg); } */\n}\n\n@keyframes moveLefts-secondLeg-secondPart {\n  /* 0% { transform: rotate(21deg); } */\n  35% { transform: rotate(-30deg); }\n  50% { transform: rotate(-30deg); }\n  /* 100% { transform: rotate(21deg); } */\n}\n\n@keyframes moveLefts-secondLeg-thirdPart {\n  /* 0% { transform: rotate(-16deg); } */\n  35% { transform: rotate(8deg); }\n  50% { transform: rotate(12deg); }  \n  /* 100% { transform: rotate(-16deg); } */\n}\n\n// Third Leg Animations\n@keyframes moveLefts-thirdLeg-firstPart {\n  /* 0% { transform: rotate(-15.5deg); } */\n  10% { transform: rotate(-15.5deg); }\n  50% { transform: rotate(10deg); }\n  /* 100% { transform: rotate(-15.5deg); } */\n}\n\n@keyframes moveLefts-thirdLeg-secondPart {\n  /* 0% { transform: rotate(4deg); } */\n  35% { transform: rotate(-35deg); }\n  50% { transform: rotate(-35deg); }\n  /* 100% { transform: rotate(4deg); } */\n}\n\n@keyframes moveLefts-thirdLeg-thirdPart {\n  /* 0% { transform: rotate(3deg); } */\n  35% { transform: rotate(-3deg); }\n  50% { transform: rotate(-3deg); }  \n  /* 100% { transform: rotate(3deg); } */\n}\n\n// Fourth Leg Animations\n@keyframes moveLefts-fourthLeg-firstPart {\n  /* 0% { transform: rotate(-11deg); } */\n  10% { transform: rotate(-11deg); }\n  50% { transform: rotate(14deg); }\n  /* 100% { transform: rotate(-11deg); } */\n}\n\n@keyframes moveLefts-fourthLeg-secondPart {\n  /* 0% { transform: rotate(3.5deg); } */\n  35% { transform: rotate(-35deg); }\n  50% { transform: rotate(-35deg); }\n  100% { transform: rotate(3.5deg); }\n}\n\n@keyframes moveLefts-fourthLeg-thirdPart {\n  /* 0% { transform: rotate(-15deg); } */\n  35% { transform: rotate(-45deg); }\n  50% { transform: rotate(-45deg); }  \n  /* 100% { transform: rotate(-15deg); } */\n}\n\n//******RIGHT LEGS ANIMATIONS******//\n// First Leg Animations\n@keyframes moveRights-firstLeg-firstPart {\n  /* 0% { transform: rotate(14deg); } */\n  10% { transform: rotate(14deg); }\n  50% { transform: rotate(-13deg); }\n  /* 100% { transform: rotate(14deg); } */\n}\n\n@keyframes moveRights-firstLeg-secondPart {\n  /* 0% { transform: rotate(-31deg); } */\n  35% { transform: rotate(25deg); }\n  50% { transform: rotate(25deg); }\n  /* 100% { transform: rotate(-31deg); } */\n}\n\n@keyframes moveRights-firstLeg-thirdPart {\n  /* 0% { transform: rotate(17deg); } */\n  35% { transform: rotate(-8deg); }\n  50% { transform: rotate(-12deg); }  \n  /* 100% { transform: rotate(17deg); } */\n}\n\n// Second Leg Animations\n@keyframes moveRights-secondLeg-firstPart {\n  /* 0% { transform: rotate(15.5deg); } */\n  10% { transform: rotate(15.5deg); }\n  50% { transform: rotate(-10deg); }\n  /* 100% { transform: rotate(15.5deg); } */\n}\n\n@keyframes moveRights-secondLeg-secondPart {\n  /* 0% { transform: rotate(-21deg); } */\n  35% { transform: rotate(30deg); }\n  50% { transform: rotate(30deg); }\n  /* 100% { transform: rotate(-21deg); } */\n}\n\n@keyframes moveRights-secondLeg-thirdPart {\n  /* 0% { transform: rotate(16deg); } */\n  35% { transform: rotate(-8deg); }\n  50% { transform: rotate(-12deg); }  \n  /* 100% { transform: rotate(16deg); } */\n}\n\n// Third Leg Animations\n@keyframes moveRights-thirdLeg-firstPart {\n  /* 0% { transform: rotate(15.5deg); } */\n  10% { transform: rotate(15.5deg); }\n  50% { transform: rotate(-10deg); }\n  /* 100% { transform: rotate(15.5deg); } */\n}\n\n@keyframes moveRights-thirdLeg-secondPart {\n  /* 0% { transform: rotate(-4deg); } */\n  35% { transform: rotate(35deg); }\n  50% { transform: rotate(35deg); }\n  /* 100% { transform: rotate(-4deg); } */\n}\n\n@keyframes moveRights-thirdLeg-thirdPart {\n  /* 0% { transform: rotate(-3deg); } */\n  35% { transform: rotate(3deg); }\n  50% { transform: rotate(3deg); }  \n  /* 100% { transform: rotate(-3deg); } */\n}\n\n// Fourth Leg Animations\n@keyframes moveRights-fourthLeg-firstPart {\n  /* 0% { transform: rotate(11deg); } */\n  10% { transform: rotate(11deg); }\n  50% { transform: rotate(-14deg); }\n  /* 100% { transform: rotate(11deg); } */\n}\n\n@keyframes moveRights-fourthLeg-secondPart {\n  /* 0% { transform: rotate(-3.5deg); } */\n  35% { transform: rotate(35deg); }\n  50% { transform: rotate(35deg); }\n  /* 100% { transform: rotate(-3.5deg); } */\n}\n\n@keyframes moveRights-fourthLeg-thirdPart {\n  /* 0% { transform: rotate(15deg); } */\n  35% { transform: rotate(45deg); }\n  50% { transform: rotate(45deg); }  \n  /* 100% { transform: rotate(15deg); } */\n}\n\n@keyframes move-shell {\n  33.33% { transform: rotate(1deg); }\n  66.66% { transform: rotate(-1deg); }\n}\n\n.legs {\n  .left-legs {\n      .first-leg {\n          transform: rotate(-14deg);\n          transform-origin: 56.80% 61.33%;\n          animation-fill-mode: both;\n\n          .second-part {\n              transform: rotate(31deg);\n              transform-origin: 73.13% 41.79%;\n              animation-fill-mode: both;\n\n              .third-part {\n                  transform: rotate(-17deg);\n                  transform-origin: 88.45% 56.52%;\n                  animation-fill-mode: both;\n              }\n          }\n      }\n\n      .second-leg {\n          transform: rotate(-15.5deg);\n          transform-origin: 56.20% 68.90%;\n          transition: transform 0.5;\n          animation-fill-mode: both;\n\n          .second-part {\n              transform: rotate(21deg);\n              transform-origin: 70.03% 53.45%;\n              transition: transform 0.5;\n              animation-fill-mode: both;\n\n              .third-part {\n                  transform: rotate(-16deg);\n                  transform-origin: 83.50% 66.55%;\n                  transition: transform 0.5;\n                  animation-fill-mode: both;\n              }\n          }\n      }\n\n      .third-leg {\n          transform: rotate(-15.5deg);\n          transform-origin: 55.73% 75.86%;\n          transition: transform 0.5;\n          animation-fill-mode: both;\n\n          .second-part {\n              transform: rotate(4deg);\n              transform-origin: 67.48% 63.48%;\n              transition: transform 0.5;\n              animation-fill-mode: both;\n\n              .third-part {\n                  transform: rotate(3deg);\n                  transform-origin: 79.50% 75.40%;\n                  transition: transform 0.5;\n                  animation-fill-mode: both;\n              }\n          }\n      }\n\n      .fourth-leg {\n          transform: rotate(-11deg);\n          transform-origin: 55.18% 81.89%;\n          transition: transform 0.5;\n          animation-fill-mode: both;\n\n          .second-part {\n              transform: rotate(3.5deg);\n              transform-origin: 65.50% 71.61%;\n              transition: transform 0.5;\n              animation-fill-mode: both;\n\n              .third-part {\n                  transform: rotate(-15deg);\n                  transform-origin: 76.55% 82.51%;\n                  transition: transform 0.5;\n                  animation-fill-mode: both;\n              }\n          }\n      }\n  }\n\n  .right-legs {\n      .first-leg {\n          transform: rotate(14deg);\n          transform-origin: 43.20% 61.33%;\n          animation-fill-mode: both;\n\n          .second-part {\n              transform: rotate(-31deg);\n              transform-origin: 26.87% 41.79%;\n              animation-fill-mode: both;\n\n              .third-part {\n                  transform: rotate(17deg);\n                  transform-origin: 11.55% 56.52%;\n                  animation-fill-mode: both;\n              }\n          }\n      }\n\n      .second-leg {\n          transform: rotate(15.5deg);\n          transform-origin: 43.80% 68.90%;\n          animation-fill-mode: both;\n\n          .second-part {\n              transform: rotate(-21deg);\n              transform-origin: 29.97% 53.45%;\n              animation-fill-mode: both;\n\n              .third-part {\n                  transform: rotate(16deg);\n                  transform-origin: 16.50% 66.55%;\n                  animation-fill-mode: both;\n              }\n          }\n      }\n\n      .third-leg {\n          transform: rotate(15.5deg);\n          transform-origin: 44.27% 75.86%;\n          animation-fill-mode: both;\n\n          .second-part {\n              transform: rotate(-4deg);\n              transform-origin: 32.52% 63.48%;\n              animation-fill-mode: both;\n\n              .third-part {\n                  transform: rotate(-3deg);\n                  transform-origin: 20.50% 75.40%;\n                  animation-fill-mode: both;\n              }\n          }\n      }\n\n      .fourth-leg {\n          transform: rotate(11deg);\n          transform-origin: 44.82% 81.89%;\n          animation-fill-mode: both;\n\n          .second-part {\n              transform: rotate(-3.5deg);\n              transform-origin: 34.50% 71.61%;\n              animation-fill-mode: both;\n\n              .third-part {\n                  transform: rotate(15deg);\n                  transform-origin: 23.45% 82.51%;\n                  animation-fill-mode: both;\n              }\n          }\n      }\n  }\n}\n\n&.walking {\n    .legs {\n      .left-legs *, .right-legs * {\n        animation-duration: 1s;\n        animation-iteration-count: infinite;\n      }\n      .left-legs {\n          * {\n            animation-direction: ', ';\n          }\n          .first-leg {\n              animation-name: moveLefts-firstLeg-firstPart;\n              animation-delay:0.125s;\n              * {\n                animation-delay:0.125s;\n              }\n              .second-part {\n                  animation-name: moveLefts-firstLeg-secondPart;\n                  .third-part {\n                      animation-name: moveLefts-firstLeg-thirdPart;\n                  }\n              }\n          }\n          .second-leg {\n              animation-name: moveLefts-secondLeg-firstPart;\n              animation-delay:0.375s;\n              * {\n                animation-delay:0.375s;\n              }\n              .second-part {\n                  animation-name: moveLefts-secondLeg-secondPart;\n                  .third-part {\n                      animation-name: moveLefts-secondLeg-thirdPart;\n                  }\n              }\n          }\n          .third-leg {\n              animation-name: moveLefts-thirdLeg-firstPart;\n              .second-part {\n                  animation-name: moveLefts-thirdLeg-secondPart;\n                  .third-part {\n                      animation-name: moveLefts-thirdLeg-thirdPart;\n                  }\n              }\n          }\n\n          .fourth-leg {\n              animation-name: moveLefts-fourthLeg-firstPart;\n              animation-delay:0.25s;\n              * {\n                animation-delay:0.25s;\n              }\n              .second-part {\n                  animation-name: moveLefts-fourthLeg-secondPart;\n                  .third-part {\n                      animation-name: moveLefts-fourthLeg-thirdPart;\n                  }\n              }\n          }\n      }\n\n      .right-legs {\n          * {\n            animation-direction: ', ';\n          }\n          .first-leg {\n              animation-name: moveRights-firstLeg-firstPart;\n              animation-delay:0.255s;\n              * {\n                animation-delay:0.255s;\n              }\n              .second-part {\n                  animation-name: moveRights-firstLeg-secondPart;\n                  .third-part {\n                      animation-name: moveRights-firstLeg-thirdPart;\n                  }\n              }\n          }\n          .second-leg {\n              animation-name: moveRights-secondLeg-firstPart;\n              animation-delay:0.12s;\n              * {\n                animation-delay:0.12s;\n              }\n              .second-part {\n                  animation-name: moveRights-secondLeg-secondPart;\n                  .third-part {\n                      animation-name: moveRights-secondLeg-thirdPart;\n                  }\n              }\n          }\n          .third-leg {\n              animation-name: moveRights-thirdLeg-firstPart;\n              animation-delay:0.37s;\n              * {\n                animation-delay:0.37s;\n              }\n              .second-part {\n                  animation-name: moveRights-thirdLeg-secondPart;\n                  .third-part {\n                      animation-name: moveRights-thirdLeg-thirdPart;\n                  }\n              }\n          }\n\n          .fourth-leg {\n              animation-name: moveRights-fourthLeg-firstPart;\n              animation-delay:0.005s;\n              * {\n                animation-delay:0.005s;\n              }\n              .second-part {\n                  animation-name: moveRights-fourthLeg-secondPart;\n                  .third-part {\n                      animation-name: moveRights-fourthLeg-thirdPart;\n                  }\n              }\n          }\n      }\n    }\n\n  .shell {\n      transform-origin: 50% 85.07%;\n      animation-name: move-shell;\n      animation-duration: 2s;\n      animation-iteration-count: infinite;\n      pointer-events: all;\n  }\n\n  &.paused {\n    .legs *, .shell * {\n      animation-play-state: paused;\n    }\n  }\n}\n\n.pincers {\n  .left-pincer {\n    transform: rotate(20deg);\n    transform-origin: 55.28% 54.88%;\n\n    .second-part {\n      transform: rotate(-20deg);\n      transform-origin: 62.03% 43.22%;\n\n      .third-part {\n        transform: rotate(-75deg);\n        transform-origin: 64.93% 32.28%;\n\n        .moving-pincer {\n          transform: rotate(5deg);\n          transform-origin: 68.85% 19.08%;\n        }\n      }\n    }\n  }\n\n  .right-pincer {\n    transform: rotate(-20deg);\n    transform-origin: 44.70% 54.88%;\n\n    .second-part {\n      transform: rotate(20deg);\n      transform-origin: 37.65% 42.20%;\n\n      .third-part {\n        transform: rotate(20deg);\n        transform-origin: 34.38% 29.77%;\n\n        .moving-pincer {\n          transform: rotate(5deg);\n          transform-origin: 29.90% 14.78%;\n        }\n      }\n    }\n  }\n}\n\n.mouth {\n  .outer-mouth {\n    .right-mouth {\n      transform-origin: 50% 45.01%;\n    }\n\n    .left-mouth {\n      transform-origin: 50% 45.01%;\n    }\n  }\n}\n\n@keyframes left-eye {\n  0% { transform: rotate(23deg); }\n  5% { transform: rotate(23deg); }\n  7% { transform: rotate(27deg); }\n  10% { transform: rotate(20deg); }\n  25% { transform: rotate(20deg); }\n  30% { transform: rotate(-10deg); }\n  45% { transform: rotate(-10deg); }\n  55% { transform: rotate(10deg); }\n  75% { transform: rotate(-10deg); }\n  80% { transform: rotate(-20deg); }\n  85% { transform: rotate(23deg); }\n  100% { transform: rotate(23deg); }\n}\n\n@keyframes right-eye {\n  0% { transform: rotate(-10deg); }\n  7% { transform: rotate(-15deg); }\n  10% { transform: rotate(10deg); }\n  14% { transform: rotate(29deg); }\n  29% { transform: rotate(2deg); }\n  33% { transform: rotate(-20deg); }\n  44% { transform: rotate(10deg); }\n  51% { transform: rotate(-20deg); }\n  73% { transform: rotate(-25deg); }\n  81% { transform: rotate(-4deg); }\n  86% { transform: rotate(-10deg); }\n  100% { transform: rotate(-10deg); }\n}\n\n.eyes {\n  .left-eye {\n    transform: rotate(23deg);\n    transform-origin: 59.88% 28.34%;\n    animation-name: left-eye;\n    animation-duration: 9s;\n    animation-iteration-count: infinite;\n    animation-direction: normal;\n  }\n\n  .right-eye {\n    transform: rotate(-10deg);\n    transform-origin: 40.13% 28.34%;\n    animation-name: right-eye;\n    animation-duration: 8.5s;\n    animation-iteration-count: infinite;\n    animation-direction: normal;\n  }\n}\n\n// EATING ANIMATION\n@keyframes eating-right-pincer {\n  0% { transform: rotate(-20deg); }\n  25% { transform: rotate(40deg); }\n  50% { transform: rotate(-20deg); }\n}\n\n@keyframes eating-right-pincer-secondPart {\n  0% { transform: rotate(20deg); }\n  25% { transform: rotate(-30deg); }\n  50% { transform: rotate(20deg); }\n  70% { transform: rotate(70deg); }\n  75% { transform: rotate(70deg); }\n  100% { transform: rotate(20deg); }\n}\n\n@keyframes eating-right-pincer-thirdPart {\n  0% { transform: rotate(20deg); }\n  25% { transform: rotate(-10deg); }\n  50% { transform: rotate(20deg); }\n  70% { transform: rotate(40deg); }\n  75% { transform: rotate(40deg); }\n  100% { transform: rotate(20deg); }\n}\n\n@keyframes eating-right-pincer-close {\n  0% { transform: rotate(5deg); }\n  17% { transform: rotate(-5deg); }\n  20% { transform: rotate(35deg); }\n  50% { transform: rotate(35deg); }\n  70% { transform: rotate(35deg); }\n  75% { transform: rotate(-5deg); }\n  100% { transform: rotate(5deg); }\n}\n\n@keyframes eating-left-pincer {\n  0% { transform: rotate(20deg); }\n  33.33% { transform: rotate(20deg); }\n  46.66% { transform: rotate(5deg); }\n  50% { transform: rotate(5deg); }\n  60% { transform: rotate(0deg); }\n  90% { transform: rotate(0deg); }\n}\n\n@keyframes eating-left-pincer-secondPart {\n  0% { transform: rotate(-20deg); }\n  33.33% { transform: rotate(-20deg); }\n  46.66% { transform: rotate(-24deg); }\n  50% { transform: rotate(-24deg); }\n  60% { transform: rotate(-30deg); }\n  90% { transform: rotate(-30deg); }\n}\n\n@keyframes eating-left-pincer-thirdPart {\n  0% { transform: rotate(-75deg); }\n  33.33% { transform: rotate(-75deg); }\n  46.66% { transform: rotate(-75deg); }\n  50% { transform: rotate(-75deg); }\n  60% { transform: rotate(-80deg); }\n  90% { transform: rotate(-80deg); }\n}\n\n@keyframes eating-left-pincer-close {\n  0% { transform: rotate(5deg); }\n  46.66% { transform: rotate(5deg); }\n  50% { transform: rotate(-25deg); }\n  90% { transform: rotate(-25deg); }\n}\n\n@keyframes eating-right-mouth {\n  10% { transform: rotate(-4deg) skewX(4deg); }\n  20% { transform: rotate(-2deg) skewX(2deg); }\n  35% { transform: rotate(-4deg) skewX(4deg); }\n  45% { transform: rotate(-2deg) skewX(2deg); }\n  60% { transform: rotate(-4deg) skewX(4deg); }\n  65% { transform: rotate(-2deg) skewX(2deg); }\n  70% { transform: rotate(-4deg) skewX(4deg); }\n  80% { transform: rotate(-2deg) skewX(2deg); }\n  90% { transform: rotate(-4deg) skewX(4deg); }\n}\n\n@keyframes eating-left-mouth {\n  12% { transform: rotate(10deg) skewX(-10deg); }\n  22% { transform: rotate(2deg) skewX(-2deg); }\n  62% { transform: rotate(10deg) skewX(-10deg); }\n  67% { transform: rotate(2deg) skewX(-2deg); }\n  92% { transform: rotate(10deg) skewX(-10deg); }\n}\n\n&.eating {\n  .pincers {\n    .right-pincer {\n      animation-name: eating-right-pincer;\n      animation-duration: 2s;\n      animation-delay: 0.5s;\n      animation-timing-function: ease-in-out;\n\n      .second-part {\n        animation-name: eating-right-pincer-secondPart;\n        animation-duration: 2s;\n        animation-delay: 0.5s;\n        animation-timing-function: ease-in-out;\n\n        .third-part {\n          animation-name: eating-right-pincer-thirdPart;\n          animation-duration: 2s;\n          animation-delay: 0.5s;\n          animation-timing-function: ease-in-out;\n\n          .moving-pincer {\n            animation-name: eating-right-pincer-close;\n            animation-duration: 2s;\n            animation-delay: 0.5s;\n          }\n        }\n      }\n    }\n\n    .left-pincer {\n      animation-name: eating-left-pincer;\n      animation-duration: 3s;\n      animation-delay: 0.5s;\n      animation-timing-function: ease-in-out;\n\n      .second-part {\n        animation-name: eating-left-pincer-secondPart;\n        animation-duration: 3s;\n        animation-delay: 0.5s;\n        animation-timing-function: ease-in-out;\n\n        .third-part {\n          animation-name: eating-left-pincer-thirdPart;\n          animation-duration: 3s;\n          animation-delay: 0.5s;\n          animation-timing-function: ease-in-out;\n\n          .moving-pincer {\n            animation-name: eating-left-pincer-close;\n            animation-duration: 3s;\n            animation-delay: 0.5s;\n          }\n        }\n      }\n    }\n  }\n\n  .mouth {\n    .outer-mouth {\n      .right-mouth {\n        animation-name: eating-right-mouth;\n        animation-duration: 1s;\n        animation-delay: 2.5s;\n        animation-timing-function: ease-in-out;\n      }\n\n      .left-mouth {\n        animation-name: eating-left-mouth;\n        animation-duration: 1s;\n        animation-delay: 2.5s;\n        animation-timing-function: ease-in-out;\n      }\n    }\n  }\n}\n\n//WAVING ANIMATION\n@keyframes waving-right-pincer {\n  0% { transform: rotate(-20deg); }\n  25% { transform: rotate(40deg); }\n  45% { transform: rotate(-40deg); }\n  65% { transform: rotate(50deg); }\n}\n\n@keyframes waving-right-pincer-secondPart {\n  0% { transform: rotate(20deg); }\n  25% { transform: rotate(0deg); }\n  90% { transform: rotate(0deg); }\n}\n\n@keyframes waving-right-pincer-thirdPart {\n  0% { transform: rotate(20deg); }\n  25% { transform: rotate(5deg); }\n  90% { transform: rotate(5deg); }\n}\n\n@keyframes waving-left-pincer {\n  0% { transform: rotate(20deg); }\n  25% { transform: rotate(-30deg); }\n  45% { transform: rotate(40deg); }\n  65% { transform: rotate(-50deg); }\n}\n\n@keyframes waving-left-pincer-secondPart {\n  0% { transform: rotate(-20deg); }\n  25% { transform: rotate(5deg); }\n  80% { transform: rotate(5deg); }\n}\n\n@keyframes waving-left-pincer-thirdPart {\n  0% { transform: rotate(-75deg); }\n  25% { transform: rotate(0deg); }\n  80% { transform: rotate(0deg); }\n}\n\n&.waving {\n  .pincers {\n    .right-pincer {\n      animation-name: waving-right-pincer;\n      animation-duration: 2.5s;\n      animation-delay: 0.5s;\n      animation-timing-function: ease-in-out;\n\n      .second-part {\n        animation-name: waving-right-pincer-secondPart;\n        animation-duration: 2.5s;\n        animation-delay: 0.5s;\n        animation-timing-function: ease-in-out;\n\n        .third-part {\n          animation-name: waving-right-pincer-thirdPart;\n          animation-duration: 2.5s;\n          animation-delay: 0.5s;\n          animation-timing-function: ease-in-out;\n        }\n      }\n    }\n\n    .left-pincer {\n      animation-name: waving-left-pincer;\n      animation-duration: 2.5s;\n      animation-delay: 1s;\n      animation-timing-function: ease-in-out;\n\n      .second-part {\n        animation-name: waving-left-pincer-secondPart;\n        animation-duration: 2.5s;\n        animation-delay: 1s;\n        animation-timing-function: ease-in-out;\n\n        .third-part {\n          animation-name: waving-left-pincer-thirdPart;\n          animation-duration: 2.5s;\n          animation-delay: 1s;\n          animation-timing-function: ease-in-out;\n        }\n      }\n    }\n  }\n}\n\n//SNAPPING ANIMATION\n@keyframes snapping-right-pincer {\n  0% { transform: rotate(-20deg); }\n  10% { transform: rotate(-30deg); }\n  90% { transform: rotate(-30deg); }\n}\n\n@keyframes snapping-right-pincer-secondPart {\n  0% { transform: rotate(20deg); }\n  10% { transform: rotate(0deg); }\n  90% { transform: rotate(0deg); }\n}\n\n@keyframes snapping-right-pincer-thirdPart {\n  0% { transform: rotate(20deg); }\n  10% { transform: rotate(10deg); }\n  90% { transform: rotate(10deg); }\n}\n\n@keyframes snapping-right-pincer-close {\n  0% { transform: rotate(5deg); }\n  17.43% { transform: rotate(5deg); }\n  21.43% { transform: rotate(35deg); }\n  25.43% { transform: rotate(5deg); }\n  40.29% { transform: rotate(5deg); }\n  44.29% { transform: rotate(35deg); }\n  48.29% { transform: rotate(5deg); }\n  63.15% { transform: rotate(5deg); }\n  67.15% { transform: rotate(35deg); }\n  71.15% { transform: rotate(5deg); }\n  74.58% { transform: rotate(5deg); }\n  78.58% { transform: rotate(35deg); }\n  82.58% { transform: rotate(5deg); }\n}\n\n@keyframes snapping-left-pincer {\n  0% { transform: rotate(20deg); }\n  10% { transform: rotate(30deg); }\n  90% { transform: rotate(30deg); }\n}\n\n@keyframes snapping-left-pincer-secondPart {\n  0% { transform: rotate(-20deg); }\n  10% { transform: rotate(0deg); }\n  90% { transform: rotate(0deg); }\n}\n\n@keyframes snapping-left-pincer-thirdPart {\n  0% { transform: rotate(-75deg); }\n  10% { transform: rotate(-10deg); }\n  90% { transform: rotate(-10deg); }\n}\n\n/*\nR-LLR-L---B-B-\n11.43 beat split */\n\n@keyframes snapping-left-pincer-close {\n  0% { transform: rotate(-5deg); }\n  28.86% { transform: rotate(-5deg); }\n  32.86% { transform: rotate(-35deg); }\n  35.72% { transform: rotate(-5deg); }\n  38.58% { transform: rotate(-35deg); }\n  42.58% { transform: rotate(-5deg); }\n  51.72% { transform: rotate(-5deg); }\n  55.72% { transform: rotate(-35deg); }\n  59.72% { transform: rotate(-5deg); }\n  63.15% { transform: rotate(-5deg); }\n  67.15% { transform: rotate(-35deg); }\n  71.15% { transform: rotate(-5deg); }\n  74.58% { transform: rotate(-5deg); }\n  78.58% { transform: rotate(-35deg); }\n  82.58% { transform: rotate(-5deg); }\n}\n\n&.snapping {\n  .pincers {\n    .right-pincer {\n      animation-name: snapping-right-pincer;\n      animation-duration: 3s;\n      animation-delay: 0.5s;\n      animation-timing-function: ease-in-out;\n\n      .second-part {\n        animation-name: snapping-right-pincer-secondPart;\n        animation-duration: 3s;\n        animation-delay: 0.5s;\n        animation-timing-function: ease-in-out;\n\n        .third-part {\n          animation-name: snapping-right-pincer-thirdPart;\n          animation-duration: 3s;\n          animation-delay: 0.5s;\n          animation-timing-function: ease-in-out;\n\n          .moving-pincer {\n            animation-name: snapping-right-pincer-close;\n            animation-duration: 3s;\n            animation-delay: 0.5s;\n          }\n        }\n      }\n    }\n\n    .left-pincer {\n      animation-name: snapping-left-pincer;\n      animation-duration: 3s;\n      animation-delay: 0.5s;\n      animation-timing-function: ease-in-out;\n\n      .second-part {\n        animation-name: snapping-left-pincer-secondPart;\n        animation-duration: 3s;\n        animation-delay: 0.5s;\n        animation-timing-function: ease-in-out;\n\n        .third-part {\n          animation-name: snapping-left-pincer-thirdPart;\n          animation-duration: 3s;\n          animation-delay: 0.5s;\n          animation-timing-function: ease-in-out;\n\n          .moving-pincer {\n            animation-name: snapping-left-pincer-close;\n            animation-duration: 3s;\n            animation-delay: 0.5s;\n          }\n        }\n      }\n    }\n  }\n}\n'], ['\n  min-width: ', 'px;\n  width: 12%;\n  height: fit-content;\n  overflow: visible;\n  cursor: pointer;\n  pointer-events: none;\n  position: absolute;\n  top: 0;\n  left: 0;\n  animation-fill-mode: both;\n  transition: transform ', 's;\n  transition-timing-function: cubic-bezier(1, 1.02, 0.76, 0.99);\n\n  &.walking {\n    transform: translate(', ');\n  }\n\n//******LEFT LEGS ANIMATIONS******//\n// First Leg Animations\n@keyframes moveLefts-firstLeg-firstPart {\n  /* 0% { transform: rotate(-14deg); } */\n  10% { transform: rotate(-14deg); }\n  50% { transform: rotate(13deg); }\n  /* 100% { transform: rotate(-14deg); } */\n}\n\n@keyframes moveLefts-firstLeg-secondPart {\n  /* 0% { transform: rotate(31deg); } */\n  35% { transform: rotate(-25deg); }\n  50% { transform: rotate(-25deg); }\n  /* 100% { transform: rotate(31deg); } */\n}\n\n@keyframes moveLefts-firstLeg-thirdPart {\n  /* 0% { transform: rotate(-17deg); } */\n  35% { transform: rotate(8deg); }\n  50% { transform: rotate(12deg); }  \n  /* 100% { transform: rotate(-17deg); } */\n}\n\n@keyframes returnLefts-firstLeg-firstPart {\n  100% { transform: rotate(-14deg); }\n}\n\n@keyframes returnLefts-firstLeg-secondPart {\n  100% { transform: rotate(31deg); }\n}\n\n@keyframes returnLefts-firstLeg-thirdPart {\n  100% { transform: rotate(-17deg); }\n}\n\n// Second Leg Animations\n@keyframes moveLefts-secondLeg-firstPart {\n  /* 0% { transform: rotate(-15.5deg); } */\n  10% { transform: rotate(-15.5deg); }\n  50% { transform: rotate(10deg); }\n  /* 100% { transform: rotate(-15.5deg); } */\n}\n\n@keyframes moveLefts-secondLeg-secondPart {\n  /* 0% { transform: rotate(21deg); } */\n  35% { transform: rotate(-30deg); }\n  50% { transform: rotate(-30deg); }\n  /* 100% { transform: rotate(21deg); } */\n}\n\n@keyframes moveLefts-secondLeg-thirdPart {\n  /* 0% { transform: rotate(-16deg); } */\n  35% { transform: rotate(8deg); }\n  50% { transform: rotate(12deg); }  \n  /* 100% { transform: rotate(-16deg); } */\n}\n\n// Third Leg Animations\n@keyframes moveLefts-thirdLeg-firstPart {\n  /* 0% { transform: rotate(-15.5deg); } */\n  10% { transform: rotate(-15.5deg); }\n  50% { transform: rotate(10deg); }\n  /* 100% { transform: rotate(-15.5deg); } */\n}\n\n@keyframes moveLefts-thirdLeg-secondPart {\n  /* 0% { transform: rotate(4deg); } */\n  35% { transform: rotate(-35deg); }\n  50% { transform: rotate(-35deg); }\n  /* 100% { transform: rotate(4deg); } */\n}\n\n@keyframes moveLefts-thirdLeg-thirdPart {\n  /* 0% { transform: rotate(3deg); } */\n  35% { transform: rotate(-3deg); }\n  50% { transform: rotate(-3deg); }  \n  /* 100% { transform: rotate(3deg); } */\n}\n\n// Fourth Leg Animations\n@keyframes moveLefts-fourthLeg-firstPart {\n  /* 0% { transform: rotate(-11deg); } */\n  10% { transform: rotate(-11deg); }\n  50% { transform: rotate(14deg); }\n  /* 100% { transform: rotate(-11deg); } */\n}\n\n@keyframes moveLefts-fourthLeg-secondPart {\n  /* 0% { transform: rotate(3.5deg); } */\n  35% { transform: rotate(-35deg); }\n  50% { transform: rotate(-35deg); }\n  100% { transform: rotate(3.5deg); }\n}\n\n@keyframes moveLefts-fourthLeg-thirdPart {\n  /* 0% { transform: rotate(-15deg); } */\n  35% { transform: rotate(-45deg); }\n  50% { transform: rotate(-45deg); }  \n  /* 100% { transform: rotate(-15deg); } */\n}\n\n//******RIGHT LEGS ANIMATIONS******//\n// First Leg Animations\n@keyframes moveRights-firstLeg-firstPart {\n  /* 0% { transform: rotate(14deg); } */\n  10% { transform: rotate(14deg); }\n  50% { transform: rotate(-13deg); }\n  /* 100% { transform: rotate(14deg); } */\n}\n\n@keyframes moveRights-firstLeg-secondPart {\n  /* 0% { transform: rotate(-31deg); } */\n  35% { transform: rotate(25deg); }\n  50% { transform: rotate(25deg); }\n  /* 100% { transform: rotate(-31deg); } */\n}\n\n@keyframes moveRights-firstLeg-thirdPart {\n  /* 0% { transform: rotate(17deg); } */\n  35% { transform: rotate(-8deg); }\n  50% { transform: rotate(-12deg); }  \n  /* 100% { transform: rotate(17deg); } */\n}\n\n// Second Leg Animations\n@keyframes moveRights-secondLeg-firstPart {\n  /* 0% { transform: rotate(15.5deg); } */\n  10% { transform: rotate(15.5deg); }\n  50% { transform: rotate(-10deg); }\n  /* 100% { transform: rotate(15.5deg); } */\n}\n\n@keyframes moveRights-secondLeg-secondPart {\n  /* 0% { transform: rotate(-21deg); } */\n  35% { transform: rotate(30deg); }\n  50% { transform: rotate(30deg); }\n  /* 100% { transform: rotate(-21deg); } */\n}\n\n@keyframes moveRights-secondLeg-thirdPart {\n  /* 0% { transform: rotate(16deg); } */\n  35% { transform: rotate(-8deg); }\n  50% { transform: rotate(-12deg); }  \n  /* 100% { transform: rotate(16deg); } */\n}\n\n// Third Leg Animations\n@keyframes moveRights-thirdLeg-firstPart {\n  /* 0% { transform: rotate(15.5deg); } */\n  10% { transform: rotate(15.5deg); }\n  50% { transform: rotate(-10deg); }\n  /* 100% { transform: rotate(15.5deg); } */\n}\n\n@keyframes moveRights-thirdLeg-secondPart {\n  /* 0% { transform: rotate(-4deg); } */\n  35% { transform: rotate(35deg); }\n  50% { transform: rotate(35deg); }\n  /* 100% { transform: rotate(-4deg); } */\n}\n\n@keyframes moveRights-thirdLeg-thirdPart {\n  /* 0% { transform: rotate(-3deg); } */\n  35% { transform: rotate(3deg); }\n  50% { transform: rotate(3deg); }  \n  /* 100% { transform: rotate(-3deg); } */\n}\n\n// Fourth Leg Animations\n@keyframes moveRights-fourthLeg-firstPart {\n  /* 0% { transform: rotate(11deg); } */\n  10% { transform: rotate(11deg); }\n  50% { transform: rotate(-14deg); }\n  /* 100% { transform: rotate(11deg); } */\n}\n\n@keyframes moveRights-fourthLeg-secondPart {\n  /* 0% { transform: rotate(-3.5deg); } */\n  35% { transform: rotate(35deg); }\n  50% { transform: rotate(35deg); }\n  /* 100% { transform: rotate(-3.5deg); } */\n}\n\n@keyframes moveRights-fourthLeg-thirdPart {\n  /* 0% { transform: rotate(15deg); } */\n  35% { transform: rotate(45deg); }\n  50% { transform: rotate(45deg); }  \n  /* 100% { transform: rotate(15deg); } */\n}\n\n@keyframes move-shell {\n  33.33% { transform: rotate(1deg); }\n  66.66% { transform: rotate(-1deg); }\n}\n\n.legs {\n  .left-legs {\n      .first-leg {\n          transform: rotate(-14deg);\n          transform-origin: 56.80% 61.33%;\n          animation-fill-mode: both;\n\n          .second-part {\n              transform: rotate(31deg);\n              transform-origin: 73.13% 41.79%;\n              animation-fill-mode: both;\n\n              .third-part {\n                  transform: rotate(-17deg);\n                  transform-origin: 88.45% 56.52%;\n                  animation-fill-mode: both;\n              }\n          }\n      }\n\n      .second-leg {\n          transform: rotate(-15.5deg);\n          transform-origin: 56.20% 68.90%;\n          transition: transform 0.5;\n          animation-fill-mode: both;\n\n          .second-part {\n              transform: rotate(21deg);\n              transform-origin: 70.03% 53.45%;\n              transition: transform 0.5;\n              animation-fill-mode: both;\n\n              .third-part {\n                  transform: rotate(-16deg);\n                  transform-origin: 83.50% 66.55%;\n                  transition: transform 0.5;\n                  animation-fill-mode: both;\n              }\n          }\n      }\n\n      .third-leg {\n          transform: rotate(-15.5deg);\n          transform-origin: 55.73% 75.86%;\n          transition: transform 0.5;\n          animation-fill-mode: both;\n\n          .second-part {\n              transform: rotate(4deg);\n              transform-origin: 67.48% 63.48%;\n              transition: transform 0.5;\n              animation-fill-mode: both;\n\n              .third-part {\n                  transform: rotate(3deg);\n                  transform-origin: 79.50% 75.40%;\n                  transition: transform 0.5;\n                  animation-fill-mode: both;\n              }\n          }\n      }\n\n      .fourth-leg {\n          transform: rotate(-11deg);\n          transform-origin: 55.18% 81.89%;\n          transition: transform 0.5;\n          animation-fill-mode: both;\n\n          .second-part {\n              transform: rotate(3.5deg);\n              transform-origin: 65.50% 71.61%;\n              transition: transform 0.5;\n              animation-fill-mode: both;\n\n              .third-part {\n                  transform: rotate(-15deg);\n                  transform-origin: 76.55% 82.51%;\n                  transition: transform 0.5;\n                  animation-fill-mode: both;\n              }\n          }\n      }\n  }\n\n  .right-legs {\n      .first-leg {\n          transform: rotate(14deg);\n          transform-origin: 43.20% 61.33%;\n          animation-fill-mode: both;\n\n          .second-part {\n              transform: rotate(-31deg);\n              transform-origin: 26.87% 41.79%;\n              animation-fill-mode: both;\n\n              .third-part {\n                  transform: rotate(17deg);\n                  transform-origin: 11.55% 56.52%;\n                  animation-fill-mode: both;\n              }\n          }\n      }\n\n      .second-leg {\n          transform: rotate(15.5deg);\n          transform-origin: 43.80% 68.90%;\n          animation-fill-mode: both;\n\n          .second-part {\n              transform: rotate(-21deg);\n              transform-origin: 29.97% 53.45%;\n              animation-fill-mode: both;\n\n              .third-part {\n                  transform: rotate(16deg);\n                  transform-origin: 16.50% 66.55%;\n                  animation-fill-mode: both;\n              }\n          }\n      }\n\n      .third-leg {\n          transform: rotate(15.5deg);\n          transform-origin: 44.27% 75.86%;\n          animation-fill-mode: both;\n\n          .second-part {\n              transform: rotate(-4deg);\n              transform-origin: 32.52% 63.48%;\n              animation-fill-mode: both;\n\n              .third-part {\n                  transform: rotate(-3deg);\n                  transform-origin: 20.50% 75.40%;\n                  animation-fill-mode: both;\n              }\n          }\n      }\n\n      .fourth-leg {\n          transform: rotate(11deg);\n          transform-origin: 44.82% 81.89%;\n          animation-fill-mode: both;\n\n          .second-part {\n              transform: rotate(-3.5deg);\n              transform-origin: 34.50% 71.61%;\n              animation-fill-mode: both;\n\n              .third-part {\n                  transform: rotate(15deg);\n                  transform-origin: 23.45% 82.51%;\n                  animation-fill-mode: both;\n              }\n          }\n      }\n  }\n}\n\n&.walking {\n    .legs {\n      .left-legs *, .right-legs * {\n        animation-duration: 1s;\n        animation-iteration-count: infinite;\n      }\n      .left-legs {\n          * {\n            animation-direction: ', ';\n          }\n          .first-leg {\n              animation-name: moveLefts-firstLeg-firstPart;\n              animation-delay:0.125s;\n              * {\n                animation-delay:0.125s;\n              }\n              .second-part {\n                  animation-name: moveLefts-firstLeg-secondPart;\n                  .third-part {\n                      animation-name: moveLefts-firstLeg-thirdPart;\n                  }\n              }\n          }\n          .second-leg {\n              animation-name: moveLefts-secondLeg-firstPart;\n              animation-delay:0.375s;\n              * {\n                animation-delay:0.375s;\n              }\n              .second-part {\n                  animation-name: moveLefts-secondLeg-secondPart;\n                  .third-part {\n                      animation-name: moveLefts-secondLeg-thirdPart;\n                  }\n              }\n          }\n          .third-leg {\n              animation-name: moveLefts-thirdLeg-firstPart;\n              .second-part {\n                  animation-name: moveLefts-thirdLeg-secondPart;\n                  .third-part {\n                      animation-name: moveLefts-thirdLeg-thirdPart;\n                  }\n              }\n          }\n\n          .fourth-leg {\n              animation-name: moveLefts-fourthLeg-firstPart;\n              animation-delay:0.25s;\n              * {\n                animation-delay:0.25s;\n              }\n              .second-part {\n                  animation-name: moveLefts-fourthLeg-secondPart;\n                  .third-part {\n                      animation-name: moveLefts-fourthLeg-thirdPart;\n                  }\n              }\n          }\n      }\n\n      .right-legs {\n          * {\n            animation-direction: ', ';\n          }\n          .first-leg {\n              animation-name: moveRights-firstLeg-firstPart;\n              animation-delay:0.255s;\n              * {\n                animation-delay:0.255s;\n              }\n              .second-part {\n                  animation-name: moveRights-firstLeg-secondPart;\n                  .third-part {\n                      animation-name: moveRights-firstLeg-thirdPart;\n                  }\n              }\n          }\n          .second-leg {\n              animation-name: moveRights-secondLeg-firstPart;\n              animation-delay:0.12s;\n              * {\n                animation-delay:0.12s;\n              }\n              .second-part {\n                  animation-name: moveRights-secondLeg-secondPart;\n                  .third-part {\n                      animation-name: moveRights-secondLeg-thirdPart;\n                  }\n              }\n          }\n          .third-leg {\n              animation-name: moveRights-thirdLeg-firstPart;\n              animation-delay:0.37s;\n              * {\n                animation-delay:0.37s;\n              }\n              .second-part {\n                  animation-name: moveRights-thirdLeg-secondPart;\n                  .third-part {\n                      animation-name: moveRights-thirdLeg-thirdPart;\n                  }\n              }\n          }\n\n          .fourth-leg {\n              animation-name: moveRights-fourthLeg-firstPart;\n              animation-delay:0.005s;\n              * {\n                animation-delay:0.005s;\n              }\n              .second-part {\n                  animation-name: moveRights-fourthLeg-secondPart;\n                  .third-part {\n                      animation-name: moveRights-fourthLeg-thirdPart;\n                  }\n              }\n          }\n      }\n    }\n\n  .shell {\n      transform-origin: 50% 85.07%;\n      animation-name: move-shell;\n      animation-duration: 2s;\n      animation-iteration-count: infinite;\n      pointer-events: all;\n  }\n\n  &.paused {\n    .legs *, .shell * {\n      animation-play-state: paused;\n    }\n  }\n}\n\n.pincers {\n  .left-pincer {\n    transform: rotate(20deg);\n    transform-origin: 55.28% 54.88%;\n\n    .second-part {\n      transform: rotate(-20deg);\n      transform-origin: 62.03% 43.22%;\n\n      .third-part {\n        transform: rotate(-75deg);\n        transform-origin: 64.93% 32.28%;\n\n        .moving-pincer {\n          transform: rotate(5deg);\n          transform-origin: 68.85% 19.08%;\n        }\n      }\n    }\n  }\n\n  .right-pincer {\n    transform: rotate(-20deg);\n    transform-origin: 44.70% 54.88%;\n\n    .second-part {\n      transform: rotate(20deg);\n      transform-origin: 37.65% 42.20%;\n\n      .third-part {\n        transform: rotate(20deg);\n        transform-origin: 34.38% 29.77%;\n\n        .moving-pincer {\n          transform: rotate(5deg);\n          transform-origin: 29.90% 14.78%;\n        }\n      }\n    }\n  }\n}\n\n.mouth {\n  .outer-mouth {\n    .right-mouth {\n      transform-origin: 50% 45.01%;\n    }\n\n    .left-mouth {\n      transform-origin: 50% 45.01%;\n    }\n  }\n}\n\n@keyframes left-eye {\n  0% { transform: rotate(23deg); }\n  5% { transform: rotate(23deg); }\n  7% { transform: rotate(27deg); }\n  10% { transform: rotate(20deg); }\n  25% { transform: rotate(20deg); }\n  30% { transform: rotate(-10deg); }\n  45% { transform: rotate(-10deg); }\n  55% { transform: rotate(10deg); }\n  75% { transform: rotate(-10deg); }\n  80% { transform: rotate(-20deg); }\n  85% { transform: rotate(23deg); }\n  100% { transform: rotate(23deg); }\n}\n\n@keyframes right-eye {\n  0% { transform: rotate(-10deg); }\n  7% { transform: rotate(-15deg); }\n  10% { transform: rotate(10deg); }\n  14% { transform: rotate(29deg); }\n  29% { transform: rotate(2deg); }\n  33% { transform: rotate(-20deg); }\n  44% { transform: rotate(10deg); }\n  51% { transform: rotate(-20deg); }\n  73% { transform: rotate(-25deg); }\n  81% { transform: rotate(-4deg); }\n  86% { transform: rotate(-10deg); }\n  100% { transform: rotate(-10deg); }\n}\n\n.eyes {\n  .left-eye {\n    transform: rotate(23deg);\n    transform-origin: 59.88% 28.34%;\n    animation-name: left-eye;\n    animation-duration: 9s;\n    animation-iteration-count: infinite;\n    animation-direction: normal;\n  }\n\n  .right-eye {\n    transform: rotate(-10deg);\n    transform-origin: 40.13% 28.34%;\n    animation-name: right-eye;\n    animation-duration: 8.5s;\n    animation-iteration-count: infinite;\n    animation-direction: normal;\n  }\n}\n\n// EATING ANIMATION\n@keyframes eating-right-pincer {\n  0% { transform: rotate(-20deg); }\n  25% { transform: rotate(40deg); }\n  50% { transform: rotate(-20deg); }\n}\n\n@keyframes eating-right-pincer-secondPart {\n  0% { transform: rotate(20deg); }\n  25% { transform: rotate(-30deg); }\n  50% { transform: rotate(20deg); }\n  70% { transform: rotate(70deg); }\n  75% { transform: rotate(70deg); }\n  100% { transform: rotate(20deg); }\n}\n\n@keyframes eating-right-pincer-thirdPart {\n  0% { transform: rotate(20deg); }\n  25% { transform: rotate(-10deg); }\n  50% { transform: rotate(20deg); }\n  70% { transform: rotate(40deg); }\n  75% { transform: rotate(40deg); }\n  100% { transform: rotate(20deg); }\n}\n\n@keyframes eating-right-pincer-close {\n  0% { transform: rotate(5deg); }\n  17% { transform: rotate(-5deg); }\n  20% { transform: rotate(35deg); }\n  50% { transform: rotate(35deg); }\n  70% { transform: rotate(35deg); }\n  75% { transform: rotate(-5deg); }\n  100% { transform: rotate(5deg); }\n}\n\n@keyframes eating-left-pincer {\n  0% { transform: rotate(20deg); }\n  33.33% { transform: rotate(20deg); }\n  46.66% { transform: rotate(5deg); }\n  50% { transform: rotate(5deg); }\n  60% { transform: rotate(0deg); }\n  90% { transform: rotate(0deg); }\n}\n\n@keyframes eating-left-pincer-secondPart {\n  0% { transform: rotate(-20deg); }\n  33.33% { transform: rotate(-20deg); }\n  46.66% { transform: rotate(-24deg); }\n  50% { transform: rotate(-24deg); }\n  60% { transform: rotate(-30deg); }\n  90% { transform: rotate(-30deg); }\n}\n\n@keyframes eating-left-pincer-thirdPart {\n  0% { transform: rotate(-75deg); }\n  33.33% { transform: rotate(-75deg); }\n  46.66% { transform: rotate(-75deg); }\n  50% { transform: rotate(-75deg); }\n  60% { transform: rotate(-80deg); }\n  90% { transform: rotate(-80deg); }\n}\n\n@keyframes eating-left-pincer-close {\n  0% { transform: rotate(5deg); }\n  46.66% { transform: rotate(5deg); }\n  50% { transform: rotate(-25deg); }\n  90% { transform: rotate(-25deg); }\n}\n\n@keyframes eating-right-mouth {\n  10% { transform: rotate(-4deg) skewX(4deg); }\n  20% { transform: rotate(-2deg) skewX(2deg); }\n  35% { transform: rotate(-4deg) skewX(4deg); }\n  45% { transform: rotate(-2deg) skewX(2deg); }\n  60% { transform: rotate(-4deg) skewX(4deg); }\n  65% { transform: rotate(-2deg) skewX(2deg); }\n  70% { transform: rotate(-4deg) skewX(4deg); }\n  80% { transform: rotate(-2deg) skewX(2deg); }\n  90% { transform: rotate(-4deg) skewX(4deg); }\n}\n\n@keyframes eating-left-mouth {\n  12% { transform: rotate(10deg) skewX(-10deg); }\n  22% { transform: rotate(2deg) skewX(-2deg); }\n  62% { transform: rotate(10deg) skewX(-10deg); }\n  67% { transform: rotate(2deg) skewX(-2deg); }\n  92% { transform: rotate(10deg) skewX(-10deg); }\n}\n\n&.eating {\n  .pincers {\n    .right-pincer {\n      animation-name: eating-right-pincer;\n      animation-duration: 2s;\n      animation-delay: 0.5s;\n      animation-timing-function: ease-in-out;\n\n      .second-part {\n        animation-name: eating-right-pincer-secondPart;\n        animation-duration: 2s;\n        animation-delay: 0.5s;\n        animation-timing-function: ease-in-out;\n\n        .third-part {\n          animation-name: eating-right-pincer-thirdPart;\n          animation-duration: 2s;\n          animation-delay: 0.5s;\n          animation-timing-function: ease-in-out;\n\n          .moving-pincer {\n            animation-name: eating-right-pincer-close;\n            animation-duration: 2s;\n            animation-delay: 0.5s;\n          }\n        }\n      }\n    }\n\n    .left-pincer {\n      animation-name: eating-left-pincer;\n      animation-duration: 3s;\n      animation-delay: 0.5s;\n      animation-timing-function: ease-in-out;\n\n      .second-part {\n        animation-name: eating-left-pincer-secondPart;\n        animation-duration: 3s;\n        animation-delay: 0.5s;\n        animation-timing-function: ease-in-out;\n\n        .third-part {\n          animation-name: eating-left-pincer-thirdPart;\n          animation-duration: 3s;\n          animation-delay: 0.5s;\n          animation-timing-function: ease-in-out;\n\n          .moving-pincer {\n            animation-name: eating-left-pincer-close;\n            animation-duration: 3s;\n            animation-delay: 0.5s;\n          }\n        }\n      }\n    }\n  }\n\n  .mouth {\n    .outer-mouth {\n      .right-mouth {\n        animation-name: eating-right-mouth;\n        animation-duration: 1s;\n        animation-delay: 2.5s;\n        animation-timing-function: ease-in-out;\n      }\n\n      .left-mouth {\n        animation-name: eating-left-mouth;\n        animation-duration: 1s;\n        animation-delay: 2.5s;\n        animation-timing-function: ease-in-out;\n      }\n    }\n  }\n}\n\n//WAVING ANIMATION\n@keyframes waving-right-pincer {\n  0% { transform: rotate(-20deg); }\n  25% { transform: rotate(40deg); }\n  45% { transform: rotate(-40deg); }\n  65% { transform: rotate(50deg); }\n}\n\n@keyframes waving-right-pincer-secondPart {\n  0% { transform: rotate(20deg); }\n  25% { transform: rotate(0deg); }\n  90% { transform: rotate(0deg); }\n}\n\n@keyframes waving-right-pincer-thirdPart {\n  0% { transform: rotate(20deg); }\n  25% { transform: rotate(5deg); }\n  90% { transform: rotate(5deg); }\n}\n\n@keyframes waving-left-pincer {\n  0% { transform: rotate(20deg); }\n  25% { transform: rotate(-30deg); }\n  45% { transform: rotate(40deg); }\n  65% { transform: rotate(-50deg); }\n}\n\n@keyframes waving-left-pincer-secondPart {\n  0% { transform: rotate(-20deg); }\n  25% { transform: rotate(5deg); }\n  80% { transform: rotate(5deg); }\n}\n\n@keyframes waving-left-pincer-thirdPart {\n  0% { transform: rotate(-75deg); }\n  25% { transform: rotate(0deg); }\n  80% { transform: rotate(0deg); }\n}\n\n&.waving {\n  .pincers {\n    .right-pincer {\n      animation-name: waving-right-pincer;\n      animation-duration: 2.5s;\n      animation-delay: 0.5s;\n      animation-timing-function: ease-in-out;\n\n      .second-part {\n        animation-name: waving-right-pincer-secondPart;\n        animation-duration: 2.5s;\n        animation-delay: 0.5s;\n        animation-timing-function: ease-in-out;\n\n        .third-part {\n          animation-name: waving-right-pincer-thirdPart;\n          animation-duration: 2.5s;\n          animation-delay: 0.5s;\n          animation-timing-function: ease-in-out;\n        }\n      }\n    }\n\n    .left-pincer {\n      animation-name: waving-left-pincer;\n      animation-duration: 2.5s;\n      animation-delay: 1s;\n      animation-timing-function: ease-in-out;\n\n      .second-part {\n        animation-name: waving-left-pincer-secondPart;\n        animation-duration: 2.5s;\n        animation-delay: 1s;\n        animation-timing-function: ease-in-out;\n\n        .third-part {\n          animation-name: waving-left-pincer-thirdPart;\n          animation-duration: 2.5s;\n          animation-delay: 1s;\n          animation-timing-function: ease-in-out;\n        }\n      }\n    }\n  }\n}\n\n//SNAPPING ANIMATION\n@keyframes snapping-right-pincer {\n  0% { transform: rotate(-20deg); }\n  10% { transform: rotate(-30deg); }\n  90% { transform: rotate(-30deg); }\n}\n\n@keyframes snapping-right-pincer-secondPart {\n  0% { transform: rotate(20deg); }\n  10% { transform: rotate(0deg); }\n  90% { transform: rotate(0deg); }\n}\n\n@keyframes snapping-right-pincer-thirdPart {\n  0% { transform: rotate(20deg); }\n  10% { transform: rotate(10deg); }\n  90% { transform: rotate(10deg); }\n}\n\n@keyframes snapping-right-pincer-close {\n  0% { transform: rotate(5deg); }\n  17.43% { transform: rotate(5deg); }\n  21.43% { transform: rotate(35deg); }\n  25.43% { transform: rotate(5deg); }\n  40.29% { transform: rotate(5deg); }\n  44.29% { transform: rotate(35deg); }\n  48.29% { transform: rotate(5deg); }\n  63.15% { transform: rotate(5deg); }\n  67.15% { transform: rotate(35deg); }\n  71.15% { transform: rotate(5deg); }\n  74.58% { transform: rotate(5deg); }\n  78.58% { transform: rotate(35deg); }\n  82.58% { transform: rotate(5deg); }\n}\n\n@keyframes snapping-left-pincer {\n  0% { transform: rotate(20deg); }\n  10% { transform: rotate(30deg); }\n  90% { transform: rotate(30deg); }\n}\n\n@keyframes snapping-left-pincer-secondPart {\n  0% { transform: rotate(-20deg); }\n  10% { transform: rotate(0deg); }\n  90% { transform: rotate(0deg); }\n}\n\n@keyframes snapping-left-pincer-thirdPart {\n  0% { transform: rotate(-75deg); }\n  10% { transform: rotate(-10deg); }\n  90% { transform: rotate(-10deg); }\n}\n\n/*\nR-LLR-L---B-B-\n11.43 beat split */\n\n@keyframes snapping-left-pincer-close {\n  0% { transform: rotate(-5deg); }\n  28.86% { transform: rotate(-5deg); }\n  32.86% { transform: rotate(-35deg); }\n  35.72% { transform: rotate(-5deg); }\n  38.58% { transform: rotate(-35deg); }\n  42.58% { transform: rotate(-5deg); }\n  51.72% { transform: rotate(-5deg); }\n  55.72% { transform: rotate(-35deg); }\n  59.72% { transform: rotate(-5deg); }\n  63.15% { transform: rotate(-5deg); }\n  67.15% { transform: rotate(-35deg); }\n  71.15% { transform: rotate(-5deg); }\n  74.58% { transform: rotate(-5deg); }\n  78.58% { transform: rotate(-35deg); }\n  82.58% { transform: rotate(-5deg); }\n}\n\n&.snapping {\n  .pincers {\n    .right-pincer {\n      animation-name: snapping-right-pincer;\n      animation-duration: 3s;\n      animation-delay: 0.5s;\n      animation-timing-function: ease-in-out;\n\n      .second-part {\n        animation-name: snapping-right-pincer-secondPart;\n        animation-duration: 3s;\n        animation-delay: 0.5s;\n        animation-timing-function: ease-in-out;\n\n        .third-part {\n          animation-name: snapping-right-pincer-thirdPart;\n          animation-duration: 3s;\n          animation-delay: 0.5s;\n          animation-timing-function: ease-in-out;\n\n          .moving-pincer {\n            animation-name: snapping-right-pincer-close;\n            animation-duration: 3s;\n            animation-delay: 0.5s;\n          }\n        }\n      }\n    }\n\n    .left-pincer {\n      animation-name: snapping-left-pincer;\n      animation-duration: 3s;\n      animation-delay: 0.5s;\n      animation-timing-function: ease-in-out;\n\n      .second-part {\n        animation-name: snapping-left-pincer-secondPart;\n        animation-duration: 3s;\n        animation-delay: 0.5s;\n        animation-timing-function: ease-in-out;\n\n        .third-part {\n          animation-name: snapping-left-pincer-thirdPart;\n          animation-duration: 3s;\n          animation-delay: 0.5s;\n          animation-timing-function: ease-in-out;\n\n          .moving-pincer {\n            animation-name: snapping-left-pincer-close;\n            animation-duration: 3s;\n            animation-delay: 0.5s;\n          }\n        }\n      }\n    }\n  }\n}\n']);
 
 
 
@@ -1122,7 +1285,6 @@ var crab_UnstyledCrab = function (_Preact$Component) {
     };
 
     _this.componentDidMount = _this.componentDidMount.bind(_this);
-    _this.componentDidUpdate = _this.componentDidUpdate.bind(_this);
     _this.componentWillUnmount = _this.componentWillUnmount.bind(_this);
     return _this;
   }
@@ -1130,15 +1292,8 @@ var crab_UnstyledCrab = function (_Preact$Component) {
   UnstyledCrab.prototype.componentDidMount = function componentDidMount() {
     this.base.addEventListener('transitionend', this.props.pauseWalking);
     this.base.querySelector('.left-pincer').addEventListener('animationend', this.props.removePincerAction);
-    this.base.style.transform = 'translate(' + this.props.currentPos[0] + 'vw, ' + this.props.currentPos[1] + 'vh)';
 
     this.setState({ changePincerInterval: setInterval(this.props.changePincerAction, 8000) });
-  };
-
-  UnstyledCrab.prototype.componentDidUpdate = function componentDidUpdate() {
-    if (this.props.walk) {
-      this.base.style.transform = 'translate(' + this.props.moveTo[0] + 'vw, ' + this.props.moveTo[1] + 'vh)';
-    }
   };
 
   UnstyledCrab.prototype.componentWillUnmount = function componentWillUnmount() {
@@ -1150,7 +1305,7 @@ var crab_UnstyledCrab = function (_Preact$Component) {
   UnstyledCrab.prototype.render = function render() {
     return Object(preact_min["h"])(crab_final_default.a, {
       'data-iteration': '0',
-      className: '\n        ' + this.props.className + '\n        ' + (this.props.pincerAction || '') + '\n        ' + (this.props.walk ? 'walking' : '') + '\n        ' + (this.props.paused ? 'paused' : '') + '\n        ' + this.props.direction + '\n      ' });
+      className: '\n        crab\n        ' + this.props.className + '\n        ' + (this.props.pincerAction || '') + '\n        ' + (this.props.walk ? 'walking' : '') + '\n        ' + (this.props.paused ? 'paused' : '') + '\n        ' + this.props.direction + '\n      ' });
   };
 
   return UnstyledCrab;
@@ -1159,9 +1314,9 @@ var crab_UnstyledCrab = function (_Preact$Component) {
 var Crab = Object(styled_components_es["a" /* default */])(crab_UnstyledCrab)(_templateObject, function (props) {
   return props.width;
 }, function (props) {
-  return props.width / 2;
+  return Math.pow(Math.pow(Math.abs(props.currentPos[0] - (props.moveTo ? props.moveTo[0] : 0)), 2) + Math.pow(Math.abs(props.currentPos[1] - (props.moveTo ? props.moveTo[1] : 0)), 2), 0.5) / 10 / props.speed;
 }, function (props) {
-  return Math.pow(Math.pow(Math.abs(props.currentPos[0] - props.moveTo[0]), 2) + Math.pow(Math.abs(props.currentPos[1] - props.moveTo[1]), 2), 0.5) / 10 / props.speed;
+  return props.moveTo ? props.moveTo[0] + 'vw, ' + props.moveTo[1] + 'vh' : '0, 0';
 }, function (props) {
   return props.direction === 'right' ? 'normal' : 'reverse';
 }, function (props) {
@@ -1186,9 +1341,16 @@ function index__inherits(subClass, superClass) { if (typeof superClass !== "func
 
 
 
-var _ref = Object(preact_min["h"])('div', { id: 'inch' });
 
-var _ref2 = Object(preact_min["h"])(
+var _ref = Object(preact_min["h"])(
+	'div',
+	{ className: 'row' },
+	Object(preact_min["h"])('div', { className: 'hiding-spot' })
+);
+
+var _ref2 = Object(preact_min["h"])('div', { id: 'inch' });
+
+var _ref3 = Object(preact_min["h"])(
 	'h2',
 	null,
 	'Crab State'
@@ -1210,11 +1372,13 @@ var index_App = function (_Component) {
 			inch: null,
 			speed: 3,
 			paused: false,
-			moveTo: [50, 22],
-			currentPos: [0, 0]
+			currentPos: [0, 0],
+			fullscreen: false
 		};
 
 		_this.componentDidMount = _this.componentDidMount.bind(_this);
+		_this.initGame = _this.initGame.bind(_this);
+		_this.enterFullscreen = _this.enterFullscreen.bind(_this);
 		_this.removePincerAction = _this.removePincerAction.bind(_this);
 		_this.walk = _this.walk.bind(_this);
 		_this.pauseWalking = _this.pauseWalking.bind(_this);
@@ -1223,15 +1387,46 @@ var index_App = function (_Component) {
 	}
 
 	App.prototype.componentDidMount = function componentDidMount() {
-		if (inch) return null;
-		var inchDiv = document.getElementById('inch');
-		var inch = inchDiv.clientHeight;
-
+		var inch = document.getElementById('inch').clientHeight;
 		return this.setState({ inch: inch });
 	};
 
-	App.prototype.removePincerAction = function removePincerAction() {
+	App.prototype.initGame = function initGame() {
 		console.log('this ran');
+		var shellDimensions = document.querySelector('.crab .shell').getBoundingClientRect();
+		var cols = Math.floor(window.innerWidth / (shellDimensions.width * 3));
+		var rows = Math.floor(window.innerHeight / (shellDimensions.height * 3));
+
+		var hidingSpots = [];
+		for (var x = 0; x < cols; x++) {
+			var colWidth = window.innerWidth / cols;
+			var colCenter = colWidth / 2 + colWidth * (x + 1) - colWidth;
+
+			for (var i = 0; i < rows; i++) {
+				var rowHeight = window.innerHeight / rows;
+				var rowCenter = rowHeight / 2 + rowHeight * (i + 1) - rowHeight;
+				var spot = [colCenter, rowCenter];
+				hidingSpots.push([spot]);
+			}
+		}
+		return this.setState({ cols: cols, rows: rows, hidingSpots: hidingSpots, hidingSpotWidth: shellDimensions.width });
+	};
+
+	App.prototype.enterFullscreen = function enterFullscreen(e) {
+		e.preventDefault();
+
+		if (document.webkitIsFullScreen) {
+			document.webkitExitFullscreen();
+			return this.setState({ fullscreen: false });
+		}
+
+		var main = document.querySelector('main');
+		main.webkitRequestFullscreen();
+		this.initGame();
+		return this.setState({ fullscreen: true });
+	};
+
+	App.prototype.removePincerAction = function removePincerAction() {
 		this.setState({ currentPincerAction: null });
 	};
 
@@ -1240,7 +1435,7 @@ var index_App = function (_Component) {
 		var direction = void 0;
 		if (this.state.direction === 'right') direction = 'left';else direction = 'right';
 		var moveTo = direction === 'right' ? [50, 22] : [0, 0];
-		this.setState({ walk: true, direction: direction, paused: false, currentPos: this.state.moveTo, moveTo: moveTo });
+		this.setState({ walk: true, direction: direction, paused: false, currentPos: this.state.moveTo || this.state.currentPos, moveTo: moveTo });
 	};
 
 	App.prototype.pauseWalking = function pauseWalking(e) {
@@ -1254,10 +1449,29 @@ var index_App = function (_Component) {
 	};
 
 	App.prototype.render = function render() {
+		var _this2 = this;
+
 		return Object(preact_min["h"])(
 			'main',
 			null,
-			_ref,
+			Object(preact_min["h"])(Helmet_default.a, {
+				title: 'Crab Trap',
+				meta: [{ name: "viewport", content: "width=device-width, initial-scale=1" }]
+			}),
+			Object(preact_min["h"])(
+				'div',
+				{ className: 'grid' },
+				Array.from({ length: this.state.cols }, function (a, i) {
+					return Object(preact_min["h"])(
+						'div',
+						{ className: 'column' },
+						Array.from({ length: _this2.state.rows }, function (b, x) {
+							return _ref;
+						})
+					);
+				})
+			),
+			_ref2,
 			Object(preact_min["h"])(crab, {
 				walk: this.state.walk,
 				pincerAction: this.state.currentPincerAction,
@@ -1278,12 +1492,18 @@ var index_App = function (_Component) {
 					{ onClick: this.walk },
 					'Walk ',
 					this.state.direction === 'right' ? 'Left' : 'Right'
+				),
+				Object(preact_min["h"])(
+					'button',
+					{ onClick: this.enterFullscreen },
+					this.state.fullscreen ? 'Exit' : 'Enter',
+					' Fullscreen'
 				)
 			),
 			Object(preact_min["h"])(
 				'div',
 				null,
-				_ref2,
+				_ref3,
 				Object(preact_min["h"])(
 					'p',
 					null,
@@ -1395,6 +1615,64 @@ exports.isFragment = function (a) {
   return m(a) === d;
 };exports.isStrictMode = function (a) {
   return m(a) === f;
+};
+
+/***/ }),
+
+/***/ "OPss":
+/***/ (function(module, exports) {
+
+exports.__esModule = true;
+var TAG_NAMES = exports.TAG_NAMES = {
+    HTML: "htmlAttributes",
+    TITLE: "title",
+    BASE: "base",
+    META: "meta",
+    LINK: "link",
+    SCRIPT: "script",
+    NOSCRIPT: "noscript",
+    STYLE: "style"
+};
+
+var TAG_PROPERTIES = exports.TAG_PROPERTIES = {
+    NAME: "name",
+    CHARSET: "charset",
+    HTTPEQUIV: "http-equiv",
+    REL: "rel",
+    HREF: "href",
+    PROPERTY: "property",
+    SRC: "src",
+    INNER_HTML: "innerHTML",
+    CSS_TEXT: "cssText",
+    ITEM_PROP: "itemprop"
+};
+
+var PREACT_TAG_MAP = exports.PREACT_TAG_MAP = {
+    "charset": "charSet",
+    "http-equiv": "httpEquiv",
+    "itemprop": "itemProp",
+    "class": "className"
+};
+
+/***/ }),
+
+/***/ "PfvZ":
+/***/ (function(module, exports) {
+
+var supportsArgumentsClass = function () {
+  return Object.prototype.toString.call(arguments);
+}() == '[object Arguments]';
+
+exports = module.exports = supportsArgumentsClass ? supported : unsupported;
+
+exports.supported = supported;
+function supported(object) {
+  return Object.prototype.toString.call(object) == '[object Arguments]';
+};
+
+exports.unsupported = unsupported;
+function unsupported(object) {
+  return object && typeof object == 'object' && typeof object.length == 'number' && Object.prototype.hasOwnProperty.call(object, 'callee') && !Object.prototype.propertyIsEnumerable.call(object, 'callee') || false;
 };
 
 /***/ }),
@@ -5701,6 +5979,663 @@ if (true) {
 
 /***/ }),
 
+/***/ "q5Bp":
+/***/ (function(module, exports, __webpack_require__) {
+
+exports.__esModule = true;
+
+var _createClass = function () {
+    function defineProperties(target, props) {
+        for (var i = 0; i < props.length; i++) {
+            var descriptor = props[i];descriptor.enumerable = descriptor.enumerable || false;descriptor.configurable = true;if ("value" in descriptor) descriptor.writable = true;Object.defineProperty(target, descriptor.key, descriptor);
+        }
+    }return function (Constructor, protoProps, staticProps) {
+        if (protoProps) defineProperties(Constructor.prototype, protoProps);if (staticProps) defineProperties(Constructor, staticProps);return Constructor;
+    };
+}();
+
+var _extends = Object.assign || function (target) {
+    for (var i = 1; i < arguments.length; i++) {
+        var source = arguments[i];for (var key in source) {
+            if (Object.prototype.hasOwnProperty.call(source, key)) {
+                target[key] = source[key];
+            }
+        }
+    }return target;
+};
+
+var _preact = __webpack_require__("EBst");
+
+var _preactSideEffect = __webpack_require__("I+62");
+
+var _preactSideEffect2 = _interopRequireDefault(_preactSideEffect);
+
+var _deepEqual = __webpack_require__("rx70");
+
+var _deepEqual2 = _interopRequireDefault(_deepEqual);
+
+var _objectAssign = __webpack_require__("yheg");
+
+var _objectAssign2 = _interopRequireDefault(_objectAssign);
+
+var _HelmetConstants = __webpack_require__("OPss");
+
+function _interopRequireDefault(obj) {
+    return obj && obj.__esModule ? obj : { default: obj };
+}
+
+function _classCallCheck(instance, Constructor) {
+    if (!(instance instanceof Constructor)) {
+        throw new TypeError("Cannot call a class as a function");
+    }
+}
+
+function _possibleConstructorReturn(self, call) {
+    if (!self) {
+        throw new ReferenceError("this hasn't been initialised - super() hasn't been called");
+    }return call && (typeof call === "object" || typeof call === "function") ? call : self;
+}
+
+function _inherits(subClass, superClass) {
+    if (typeof superClass !== "function" && superClass !== null) {
+        throw new TypeError("Super expression must either be null or a function, not " + typeof superClass);
+    }subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } });if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass;
+}
+
+function _defineProperty(obj, key, value) {
+    if (key in obj) {
+        Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true });
+    } else {
+        obj[key] = value;
+    }return obj;
+}
+
+var HELMET_ATTRIBUTE = "data-preact-helmet";
+
+var encodeSpecialCharacters = function encodeSpecialCharacters(str) {
+    return String(str).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#x27;");
+};
+
+var getInnermostProperty = function getInnermostProperty(propsList, property) {
+    for (var i = propsList.length - 1; i >= 0; i--) {
+        var props = propsList[i];
+
+        if (props[property]) {
+            return props[property];
+        }
+    }
+    return null;
+};
+
+var getTitleFromPropsList = function getTitleFromPropsList(propsList) {
+    var innermostTitle = getInnermostProperty(propsList, "title");
+    var innermostTemplate = getInnermostProperty(propsList, "titleTemplate");
+
+    if (innermostTemplate && innermostTitle) {
+        // use function arg to avoid need to escape $ characters
+        return innermostTemplate.replace(/%s/g, function () {
+            return innermostTitle;
+        });
+    }
+
+    var innermostDefaultTitle = getInnermostProperty(propsList, "defaultTitle");
+
+    return innermostTitle || innermostDefaultTitle || "";
+};
+
+var getOnChangeClientState = function getOnChangeClientState(propsList) {
+    return getInnermostProperty(propsList, "onChangeClientState") || function () {};
+};
+
+var getAttributesFromPropsList = function getAttributesFromPropsList(tagType, propsList) {
+    return propsList.filter(function (props) {
+        return typeof props[tagType] !== "undefined";
+    }).map(function (props) {
+        return props[tagType];
+    }).reduce(function (tagAttrs, current) {
+        return _extends({}, tagAttrs, current);
+    }, {});
+};
+
+var getBaseTagFromPropsList = function getBaseTagFromPropsList(primaryAttributes, propsList) {
+    return propsList.filter(function (props) {
+        return typeof props[_HelmetConstants.TAG_NAMES.BASE] !== "undefined";
+    }).map(function (props) {
+        return props[_HelmetConstants.TAG_NAMES.BASE];
+    }).reverse().reduce(function (innermostBaseTag, tag) {
+        if (!innermostBaseTag.length) {
+            var keys = Object.keys(tag);
+
+            for (var i = 0; i < keys.length; i++) {
+                var attributeKey = keys[i];
+                var lowerCaseAttributeKey = attributeKey.toLowerCase();
+
+                if (primaryAttributes.indexOf(lowerCaseAttributeKey) !== -1 && tag[lowerCaseAttributeKey]) {
+                    return innermostBaseTag.concat(tag);
+                }
+            }
+        }
+
+        return innermostBaseTag;
+    }, []);
+};
+
+var getTagsFromPropsList = function getTagsFromPropsList(tagName, primaryAttributes, propsList) {
+    // Calculate list of tags, giving priority innermost component (end of the propslist)
+    var approvedSeenTags = {};
+
+    return propsList.filter(function (props) {
+        return typeof props[tagName] !== "undefined";
+    }).map(function (props) {
+        return props[tagName];
+    }).reverse().reduce(function (approvedTags, instanceTags) {
+        var instanceSeenTags = {};
+
+        instanceTags.filter(function (tag) {
+            var primaryAttributeKey = void 0;
+            var keys = Object.keys(tag);
+            for (var i = 0; i < keys.length; i++) {
+                var attributeKey = keys[i];
+                var lowerCaseAttributeKey = attributeKey.toLowerCase();
+
+                // Special rule with link tags, since rel and href are both primary tags, rel takes priority
+                if (primaryAttributes.indexOf(lowerCaseAttributeKey) !== -1 && !(primaryAttributeKey === _HelmetConstants.TAG_PROPERTIES.REL && tag[primaryAttributeKey].toLowerCase() === "canonical") && !(lowerCaseAttributeKey === _HelmetConstants.TAG_PROPERTIES.REL && tag[lowerCaseAttributeKey].toLowerCase() === "stylesheet")) {
+                    primaryAttributeKey = lowerCaseAttributeKey;
+                }
+                // Special case for innerHTML which doesn't work lowercased
+                if (primaryAttributes.indexOf(attributeKey) !== -1 && (attributeKey === _HelmetConstants.TAG_PROPERTIES.INNER_HTML || attributeKey === _HelmetConstants.TAG_PROPERTIES.CSS_TEXT || attributeKey === _HelmetConstants.TAG_PROPERTIES.ITEM_PROP)) {
+                    primaryAttributeKey = attributeKey;
+                }
+            }
+
+            if (!primaryAttributeKey || !tag[primaryAttributeKey]) {
+                return false;
+            }
+
+            var value = tag[primaryAttributeKey].toLowerCase();
+
+            if (!approvedSeenTags[primaryAttributeKey]) {
+                approvedSeenTags[primaryAttributeKey] = {};
+            }
+
+            if (!instanceSeenTags[primaryAttributeKey]) {
+                instanceSeenTags[primaryAttributeKey] = {};
+            }
+
+            if (!approvedSeenTags[primaryAttributeKey][value]) {
+                instanceSeenTags[primaryAttributeKey][value] = true;
+                return true;
+            }
+
+            return false;
+        }).reverse().forEach(function (tag) {
+            return approvedTags.push(tag);
+        });
+
+        // Update seen tags with tags from this instance
+        var keys = Object.keys(instanceSeenTags);
+        for (var i = 0; i < keys.length; i++) {
+            var attributeKey = keys[i];
+            var tagUnion = (0, _objectAssign2.default)({}, approvedSeenTags[attributeKey], instanceSeenTags[attributeKey]);
+
+            approvedSeenTags[attributeKey] = tagUnion;
+        }
+
+        return approvedTags;
+    }, []).reverse();
+};
+
+var updateTitle = function updateTitle(title, attributes) {
+    document.title = title || document.title;
+    updateAttributes(_HelmetConstants.TAG_NAMES.TITLE, attributes);
+};
+
+var updateAttributes = function updateAttributes(tagName, attributes) {
+    var htmlTag = document.getElementsByTagName(tagName)[0];
+    var helmetAttributeString = htmlTag.getAttribute(HELMET_ATTRIBUTE);
+    var helmetAttributes = helmetAttributeString ? helmetAttributeString.split(",") : [];
+    var attributesToRemove = [].concat(helmetAttributes);
+    var attributeKeys = Object.keys(attributes);
+
+    for (var i = 0; i < attributeKeys.length; i++) {
+        var attribute = attributeKeys[i];
+        var value = attributes[attribute] || "";
+        htmlTag.setAttribute(attribute, value);
+
+        if (helmetAttributes.indexOf(attribute) === -1) {
+            helmetAttributes.push(attribute);
+        }
+
+        var indexToSave = attributesToRemove.indexOf(attribute);
+        if (indexToSave !== -1) {
+            attributesToRemove.splice(indexToSave, 1);
+        }
+    }
+
+    for (var _i = attributesToRemove.length - 1; _i >= 0; _i--) {
+        htmlTag.removeAttribute(attributesToRemove[_i]);
+    }
+
+    if (helmetAttributes.length === attributesToRemove.length) {
+        htmlTag.removeAttribute(HELMET_ATTRIBUTE);
+    } else {
+        htmlTag.setAttribute(HELMET_ATTRIBUTE, helmetAttributes.join(","));
+    }
+};
+
+var updateTags = function updateTags(type, tags) {
+    var headElement = document.head || document.querySelector("head");
+    var tagNodes = headElement.querySelectorAll(type + "[" + HELMET_ATTRIBUTE + "]");
+    var oldTags = Array.prototype.slice.call(tagNodes);
+    var newTags = [];
+    var indexToDelete = void 0;
+
+    if (tags && tags.length) {
+        tags.forEach(function (tag) {
+            var newElement = document.createElement(type);
+
+            for (var attribute in tag) {
+                if (tag.hasOwnProperty(attribute)) {
+                    if (attribute === "innerHTML") {
+                        newElement.innerHTML = tag.innerHTML;
+                    } else if (attribute === "cssText") {
+                        if (newElement.styleSheet) {
+                            newElement.styleSheet.cssText = tag.cssText;
+                        } else {
+                            newElement.appendChild(document.createTextNode(tag.cssText));
+                        }
+                    } else {
+                        var value = typeof tag[attribute] === "undefined" ? "" : tag[attribute];
+                        newElement.setAttribute(attribute, value);
+                    }
+                }
+            }
+
+            newElement.setAttribute(HELMET_ATTRIBUTE, "true");
+
+            // Remove a duplicate tag from domTagstoRemove, so it isn't cleared.
+            if (oldTags.some(function (existingTag, index) {
+                indexToDelete = index;
+                return newElement.isEqualNode(existingTag);
+            })) {
+                oldTags.splice(indexToDelete, 1);
+            } else {
+                newTags.push(newElement);
+            }
+        });
+    }
+
+    oldTags.forEach(function (tag) {
+        return tag.parentNode.removeChild(tag);
+    });
+    newTags.forEach(function (tag) {
+        return headElement.appendChild(tag);
+    });
+
+    return {
+        oldTags: oldTags,
+        newTags: newTags
+    };
+};
+
+var generateHtmlAttributesAsString = function generateHtmlAttributesAsString(attributes) {
+    return Object.keys(attributes).reduce(function (str, key) {
+        var attr = typeof attributes[key] !== "undefined" ? key + "=\"" + attributes[key] + "\"" : "" + key;
+        return str ? str + " " + attr : attr;
+    }, "");
+};
+
+var generateTitleAsString = function generateTitleAsString(type, title, attributes) {
+    var attributeString = generateHtmlAttributesAsString(attributes);
+    return attributeString ? "<" + type + " " + HELMET_ATTRIBUTE + " " + attributeString + ">" + encodeSpecialCharacters(title) + "</" + type + ">" : "<" + type + " " + HELMET_ATTRIBUTE + ">" + encodeSpecialCharacters(title) + "</" + type + ">";
+};
+
+var generateTagsAsString = function generateTagsAsString(type, tags) {
+    return tags.reduce(function (str, tag) {
+        var attributeHtml = Object.keys(tag).filter(function (attribute) {
+            return !(attribute === "innerHTML" || attribute === "cssText");
+        }).reduce(function (string, attribute) {
+            var attr = typeof tag[attribute] === "undefined" ? attribute : attribute + "=\"" + encodeSpecialCharacters(tag[attribute]) + "\"";
+            return string ? string + " " + attr : attr;
+        }, "");
+
+        var tagContent = tag.innerHTML || tag.cssText || "";
+
+        var isSelfClosing = [_HelmetConstants.TAG_NAMES.NOSCRIPT, _HelmetConstants.TAG_NAMES.SCRIPT, _HelmetConstants.TAG_NAMES.STYLE].indexOf(type) === -1;
+
+        return str + "<" + type + " " + HELMET_ATTRIBUTE + " " + attributeHtml + (isSelfClosing ? ">" : ">" + tagContent + "</" + type + ">");
+    }, "");
+};
+
+var generateTitleAsPreactComponent = function generateTitleAsPreactComponent(type, title, attributes) {
+    // assigning into an array to define toString function on it
+    var initProps = _defineProperty({
+        key: title
+    }, HELMET_ATTRIBUTE, true);
+    var props = Object.keys(attributes).reduce(function (obj, key) {
+        obj[key] = attributes[key];
+        return obj;
+    }, initProps);
+
+    return [(0, _preact.h)(_HelmetConstants.TAG_NAMES.TITLE, props, title)];
+};
+
+var generateTagsAsPreactComponent = function generateTagsAsPreactComponent(type, tags) {
+    return tags.map(function (tag, i) {
+        var mappedTag = _defineProperty({
+            key: i
+        }, HELMET_ATTRIBUTE, true);
+
+        Object.keys(tag).forEach(function (attribute) {
+            var mappedAttribute = attribute;
+
+            if (mappedAttribute === "innerHTML" || mappedAttribute === "cssText") {
+                var content = tag.innerHTML || tag.cssText;
+                mappedTag.dangerouslySetInnerHTML = { __html: content };
+            } else {
+                mappedTag[mappedAttribute] = tag[attribute];
+            }
+        });
+
+        return (0, _preact.h)(type, mappedTag);
+    });
+};
+
+var getMethodsForTag = function getMethodsForTag(type, tags) {
+    switch (type) {
+        case _HelmetConstants.TAG_NAMES.TITLE:
+            return {
+                toComponent: function toComponent() {
+                    return generateTitleAsPreactComponent(type, tags.title, tags.titleAttributes);
+                },
+                toString: function toString() {
+                    return generateTitleAsString(type, tags.title, tags.titleAttributes);
+                }
+            };
+        case _HelmetConstants.TAG_NAMES.HTML:
+            return {
+                toComponent: function toComponent() {
+                    return tags;
+                },
+                toString: function toString() {
+                    return generateHtmlAttributesAsString(tags);
+                }
+            };
+        default:
+            return {
+                toComponent: function toComponent() {
+                    return generateTagsAsPreactComponent(type, tags);
+                },
+                toString: function toString() {
+                    return generateTagsAsString(type, tags);
+                }
+            };
+    }
+};
+
+var mapStateOnServer = function mapStateOnServer(_ref) {
+    var htmlAttributes = _ref.htmlAttributes,
+        title = _ref.title,
+        titleAttributes = _ref.titleAttributes,
+        baseTag = _ref.baseTag,
+        metaTags = _ref.metaTags,
+        linkTags = _ref.linkTags,
+        scriptTags = _ref.scriptTags,
+        noscriptTags = _ref.noscriptTags,
+        styleTags = _ref.styleTags;
+    return {
+        htmlAttributes: getMethodsForTag(_HelmetConstants.TAG_NAMES.HTML, htmlAttributes),
+        title: getMethodsForTag(_HelmetConstants.TAG_NAMES.TITLE, { title: title, titleAttributes: titleAttributes }),
+        base: getMethodsForTag(_HelmetConstants.TAG_NAMES.BASE, baseTag),
+        meta: getMethodsForTag(_HelmetConstants.TAG_NAMES.META, metaTags),
+        link: getMethodsForTag(_HelmetConstants.TAG_NAMES.LINK, linkTags),
+        script: getMethodsForTag(_HelmetConstants.TAG_NAMES.SCRIPT, scriptTags),
+        noscript: getMethodsForTag(_HelmetConstants.TAG_NAMES.NOSCRIPT, noscriptTags),
+        style: getMethodsForTag(_HelmetConstants.TAG_NAMES.STYLE, styleTags)
+    };
+};
+
+/**
+ * @param {Object} htmlAttributes: {"lang": "en", "amp": undefined}
+ * @param {String} title: "Title"
+ * @param {String} defaultTitle: "Default Title"
+ * @param {String} titleTemplate: "MySite.com - %s"
+ * @param {Object} titleAttributes: {"itemprop": "name"}
+ * @param {Object} base: {"target": "_blank", "href": "http://mysite.com/"}
+ * @param {Array} meta: [{"name": "description", "content": "Test description"}]
+ * @param {Array} link: [{"rel": "canonical", "href": "http://mysite.com/example"}]
+ * @param {Array} script: [{"type": "text/javascript", "src": "http://mysite.com/js/test.js"}]
+ * @param {Array} noscript: [{"innerHTML": "<img src='http://mysite.com/js/test.js'"}]
+ * @param {Array} style: [{"type": "text/css", "cssText": "div{ display: block; color: blue; }"}]
+ * @param {Function} onChangeClientState: "(newState) => console.log(newState)"
+ */
+var Helmet = function Helmet(WrappedComponent) {
+    var _class, _temp;
+
+    return _temp = _class = function (_Component) {
+        _inherits(HelmetWrapper, _Component);
+
+        function HelmetWrapper() {
+            _classCallCheck(this, HelmetWrapper);
+
+            return _possibleConstructorReturn(this, (HelmetWrapper.__proto__ || Object.getPrototypeOf(HelmetWrapper)).apply(this, arguments));
+        }
+
+        _createClass(HelmetWrapper, [{
+            key: "shouldComponentUpdate",
+            value: function shouldComponentUpdate(nextProps) {
+                var props = _extends({}, nextProps);
+                if (!props.children || !props.children.length) {
+                    delete props.children;
+                }
+                return !(0, _deepEqual2.default)(this.props, props);
+            }
+        }, {
+            key: "render",
+            value: function render() {
+                return (0, _preact.h)(WrappedComponent, this.props);
+            }
+        }], [{
+            key: "canUseDOM",
+
+            // WrappedComponent.peek comes from react-side-effect:
+            // For testing, you may use a static peek() method available on the returned component.
+            // It lets you get the current state without resetting the mounted instance stack.
+            // Don’t use it for anything other than testing.
+            set: function set(canUseDOM) {
+                WrappedComponent.canUseDOM = canUseDOM;
+            }
+        }]);
+
+        return HelmetWrapper;
+    }(_preact.Component), _class.peek = WrappedComponent.peek, _class.rewind = function () {
+        var mappedState = WrappedComponent.rewind();
+        if (!mappedState) {
+            // provide fallback if mappedState is undefined
+            mappedState = mapStateOnServer({
+                htmlAttributes: {},
+                title: "",
+                titleAttributes: {},
+                baseTag: [],
+                metaTags: [],
+                linkTags: [],
+                scriptTags: [],
+                noscriptTags: [],
+                styleTags: []
+            });
+        }
+
+        return mappedState;
+    }, _temp;
+};
+
+var reducePropsToState = function reducePropsToState(propsList) {
+    return {
+        htmlAttributes: getAttributesFromPropsList(_HelmetConstants.TAG_NAMES.HTML, propsList),
+        title: getTitleFromPropsList(propsList),
+        titleAttributes: getAttributesFromPropsList("titleAttributes", propsList),
+        baseTag: getBaseTagFromPropsList([_HelmetConstants.TAG_PROPERTIES.HREF], propsList),
+        metaTags: getTagsFromPropsList(_HelmetConstants.TAG_NAMES.META, [_HelmetConstants.TAG_PROPERTIES.NAME, _HelmetConstants.TAG_PROPERTIES.CHARSET, _HelmetConstants.TAG_PROPERTIES.HTTPEQUIV, _HelmetConstants.TAG_PROPERTIES.PROPERTY, _HelmetConstants.TAG_PROPERTIES.ITEM_PROP], propsList),
+        linkTags: getTagsFromPropsList(_HelmetConstants.TAG_NAMES.LINK, [_HelmetConstants.TAG_PROPERTIES.REL, _HelmetConstants.TAG_PROPERTIES.HREF], propsList),
+        scriptTags: getTagsFromPropsList(_HelmetConstants.TAG_NAMES.SCRIPT, [_HelmetConstants.TAG_PROPERTIES.SRC, _HelmetConstants.TAG_PROPERTIES.INNER_HTML], propsList),
+        noscriptTags: getTagsFromPropsList(_HelmetConstants.TAG_NAMES.NOSCRIPT, [_HelmetConstants.TAG_PROPERTIES.INNER_HTML], propsList),
+        styleTags: getTagsFromPropsList(_HelmetConstants.TAG_NAMES.STYLE, [_HelmetConstants.TAG_PROPERTIES.CSS_TEXT], propsList),
+        onChangeClientState: getOnChangeClientState(propsList)
+    };
+};
+
+var handleClientStateChange = function handleClientStateChange(newState) {
+    var htmlAttributes = newState.htmlAttributes,
+        title = newState.title,
+        titleAttributes = newState.titleAttributes,
+        baseTag = newState.baseTag,
+        metaTags = newState.metaTags,
+        linkTags = newState.linkTags,
+        scriptTags = newState.scriptTags,
+        noscriptTags = newState.noscriptTags,
+        styleTags = newState.styleTags,
+        onChangeClientState = newState.onChangeClientState;
+
+    updateAttributes("html", htmlAttributes);
+
+    updateTitle(title, titleAttributes);
+
+    var tagUpdates = {
+        baseTag: updateTags(_HelmetConstants.TAG_NAMES.BASE, baseTag),
+        metaTags: updateTags(_HelmetConstants.TAG_NAMES.META, metaTags),
+        linkTags: updateTags(_HelmetConstants.TAG_NAMES.LINK, linkTags),
+        scriptTags: updateTags(_HelmetConstants.TAG_NAMES.SCRIPT, scriptTags),
+        noscriptTags: updateTags(_HelmetConstants.TAG_NAMES.NOSCRIPT, noscriptTags),
+        styleTags: updateTags(_HelmetConstants.TAG_NAMES.STYLE, styleTags)
+    };
+
+    var addedTags = {};
+    var removedTags = {};
+
+    Object.keys(tagUpdates).forEach(function (tagType) {
+        var _tagUpdates$tagType = tagUpdates[tagType],
+            newTags = _tagUpdates$tagType.newTags,
+            oldTags = _tagUpdates$tagType.oldTags;
+
+        if (newTags.length) {
+            addedTags[tagType] = newTags;
+        }
+        if (oldTags.length) {
+            removedTags[tagType] = tagUpdates[tagType].oldTags;
+        }
+    });
+
+    onChangeClientState(newState, addedTags, removedTags);
+};
+
+var NullComponent = function NullComponent() {
+    return null;
+};
+
+var HelmetSideEffects = (0, _preactSideEffect2.default)(reducePropsToState, handleClientStateChange, mapStateOnServer)(NullComponent);
+
+exports.default = Helmet(HelmetSideEffects);
+module.exports = exports["default"];
+
+/***/ }),
+
+/***/ "rx70":
+/***/ (function(module, exports, __webpack_require__) {
+
+var pSlice = Array.prototype.slice;
+var objectKeys = __webpack_require__("922s");
+var isArguments = __webpack_require__("PfvZ");
+
+var deepEqual = module.exports = function (actual, expected, opts) {
+  if (!opts) opts = {};
+  // 7.1. All identical values are equivalent, as determined by ===.
+  if (actual === expected) {
+    return true;
+  } else if (actual instanceof Date && expected instanceof Date) {
+    return actual.getTime() === expected.getTime();
+
+    // 7.3. Other pairs that do not both pass typeof value == 'object',
+    // equivalence is determined by ==.
+  } else if (!actual || !expected || typeof actual != 'object' && typeof expected != 'object') {
+    return opts.strict ? actual === expected : actual == expected;
+
+    // 7.4. For all other Object pairs, including Array objects, equivalence is
+    // determined by having the same number of owned properties (as verified
+    // with Object.prototype.hasOwnProperty.call), the same set of keys
+    // (although not necessarily the same order), equivalent values for every
+    // corresponding key, and an identical 'prototype' property. Note: this
+    // accounts for both named and indexed properties on Arrays.
+  } else {
+    return objEquiv(actual, expected, opts);
+  }
+};
+
+function isUndefinedOrNull(value) {
+  return value === null || value === undefined;
+}
+
+function isBuffer(x) {
+  if (!x || typeof x !== 'object' || typeof x.length !== 'number') return false;
+  if (typeof x.copy !== 'function' || typeof x.slice !== 'function') {
+    return false;
+  }
+  if (x.length > 0 && typeof x[0] !== 'number') return false;
+  return true;
+}
+
+function objEquiv(a, b, opts) {
+  var i, key;
+  if (isUndefinedOrNull(a) || isUndefinedOrNull(b)) return false;
+  // an identical 'prototype' property.
+  if (a.prototype !== b.prototype) return false;
+  //~~~I've managed to break Object.keys through screwy arguments passing.
+  //   Converting to array solves the problem.
+  if (isArguments(a)) {
+    if (!isArguments(b)) {
+      return false;
+    }
+    a = pSlice.call(a);
+    b = pSlice.call(b);
+    return deepEqual(a, b, opts);
+  }
+  if (isBuffer(a)) {
+    if (!isBuffer(b)) {
+      return false;
+    }
+    if (a.length !== b.length) return false;
+    for (i = 0; i < a.length; i++) {
+      if (a[i] !== b[i]) return false;
+    }
+    return true;
+  }
+  try {
+    var ka = objectKeys(a),
+        kb = objectKeys(b);
+  } catch (e) {
+    //happens when one is a string literal and the other isn't
+    return false;
+  }
+  // having the same number of owned properties (keys incorporates
+  // hasOwnProperty)
+  if (ka.length != kb.length) return false;
+  //the same set of keys (although not necessarily the same order),
+  ka.sort();
+  kb.sort();
+  //~~~cheap key test
+  for (i = ka.length - 1; i >= 0; i--) {
+    if (ka[i] != kb[i]) return false;
+  }
+  //equivalent values for every corresponding key, and
+  //~~~possibly expensive deep test
+  for (i = ka.length - 1; i >= 0; i--) {
+    key = ka[i];
+    if (!deepEqual(a[key], b[key], opts)) return false;
+  }
+  return typeof a === typeof b;
+}
+
+/***/ }),
+
 /***/ "v93/":
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -5718,6 +6653,105 @@ module.exports = CrabFinal;
 
 CrabFinal.default = CrabFinal;
 
+
+/***/ }),
+
+/***/ "yheg":
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+/*
+object-assign
+(c) Sindre Sorhus
+@license MIT
+*/
+
+
+/* eslint-disable no-unused-vars */
+
+var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
+var getOwnPropertySymbols = Object.getOwnPropertySymbols;
+var hasOwnProperty = Object.prototype.hasOwnProperty;
+var propIsEnumerable = Object.prototype.propertyIsEnumerable;
+
+function toObject(val) {
+	if (val === null || val === undefined) {
+		throw new TypeError('Object.assign cannot be called with null or undefined');
+	}
+
+	return Object(val);
+}
+
+function shouldUseNative() {
+	try {
+		if (!Object.assign) {
+			return false;
+		}
+
+		// Detect buggy property enumeration order in older V8 versions.
+
+		// https://bugs.chromium.org/p/v8/issues/detail?id=4118
+		var test1 = new String('abc'); // eslint-disable-line no-new-wrappers
+		test1[5] = 'de';
+		if (Object.getOwnPropertyNames(test1)[0] === '5') {
+			return false;
+		}
+
+		// https://bugs.chromium.org/p/v8/issues/detail?id=3056
+		var test2 = {};
+		for (var i = 0; i < 10; i++) {
+			test2['_' + String.fromCharCode(i)] = i;
+		}
+		var order2 = Object.getOwnPropertyNames(test2).map(function (n) {
+			return test2[n];
+		});
+		if (order2.join('') !== '0123456789') {
+			return false;
+		}
+
+		// https://bugs.chromium.org/p/v8/issues/detail?id=3056
+		var test3 = {};
+		'abcdefghijklmnopqrst'.split('').forEach(function (letter) {
+			test3[letter] = letter;
+		});
+		if (Object.keys(_extends({}, test3)).join('') !== 'abcdefghijklmnopqrst') {
+			return false;
+		}
+
+		return true;
+	} catch (err) {
+		// We don't expect any of the above to throw, but better to be safe.
+		return false;
+	}
+}
+
+module.exports = shouldUseNative() ? Object.assign : function (target, source) {
+	var from;
+	var to = toObject(target);
+	var symbols;
+
+	for (var s = 1; s < arguments.length; s++) {
+		from = Object(arguments[s]);
+
+		for (var key in from) {
+			if (hasOwnProperty.call(from, key)) {
+				to[key] = from[key];
+			}
+		}
+
+		if (getOwnPropertySymbols) {
+			symbols = getOwnPropertySymbols(from);
+			for (var i = 0; i < symbols.length; i++) {
+				if (propIsEnumerable.call(from, symbols[i])) {
+					to[symbols[i]] = from[symbols[i]];
+				}
+			}
+		}
+	}
+
+	return to;
+};
 
 /***/ })
 
