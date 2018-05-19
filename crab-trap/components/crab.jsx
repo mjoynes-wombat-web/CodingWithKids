@@ -41,6 +41,7 @@ class UnstyledCrab extends Preact.Component {
     <CrabSVG
       data-iteration="0"
       className={`
+        crab
         ${this.props.className}
         ${this.props.pincerAction || ''}
         ${this.props.walk ? 'walking' : ''}
@@ -53,10 +54,14 @@ class UnstyledCrab extends Preact.Component {
 
 const Crab = styled(UnstyledCrab)`
   min-width: ${props => props.width}px;
-  min-height: ${props => props.width/2}px;
   width: 12%;
+  height: fit-content;
   overflow: visible;
   cursor: pointer;
+  pointer-events: none;
+  position: absolute;
+  top: 0;
+  left: 0;
   animation-fill-mode: both;
   transition: transform ${props =>
       Math.pow(
@@ -550,6 +555,7 @@ const Crab = styled(UnstyledCrab)`
       animation-name: move-shell;
       animation-duration: 2s;
       animation-iteration-count: infinite;
+      pointer-events: all;
   }
 
   &.paused {
