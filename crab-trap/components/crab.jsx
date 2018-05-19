@@ -1,4 +1,4 @@
-import Preact from 'preact';
+import Preact from 'react';
 import styled from 'styled-components';
 
 import CrabSVG from '-!svg-react-loader!../assets/design/crab-final.svg';
@@ -18,8 +18,11 @@ class UnstyledCrab extends Preact.Component {
   componentDidMount() {
     this.base.addEventListener('transitionend', this.props.pauseWalking);
     this.base.querySelector('.left-pincer').addEventListener('animationend', this.props.removePincerAction);
-
     this.setState({ changePincerInterval: setInterval(this.props.changePincerAction, 8000) });
+  }
+
+  componentDidUpdate(e) {
+    console.log(e);
   }
 
   componentWillUnmount() {
@@ -55,20 +58,11 @@ const Crab = styled(UnstyledCrab)`
   top: 0;
   left: 0;
   animation-fill-mode: both;
-  transition: transform ${props =>
-      Math.pow(
-        Math.pow(
-          Math.abs(props.currentPos[0] - (props.moveTo ? props.moveTo[0] : 0)),
-          2)
-        + Math.pow(
-          Math.abs(props.currentPos[1] - (props.moveTo ? props.moveTo[1] : 0 )),
-        2),
-        0.5)
-        / 20 / props.speed}s;
+  transition: transform ${props => props.walkTime}s;
   transition-timing-function: cubic-bezier(1, 1.02, 0.76, 0.99);
 
   &.walking {
-    transform: translate(${props => (props.moveTo ? `${props.moveTo[0]}vw, ${props.moveTo[1]}vh` : '0, 0')});
+    transform: translate(${props => (props.moveTo ? `${props.moveTo[0]}px, ${props.moveTo[1]}px` : '0, 0')});
   }
 
 //******LEFT LEGS ANIMATIONS******//
@@ -332,7 +326,7 @@ const Crab = styled(UnstyledCrab)`
 &.walking {
     .legs {
       .left-legs *, .right-legs * {
-        animation-duration: ${props => 1 / props.speed * 1.5}s;
+        animation-duration: ${props => 1 / props.difficulty * 1.5}s;
         animation-iteration-count: infinite;
       }
       .left-legs {
@@ -433,7 +427,7 @@ const Crab = styled(UnstyledCrab)`
   .shell {
       transform-origin: 50% 85.07%;
       animation-name: move-shell;
-      animation-duration: ${props => 2 / props.speed * 1.25}s;
+      animation-duration: ${props => 2 / props.difficulty * 1.25}s;
       animation-iteration-count: infinite;
       pointer-events: all;
   }

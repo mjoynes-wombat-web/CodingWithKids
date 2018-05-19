@@ -27,11 +27,13 @@ body {
         .row {
           flex: 1;
           padding: 1rem;
+          display: flex;
+          justify-content: center;
 
           .hiding-spot {
-            width: 100%;
+            width: 12vw;
             height: 100%;
-            background-color: red;
+            background-color: rgba(red, 0.25);
           }
         }
       }
@@ -48,6 +50,28 @@ body {
     form {
       label {
         display: block;
+      }
+    }
+
+    .state {
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      flex: 1;
+      position: absolute;
+      bottom: 0;
+      width: 100%;
+      * { margin: 0.125rem; }
+      h2 { font-size: 0.75rem; }
+      .details {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-evenly;
+        text-align: left;
+        p {
+          font-size: 0.625rem;
+          flex: 1;
+        }
       }
     }
   }
