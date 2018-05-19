@@ -45,6 +45,7 @@ export default class App extends Component {
 		for(let x = 0; x < cols; x++) {
 			const colWidth = window.innerWidth / cols;
 			const colCenter = (colWidth / 2) + (colWidth * (x + 1)) - colWidth;
+			let colGroup = []
 
 			for(let i = 0; i < rows; i++) {
 				const rowHeight = window.innerHeight / rows;
@@ -53,8 +54,10 @@ export default class App extends Component {
 					colCenter,
 					rowCenter,
 				];
-				hidingSpots.push([spot]);
+				colGroup.push(spot);
 			}
+
+			hidingSpots.push(colGroup);
 		}
 		return this.setState({ cols, rows, hidingSpots, hidingSpotWidth: shellDimensions.width });
 	}
