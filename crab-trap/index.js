@@ -219,7 +219,15 @@ export default class App extends Component {
 				<div id="inch"></div>
 				<CrabSVG id="crab" className="crab" width={this.state.inch} screenWidth={this.state.screenWidth} />
 				{this.state.rotate ? <PleaseRotate /> : null}
-				{!this.state.fullscreen && !this.state.rotate ? <StartGame startGame={this.startGame}/> : null}
+				{!this.state.fullscreen && !this.state.rotate
+					? <StartGame
+						startGame={this.startGame}
+						pincerAction={this.state.currentPincerAction}
+						changePincerAction={this.changePincerAction}
+						screenWidth={this.state.screenWidth}
+						width={this.state.inch}
+						removePincerAction={this.removePincerAction}/>
+					: null}
 				{!this.state.rotate && this.state.fullscreen && this.state.gameInit 
 					? (
 						<div id="gameBoard">
