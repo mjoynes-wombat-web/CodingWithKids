@@ -3535,7 +3535,7 @@ var PleaseRotate = Object(styled_components_es["a" /* default */])(UnstyledPleas
 
 /* harmony default export */ var pleaseRotate = (PleaseRotate);
 // CONCATENATED MODULE: ./components/startGame.jsx
-var startGame__templateObject = startGame__taggedTemplateLiteralLoose(['\n'], ['\n']);
+var startGame__templateObject = startGame__taggedTemplateLiteralLoose(['\ndisplay: flex;\nflex-direction: column;\nalign-items: center;\njustify-content: space-around;\nmin-height: 100vh;\nmin-width: 100vw;\n\n.crab-wrapper {\n  width: 75%;\n  position: static;\n  .crab{\n    width: 100%;\n  }\n}\n\nbutton {\n  color: white;\n  font-weight: bold;\n  font-size: 2rem;\n  line-height: initial;\n  padding: 0.5rem 0.75rem;\n}\n'], ['\ndisplay: flex;\nflex-direction: column;\nalign-items: center;\njustify-content: space-around;\nmin-height: 100vh;\nmin-width: 100vw;\n\n.crab-wrapper {\n  width: 75%;\n  position: static;\n  .crab{\n    width: 100%;\n  }\n}\n\nbutton {\n  color: white;\n  font-weight: bold;\n  font-size: 2rem;\n  line-height: initial;\n  padding: 0.5rem 0.75rem;\n}\n']);
 
 
 
@@ -3546,19 +3546,29 @@ function startGame__taggedTemplateLiteralLoose(strings, raw) { strings.raw = raw
 
 
 
-var startGame__ref2 = Object(preact_min["h"])(crab_final_default.a, null);
-
 var startGame_UnstyledStartGame = function UnstyledStartGame(_ref) {
   var className = _ref.className,
-      startGame = _ref.startGame;
+      startGame = _ref.startGame,
+      pincerAction = _ref.pincerAction,
+      changePincerAction = _ref.changePincerAction,
+      removePincerAction = _ref.removePincerAction,
+      screenWidth = _ref.screenWidth,
+      width = _ref.width;
   return Object(preact_min["h"])(
     'div',
-    { id: 'startGame' },
-    startGame__ref2,
+    { className: className, id: 'startGame' },
+    Object(preact_min["h"])(crab, {
+      walking: true,
+      direction: "right",
+      pincerAction: pincerAction,
+      changePincerAction: changePincerAction,
+      removePincerAction: removePincerAction,
+      screenWidth: screenWidth,
+      width: width }),
     Object(preact_min["h"])(
       'button',
       { onClick: startGame },
-      'Ready Player One'
+      'Start Game'
     )
   );
 };
@@ -3799,7 +3809,13 @@ var index_App = function (_Component) {
 			index__ref,
 			Object(preact_min["h"])(CrabSVG, { id: 'crab', className: 'crab', width: this.state.inch, screenWidth: this.state.screenWidth }),
 			this.state.rotate ? index__ref2 : null,
-			!this.state.fullscreen && !this.state.rotate ? Object(preact_min["h"])(components_startGame, { startGame: this.startGame }) : null,
+			!this.state.fullscreen && !this.state.rotate ? Object(preact_min["h"])(components_startGame, {
+				startGame: this.startGame,
+				pincerAction: this.state.currentPincerAction,
+				changePincerAction: this.changePincerAction,
+				screenWidth: this.state.screenWidth,
+				width: this.state.inch,
+				removePincerAction: this.removePincerAction }) : null,
 			!this.state.rotate && this.state.fullscreen && this.state.gameInit ? Object(preact_min["h"])(
 				'div',
 				{ id: 'gameBoard' },
