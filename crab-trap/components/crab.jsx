@@ -33,7 +33,7 @@ class UnstyledCrab extends Component {
 
   render() {
     return (
-      <div id={this.props.id} className={`crabWrapper 
+      <div id={this.props.id} className={`crab-wrapper 
       ${this.props.className}  ${this.props.paused ? 'paused' : ''} ${this.props.walking ? 'walking' : ''}`}>
         <CrabSVGRaw
           data-iteration="0"
@@ -86,6 +86,7 @@ const Crab = styled(UnstyledCrab)`
   }
 
 .crab {
+  overflow: visible;
   min-width: ${props => Math.max(props.screenWidth * 0.12, props.width)}px;
   pointer-events: none;
 //******LEFT LEGS ANIMATIONS******//
