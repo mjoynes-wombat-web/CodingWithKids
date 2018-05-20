@@ -1,7 +1,18 @@
 import { Component } from 'react';
 import styled from 'styled-components';
 
-import CrabSVG from '-!svg-react-loader!../assets/design/crab-final.svg';
+import CrabSVGRaw from '-!svg-react-loader!../assets/design/crab-final.svg';
+
+export const CrabSVG = styled(CrabSVGRaw)`
+&#crab{
+  min-width: ${props => props.width}px;
+  width: ${screen.width * 0.12}px;
+  height: fit-content;
+  position: absolute;
+  top: -300px;
+  left: -300px;
+}
+`;
 
 class UnstyledCrab extends Component {
   constructor(props) {
@@ -17,6 +28,8 @@ class UnstyledCrab extends Component {
 
   componentDidMount() {
     this.base.addEventListener('transitionend', this.props.pauseWalking);
+    console.log(this.base.querySelector('.shell'));
+    this.base.querySelector('.shell').addEventListener('click', this.props.addPoint);
     this.base.querySelector('.left-pincer').addEventListener('animationend', this.props.removePincerAction);
     this.setState({ changePincerInterval: setInterval(this.props.changePincerAction, 8000) });
   }
@@ -48,7 +61,6 @@ const Crab = styled(UnstyledCrab)`
   width: ${screen.width * 0.12}px;
   height: fit-content;
   overflow: visible;
-  cursor: pointer;
   pointer-events: none;
   position: absolute;
   top: 0;
@@ -426,11 +438,13 @@ const Crab = styled(UnstyledCrab)`
       animation-duration: ${props => 2 / props.difficulty * 1.25}s;
       animation-iteration-count: infinite;
       pointer-events: all;
+      cursor: pointer;
   }
 
   &.paused {
     .legs *, .shell {
       animation-play-state: paused;
+      pointer-events: none;
     }
   }
 }
