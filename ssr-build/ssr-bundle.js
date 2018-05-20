@@ -3560,6 +3560,7 @@ var startGame_UnstyledStartGame = function UnstyledStartGame(_ref) {
     Object(preact_min["h"])(crab, {
       walking: true,
       direction: "right",
+      difficulty: 1.25,
       pincerAction: pincerAction,
       changePincerAction: changePincerAction,
       removePincerAction: removePincerAction,
