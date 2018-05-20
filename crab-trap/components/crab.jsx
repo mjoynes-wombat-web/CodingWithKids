@@ -1,9 +1,9 @@
-import Preact from 'react';
+import { Component } from 'react';
 import styled from 'styled-components';
 
 import CrabSVG from '-!svg-react-loader!../assets/design/crab-final.svg';
 
-class UnstyledCrab extends Preact.Component {
+class UnstyledCrab extends Component {
   constructor(props) {
     super(props);
 
@@ -19,10 +19,6 @@ class UnstyledCrab extends Preact.Component {
     this.base.addEventListener('transitionend', this.props.pauseWalking);
     this.base.querySelector('.left-pincer').addEventListener('animationend', this.props.removePincerAction);
     this.setState({ changePincerInterval: setInterval(this.props.changePincerAction, 8000) });
-  }
-
-  componentDidUpdate(e) {
-    console.log(e);
   }
 
   componentWillUnmount() {

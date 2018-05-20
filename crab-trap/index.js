@@ -1,5 +1,9 @@
 import { Component } from 'react';
 import Helmet from 'react-helmet';
+import FAIcon from '@fortawesome/react-fontawesome'
+import faCompress from '@fortawesome/fontawesome-pro-light/faCompress';
+import faExpand from '@fortawesome/fontawesome-pro-light/faExpand';
+import faWalking from '@fortawesome/fontawesome-pro-light/faWalking';
 
 import './assets/styles/index.scss';
 
@@ -15,7 +19,7 @@ export default class App extends Component {
 			walkTime: 0,
 			direction: 'left',
 			inch: null,
-			difficulty: 1,
+			difficulty: 3,
 			paused: false,
 			currentPos: [0, 0],
 			fullscreen: false,
@@ -32,6 +36,7 @@ export default class App extends Component {
 		this.pauseWalking = this.pauseWalking.bind(this);
 		this.changePincerAction = this.changePincerAction.bind(this);
 		this.pickSpot = this.pickSpot.bind(this);
+		this.setHidable = this.setHidable.bind(this);
 	}
 
 	componentDidMount() {
@@ -44,17 +49,18 @@ export default class App extends Component {
 	}
 
 	initGame() {
-		if (!this.state.fullscreen) return this.setState({
-			hidingSpots: [],
-			hidingSpotWidth: null,
-			crabDimensions: null,
-			gameInit: false,
+		if (!this.state.fullscreen || !document.webkitIsFullScreen) return this.setState({
+			// hidingSpots: [],
+			// hidingSpotWidth: null,
+			// crabDimensions: null,
+			// gameInit: false,
+			fullscreen: false,
 		});
 		const crab  = document.querySelector('.crab');
 		const crabDimensions = [ crab.clientWidth, crab.clientHeight ];
 		const shellDimensions = crab.querySelector('.shell').getBoundingClientRect();
-		const cols = Math.floor(window.innerWidth / (shellDimensions.width * 3));
-		const rows = Math.floor(window.innerHeight / (shellDimensions.height * 3));
+		const cols = Math.floor(window.innerWidth / Math.max(shellDimensions.width * Math.round(5 - this.state.difficulty / 1.75), (shellDimensions.width * 2)));
+		const rows = Math.floor(window.innerHeight / Math.max(shellDimensions.height * Math.round(6 - this.state.difficulty / 1.75), (shellDimensions.height * 4)));
 
 		const hidingSpots = [];
 		for(let x = 0; x < cols; x++) {
@@ -70,19 +76,35 @@ export default class App extends Component {
 						colCenter,
 						rowCenter,
 					],
-					hidable: (Math.random() * this.state.difficulty > 0.66 ? true : false),
 				};
 				colGroup.push(spot);
 			}
-
 			hidingSpots.push(colGroup);
 		}
 		return this.setState({
-			hidingSpots,
+			hidingSpots: this.setHidable(hidingSpots),
 			hidingSpotWidth: shellDimensions.width,
 			crabDimensions,
 			gameInit: true,
 		});
+	}
+
+	setHidable(spots) {
+		let percentHidden = 0;
+		const numCols = spots.length;
+		const numRows = spots[0].length
+		const minPercent = 0.5 * Math.max(this.state.difficulty * 0.33, 1);
+		const maxPercent = 0.66 * Math.max(this.state.difficulty * 0.33, 1);
+		for(let i = 0; i < numCols; i++) {
+			for(let x = 0; x < numRows; x++) {
+				if ((percentHidden + (1 / (numCols * numRows))) >= maxPercent) return spots;
+				const isHidden = (Math.random() * this.state.difficulty > 0.66 ? true : false);
+				spots[i][x].hideable = isHidden;
+				if (isHidden) { percentHidden += (1 / (numCols * numRows)); }
+			}
+		}
+		if(percentHidden < minPercent) return this.setHidable(spots);
+		return spots;
 	}
 
 	enterFullscreen(e) {
@@ -109,7 +131,7 @@ export default class App extends Component {
 		const rows = hidingSpots[0].length;
 		const spot = hidingSpots[Math.floor(Math.random()*cols)][Math.floor(Math.random()*rows)];
 
-		if (spot.hidable) return spot;
+		if (spot.hideable) return spot;
 		return this.pickSpot();
 	}
 
@@ -129,11 +151,7 @@ export default class App extends Component {
 				Math.abs(this.state.currentPos[1] - moveTo[1]),
 			2),
 			0.5)
-		/ this.state.inch / 3 / this.state.difficulty;
-
-		console.log(walkTime);
-		console.log(moveTo);
-		console.log(this.state.currentPos);
+		/ (this.state.inch * this.state.difficulty);
 
 		const direction = (this.state.currentPos[0] <= moveTo[0] ? 'right' : 'left')
 
@@ -163,20 +181,28 @@ export default class App extends Component {
 				<Helmet
 					title="Crab Trap"
 				/>
-				<div className="grid">
-					{this.state.hidingSpots.map(col => (
-						<div className="column">
-						{col.map(row =>(
-							<div className="row">
-									{row.hidable
-										? <div className="hiding-spot" style={`width: ${this.state.hidingSpotWidth + 20}px`}></div>
-										: null
-									}
-								</div>
+				{this.state.fullscreen
+					? <div className="grid">
+						{this.state.hidingSpots.map(col => (
+							<div className="column">
+							{col.map(row =>(
+								<div className="row">
+										{row.hideable
+											? <div
+												className="hiding-spot"
+												style={`
+												width: ${this.state.hidingSpotWidth + 20}px;
+												height: ${(this.state.hidingSpotWidth * 1.25) + 20}px;
+												`} />
+											: null
+										}
+									</div>
+							))}
+						</div>
 						))}
 					</div>
-					))}
-				</div>
+					: null 
+				}
 				<div id="inch"></div>
 				<Crab
 					walk={this.state.walk}
@@ -192,13 +218,23 @@ export default class App extends Component {
 					pauseWalking={this.pauseWalking}
 					inch={this.state.inch}
 					removePincerAction={this.removePincerAction} />
-				<form>
+				<div className="buttons">
+					<button onClick={this.enterFullscreen}>
+						{this.state.fullscreen
+							? <FAIcon icon={faCompress} />
+							: <FAIcon icon={faExpand} />
+						}
+					</button>
 					{this.state.fullscreen 
-						? <button onClick={this.walk}>Walk</button>
+						? <button
+								onClick={this.walk}
+								disabled={this.state.walk && !this.state.paused}
+							>
+								<FAIcon icon={faWalking} />
+							</button>
 						: null
 					}
-					<button onClick={this.enterFullscreen}>{this.state.fullscreen ? 'Exit' : 'Enter'} Fullscreen</button>
-				</form>
+				</div>
 				<div class="state">
 					<h2>Crab State</h2>
 					<div className="details">
