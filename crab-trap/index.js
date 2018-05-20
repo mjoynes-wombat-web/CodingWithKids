@@ -21,7 +21,7 @@ export default class App extends Component {
 			walkTime: 0,
 			direction: 'left',
 			inch: null,
-			difficulty: 2,
+			difficulty: 1,
 			paused: false,
 			currentPos: [0, 0],
 			fullscreen: false,
@@ -205,8 +205,12 @@ export default class App extends Component {
 	}
 
 	addPoint(e) {
-		console.log('crab clicked');
-		this.setState({ points: this.state.points + 1 });
+		const points = this.state.points + 1;
+		if (Math.ceil(points / 10) > this.state.difficulty) {
+			this.setState({ points, difficulty: Math.ceil(points / 10) });
+			return this.initGame();
+		}
+		return this.setState({ points });
 	}
 
 	render() {
