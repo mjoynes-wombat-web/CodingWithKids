@@ -27,7 +27,6 @@ export default class App extends Component {
 		}
 
 		this.componentDidMount = this.componentDidMount.bind(this);
-		this.componentWillUnmount = this.componentWillUnmount.bind(this);
 		this.initGame = this.initGame.bind(this);
 		this.enterFullscreen = this.enterFullscreen.bind(this);
 		this.removePincerAction = this.removePincerAction.bind(this);
@@ -41,35 +40,42 @@ export default class App extends Component {
 	componentDidMount() {
 		document.title = 'Crab Trap';
 		const inch = document.getElementById('inch').clientHeight;
+		this.initGame();
 		return this.setState({ inch });
 	}
 
-	componentWillUnmount() {
-		window.removeEventListener('resize', this.initGame);
-	}
-
 	initGame() {
-		if (!this.state.fullscreen || !document.webkitIsFullScreen) return this.setState({
-			// hidingSpots: [],
-			// hidingSpotWidth: null,
-			// crabDimensions: null,
-			// gameInit: false,
-			fullscreen: false,
-		});
 		const crab  = document.querySelector('.crab');
 		const crabDimensions = [ crab.clientWidth, crab.clientHeight ];
 		const shellDimensions = crab.querySelector('.shell').getBoundingClientRect();
-		const cols = Math.floor(window.innerWidth / Math.max(shellDimensions.width * Math.round(5 - this.state.difficulty / 1.75), (shellDimensions.width * 2)));
-		const rows = Math.floor(window.innerHeight / Math.max(shellDimensions.height * Math.round(6 - this.state.difficulty / 1.75), (shellDimensions.height * 4)));
+		const cols = Math.floor(screen.width / Math.max(shellDimensions.width * Math.round(5 - this.state.difficulty / 1.75), (shellDimensions.width * 2)));
+		const rows = Math.floor(
+			screen.height / Math.max(
+				shellDimensions.height
+				* Math.round(6 - this.state.difficulty / 1.75), 
+				(shellDimensions.height * 4)
+			)
+		);
+		console.log('this ran');
+		const maxCrabs = 10;
+		const minCrabs = 2;
+
+		const numCrabs = this.state.difficulty;
+
+		const crabsMoving = Math.max(
+			Math.round(numCrabs * Math.random() * 0.9),
+			Math.round(numCrabs / 2)
+		);
 
 		const hidingSpots = [];
 		for(let x = 0; x < cols; x++) {
-			const colWidth = window.innerWidth / cols;
+			const colWidth = screen.width / cols;
 			const colCenter = (colWidth / 2) + (colWidth * (x + 1)) - colWidth;
 			let colGroup = []
 
 			for(let i = 0; i < rows; i++) {
-				const rowHeight = window.innerHeight / rows;
+				const rowHeight = screen.height / rows;
+				console.log(rowHeight);
 				const rowCenter = (rowHeight / 2) + (rowHeight * (i + 1)) - rowHeight;
 				const spot = {
 					coords: [
@@ -81,9 +87,11 @@ export default class App extends Component {
 			}
 			hidingSpots.push(colGroup);
 		}
-		return this.setState({
+		this.setState({
 			hidingSpots: this.setHidable(hidingSpots),
 			hidingSpotWidth: shellDimensions.width,
+			numCrabs,
+			crabsMoving,
 			crabDimensions,
 			gameInit: true,
 		});
@@ -93,8 +101,8 @@ export default class App extends Component {
 		let percentHidden = 0;
 		const numCols = spots.length;
 		const numRows = spots[0].length
-		const minPercent = 0.5 * Math.max(this.state.difficulty * 0.33, 1);
-		const maxPercent = 0.66 * Math.max(this.state.difficulty * 0.33, 1);
+		const minPercent = Math.min(0.5 * Math.max(this.state.difficulty * 0.33, 1), 1);
+		const maxPercent = Math.min(0.66 * Math.max(this.state.difficulty * 0.33, 1), 1);
 		for(let i = 0; i < numCols; i++) {
 			for(let x = 0; x < numRows; x++) {
 				if ((percentHidden + (1 / (numCols * numRows))) >= maxPercent) return spots;
@@ -117,7 +125,6 @@ export default class App extends Component {
 		
 		const main = document.querySelector('main');
 		main.webkitRequestFullscreen();
-		window.addEventListener('resize', this.initGame);
 		return this.setState({ fullscreen: true });
 	}
 

@@ -45,7 +45,7 @@ class UnstyledCrab extends Component {
 
 const Crab = styled(UnstyledCrab)`
   min-width: ${props => props.width}px;
-  width: 12%;
+  width: ${screen.width * 0.12}px;
   height: fit-content;
   overflow: visible;
   cursor: pointer;
