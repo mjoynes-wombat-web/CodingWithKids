@@ -3,17 +3,6 @@ import styled from 'styled-components';
 
 import CrabSVGRaw from '-!svg-react-loader!../assets/design/crab-final.svg';
 
-export const CrabSVG = styled(CrabSVGRaw)`
-&#crab{
-  min-width: ${props => props.width}px;
-  width: ${props => props.screenWidth * 0.12}px;
-  height: fit-content;
-  position: absolute;
-  top: -300px;
-  left: -300px;
-}
-`;
-
 class UnstyledCrab extends Component {
   constructor(props) {
     super(props);
@@ -27,8 +16,11 @@ class UnstyledCrab extends Component {
   }
 
   componentDidMount() {
-    this.base.addEventListener('transitionend', this.props.pauseWalking);
-    this.base.querySelector('.shell').addEventListener('click', this.props.addPoint);
+    this.base.addEventListener('transitionend', (e) => { 
+      this.props.pauseWalking();
+      setTimeout(this.props.walk, Math.max(Math.random * 4000, 1000));
+    });
+    this.base.addEventListener('click', this.props.addPoint);
     this.base.querySelector('.left-pincer').addEventListener('animationend', this.props.removePincerAction);
     this.setState({ changePincerInterval: setInterval(this.props.changePincerAction, 8000) });
   }
@@ -41,37 +33,61 @@ class UnstyledCrab extends Component {
 
   render() {
     return (
-    <CrabSVG
-      data-iteration="0"
-      className={`
-        crab
-        ${this.props.className}
-        ${this.props.pincerAction || ''}
-        ${this.props.walk ? 'walking' : ''}
-        ${this.props.paused ? 'paused' : ''}
-        ${this.props.direction}
-      `} />
+      <div id={this.props.id} className={`crabWrapper 
+      ${this.props.className}  ${this.props.paused ? 'paused' : ''} ${this.props.walking ? 'walking' : ''}`}>
+        <CrabSVGRaw
+          data-iteration="0"
+          className={`
+            crab
+            ${this.props.pincerAction || ''}
+            ${this.props.walking ? 'walking' : ''}
+            ${this.props.paused ? 'paused' : ''}
+            ${this.props.direction}
+          `} />
+      </div>
     );
   }
 }
 
+export const CrabSVG = styled(UnstyledCrab)`
+&#crab{
+  width: ${props => props.screenWidth * 0.12 * 0.6}px;
+  position: absolute;
+  top: -300px;
+  left: -300px;
+
+  .crab {
+    min-width: ${props => Math.max(props.screenWidth * 0.12, props.width)}px;
+  }
+}
+`;
+
 const Crab = styled(UnstyledCrab)`
-  min-width: ${props => props.width}px;
-  width: ${props => props.screenWidth * 0.12}px;
-  height: fit-content;
+  display: flex;
+  justify-content: center;
+  width: ${props => props.screenWidth * 0.12 * 0.6}px;
   overflow: visible;
-  pointer-events: none;
+  align-items: flex-start;
   position: absolute;
   top: 0;
   left: 0;
   animation-fill-mode: both;
   transition: transform ${props => props.walkTime}s;
   transition-timing-function: cubic-bezier(1, 1.02, 0.76, 0.99);
-
+  cursor: pointer;
+  pointer-events: none;
+  
   &.walking {
+    pointer-events: all;
     transform: translate(${props => (props.moveTo ? `${props.moveTo[0]}px, ${props.moveTo[1]}px` : '0, 0')});
+    &.paused {
+      pointer-events: none;
+    }
   }
 
+.crab {
+  min-width: ${props => Math.max(props.screenWidth * 0.12, props.width)}px;
+  pointer-events: none;
 //******LEFT LEGS ANIMATIONS******//
 // First Leg Animations
 @keyframes moveLefts-firstLeg-firstPart {
@@ -862,6 +878,7 @@ const Crab = styled(UnstyledCrab)`
       }
     }
   }
+}
 }
 `;
 

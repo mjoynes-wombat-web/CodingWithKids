@@ -17,11 +17,11 @@ export default class App extends Component {
 		this.state = {
 			pincerActions: ['eating', 'waving', 'snapping' ],
 			currentPincerAction: 'eating',
-			walk: false,
+			walking: false,
 			walkTime: 0,
 			direction: 'left',
 			inch: null,
-			difficulty: 3,
+			difficulty: 2,
 			paused: false,
 			currentPos: [0, 0],
 			fullscreen: false,
@@ -62,6 +62,7 @@ export default class App extends Component {
 	initGame() {
 		const crab  = document.getElementById('crab');
 		const crabDimensions = [ crab.clientWidth, crab.clientHeight ];
+		console.log(crabDimensions);
 		const shellDimensions = crab.querySelector('.shell').getBoundingClientRect();
 		const cols = Math.floor(screen.width / Math.max(shellDimensions.width * Math.round(5 - this.state.difficulty / 1.75), (shellDimensions.width * 2)));
 		const rows = Math.floor(
@@ -102,6 +103,7 @@ export default class App extends Component {
 			}
 			hidingSpots.push(colGroup);
 		}
+		setTimeout(this.walk, 3000);
 		return this.setState({
 			hidingSpots: this.setHidable(hidingSpots),
 			hidingSpotWidth: shellDimensions.width,
@@ -158,10 +160,8 @@ export default class App extends Component {
 		return this.pickSpot();
 	}
 
-	walk(e) {
-		e.preventDefault();
+	walk() {
 		const spot = this.pickSpot();
-		console.log(spot);
 		const moveTo = [
 			spot.coords[0] - (this.state.crabDimensions[0] / 2),
 			spot.coords[1] - (this.state.crabDimensions[1] / 2),
@@ -179,9 +179,10 @@ export default class App extends Component {
 
 		const direction = (this.state.currentPos[0] <= moveTo[0] ? 'right' : 'left')
 
-		if (moveTo[0] === this.state.currentPos[0] && moveTo[1] === this.state.currentPos[1]) return null;
+		if (moveTo[0] === this.state.currentPos[0] && moveTo[1] === this.state.currentPos[1]) return this.walk();
+		console.log('walk called');
 		return this.setState({
-			walk: true,
+			walking: true,
 			direction,
 			paused: false,
 			moveTo,
@@ -189,8 +190,7 @@ export default class App extends Component {
 		});
 	}
 
-	pauseWalking(e) {
-		e.preventDefault();
+	pauseWalking() {
 		this.setState({ paused: true, currentPos: this.state.moveTo });
 	}
 
@@ -200,12 +200,12 @@ export default class App extends Component {
 	}
 
 	startGame(e) {
-		this.initGame(e);
 		this.enterFullscreen(e);
+		this.initGame(e);
 	}
 
 	addPoint(e) {
-		console.log(e);
+		console.log('crab clicked');
 		this.setState({ points: this.state.points + 1 });
 	}
 
@@ -239,9 +239,18 @@ export default class App extends Component {
 								</div>
 								))}
 							</div>
+							<div className="buttons">
+								<button onClick={this.enterFullscreen}>
+									{this.state.fullscreen
+										? <FAIcon icon={faCompress} />
+										: <FAIcon icon={faExpand} />
+									}
+								</button>
+							</div>
 							<Crab
 								addPoint={this.addPoint}
-								walk={this.state.walk}
+								walk={this.walk}
+								walking={this.state.walking}
 								walkTime={this.state.walkTime}
 								pincerAction={this.state.currentPincerAction}
 								changePincerAction={this.changePincerAction}
@@ -255,27 +264,10 @@ export default class App extends Component {
 								inch={this.state.inch}
 								screenWidth={this.state.screenWidth}
 								removePincerAction={this.removePincerAction} />
-							<div className="buttons">
-								<button onClick={this.enterFullscreen}>
-									{this.state.fullscreen
-										? <FAIcon icon={faCompress} />
-										: <FAIcon icon={faExpand} />
-									}
-								</button>
-								{this.state.fullscreen 
-									? <button
-											onClick={this.walk}
-											disabled={this.state.walk && !this.state.paused}
-										>
-											<FAIcon icon={faWalking} />
-										</button>
-									: null
-								}
-							</div>
 							<div class="state">
 								<h2>Crab State</h2>
 								<div className="details">
-									<p>Walking: {this.state.walk && this.state.paused ? 'paused' : this.state.walk.toString()}</p>
+									<p>Walking: {this.state.walking && this.state.paused ? 'paused' : this.state.walking.toString()}</p>
 									<p>Direction: {this.state.direction}</p>
 									<p>Pincer Action: {this.state.currentPincerAction}</p>
 									<p>Game Difficulty: {this.state.difficulty}</p>

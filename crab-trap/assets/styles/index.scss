@@ -54,6 +54,11 @@ body {
     }
   
     .buttons {
+      position: absolute;
+      z-index: 10000;
+      top: 0;
+      left: 0;
+      
       button {
         appearance: none;
         border: none;
