@@ -1,6 +1,5 @@
 import { Component } from 'react';
-import Helmet from 'react-helmet';
-import FAIcon from '@fortawesome/react-fontawesome'
+import FAIcon from '@fortawesome/react-fontawesome';
 import faCompress from '@fortawesome/fontawesome-pro-light/faCompress';
 import faExpand from '@fortawesome/fontawesome-pro-light/faExpand';
 import faWalking from '@fortawesome/fontawesome-pro-light/faWalking';
@@ -176,11 +175,9 @@ export default class App extends Component {
 	}
 
 	render() {
+		document.title = 'Crab Trap';
 		return (
 			<main className={this.props.className}>
-				<Helmet
-					title="Crab Trap"
-				/>
 				{this.state.fullscreen
 					? <div className="grid">
 						{this.state.hidingSpots.map(col => (
