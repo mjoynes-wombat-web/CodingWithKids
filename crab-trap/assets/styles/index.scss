@@ -58,36 +58,36 @@ body {
       z-index: 10000;
       top: 0;
       left: 0;
-      
-      button {
-        appearance: none;
-        border: none;
-        border-radius: 0.25rem;
-        padding: 0.5rem;
-        background-color: #FF8E00;
-        color: white;
-        line-height: 0;
-        outline: none;
-        margin: 0.25rem;
-        cursor: pointer;
-        transition: background-color 0.25s;
+    }
+    
+    button {
+      appearance: none;
+      border: none;
+      border-radius: 0.25rem;
+      padding: 0.5rem;
+      background-color: #FF8E00;
+      color: white;
+      line-height: 0;
+      outline: none;
+      margin: 0.25rem;
+      cursor: pointer;
+      transition: background-color 0.25s;
 
-        &:hover {
-          background-color: #FF5700;
-        }
+      &:hover {
+        background-color: #FF5700;
+      }
 
-        &:active, &:active:hover {
-          background-color: #FFB828;
-        }
+      &:active, &:active:hover {
+        background-color: #FFB828;
+      }
 
-        &:disabled {
-          background-color: #999;
-        }
+      &:disabled {
+        background-color: #999;
+      }
 
-        svg.fa-expand, svg.fa-compress, svg.fa-walking {
-          width: 1rem;
-          height: 1rem;
-        }
+      svg.fa-expand, svg.fa-compress, svg.fa-walking {
+        width: 1rem;
+        height: 1rem;
       }
     }
     .state {
