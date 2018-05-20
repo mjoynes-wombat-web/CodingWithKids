@@ -8,6 +8,7 @@ const UnstyledStartGame = ({ className, startGame, pincerAction, changePincerAct
     <Crab
       walking={true}
       direction={"right"}
+      difficulty={1.25}
       pincerAction={pincerAction}
       changePincerAction={changePincerAction}
       removePincerAction={removePincerAction}
