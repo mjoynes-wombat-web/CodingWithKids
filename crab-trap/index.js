@@ -21,7 +21,7 @@ export default class App extends Component {
 			walkTime: 0,
 			direction: 'left',
 			inch: null,
-			difficulty: 1,
+			difficulty: 3,
 			paused: false,
 			currentPos: [0, 0],
 			fullscreen: false,
@@ -51,7 +51,7 @@ export default class App extends Component {
 		this.setRotation();
 		window.addEventListener('resize', this.setRotation);
 		const inch = document.getElementById('inch').clientHeight;
-		return this.setState({ inch });
+		return this.setState({ inch, screenWidth: screen.width });
 	}
 
 	setRotation() {
@@ -213,7 +213,7 @@ export default class App extends Component {
 		return (
 			<main className={this.props.className}>
 				<div id="inch"></div>
-				<CrabSVG id="crab" className="crab" width={this.state.inch} />
+				<CrabSVG id="crab" className="crab" width={this.state.inch} screenWidth={this.state.screenWidth} />
 				{this.state.rotate ? <PleaseRotate /> : null}
 				{!this.state.fullscreen && !this.state.rotate ? <StartGame startGame={this.startGame}/> : null}
 				{!this.state.rotate && this.state.fullscreen && this.state.gameInit 
@@ -253,6 +253,7 @@ export default class App extends Component {
 								paused={this.state.paused}
 								pauseWalking={this.pauseWalking}
 								inch={this.state.inch}
+								screenWidth={this.state.screenWidth}
 								removePincerAction={this.removePincerAction} />
 							<div className="buttons">
 								<button onClick={this.enterFullscreen}>

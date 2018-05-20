@@ -6,7 +6,7 @@ import CrabSVGRaw from '-!svg-react-loader!../assets/design/crab-final.svg';
 export const CrabSVG = styled(CrabSVGRaw)`
 &#crab{
   min-width: ${props => props.width}px;
-  width: ${screen.width * 0.12}px;
+  width: ${props => props.screenWidth * 0.12}px;
   height: fit-content;
   position: absolute;
   top: -300px;
@@ -28,7 +28,6 @@ class UnstyledCrab extends Component {
 
   componentDidMount() {
     this.base.addEventListener('transitionend', this.props.pauseWalking);
-    console.log(this.base.querySelector('.shell'));
     this.base.querySelector('.shell').addEventListener('click', this.props.addPoint);
     this.base.querySelector('.left-pincer').addEventListener('animationend', this.props.removePincerAction);
     this.setState({ changePincerInterval: setInterval(this.props.changePincerAction, 8000) });
@@ -58,7 +57,7 @@ class UnstyledCrab extends Component {
 
 const Crab = styled(UnstyledCrab)`
   min-width: ${props => props.width}px;
-  width: ${screen.width * 0.12}px;
+  width: ${props => props.screenWidth * 0.12}px;
   height: fit-content;
   overflow: visible;
   pointer-events: none;
