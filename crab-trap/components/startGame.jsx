@@ -3,15 +3,10 @@ import styled from 'styled-components';
 
 import Crab from './crab';
 
-const UnstyledStartGame = ({ className, startGame, pincerAction, changePincerAction, removePincerAction, screenWidth, width }) => (
+const UnstyledStartGame = ({ className, startGame, screenWidth, width }) => (
   <div className={className} id="startGame">
     <Crab
-      walking={true}
-      direction={"right"}
-      difficulty={1.25}
-      pincerAction={pincerAction}
-      changePincerAction={changePincerAction}
-      removePincerAction={removePincerAction}
+      display={true}
       screenWidth={screenWidth}
       width={width}/>
     <button onClick={startGame}>Start Game</button>
