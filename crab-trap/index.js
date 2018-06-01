@@ -167,16 +167,12 @@ export default class App extends Component {
 			spot.coords[1] - (this.state.crabDimensions[1] / 2),
 		]
 
-		const walkTime = Math.pow(
-			Math.pow(
-				Math.abs(this.state.currentPos[0] - moveTo[0]),
-				2)
-			+ Math.pow(
-				Math.abs(this.state.currentPos[1] - moveTo[1]),
-			2),
-			0.5)
-		/ (this.state.inch * this.state.difficulty);
-
+		const walkTime = Math.hypot(
+			Math.abs(this.state.currentPos[0] - moveTo[0]),
+			Math.abs(this.state.currentPos[1] - moveTo[1])
+		)
+		/ this.state.inch / ((this.state.difficulty / 3) + 0.6666);
+	
 		const direction = (this.state.currentPos[0] <= moveTo[0] ? 'right' : 'left')
 
 		if (moveTo[0] === this.state.currentPos[0] && moveTo[1] === this.state.currentPos[1]) return this.walk();
