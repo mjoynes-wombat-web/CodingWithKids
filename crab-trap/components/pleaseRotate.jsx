@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 
-const UnstyledPleaseRotate = ({ className }) => (
+const UnstyledPleaseRotate = () => (
   <div id="pleaseRotate">
     <h1>Please Rotate Your Screen</h1>
   </div>

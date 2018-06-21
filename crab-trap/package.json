@@ -6,13 +6,10 @@
   "scripts": {
     "start": "if-env NODE_ENV=production && npm run -s serve || npm run -s dev",
     "build": "preact build",
-    "serve": "preact build && preact serve",
+    "serve": "npm run build && preact serve",
     "dev": "preact watch",
     "lint": "eslint src",
     "publish": "gh-pages -d /build"
-  },
-  "eslintConfig": {
-    "extends": "eslint-config-synacor"
   },
   "eslintIgnore": [
     "build/*"
@@ -33,6 +30,7 @@
     "@fortawesome/react-fontawesome": "0.0.20",
     "preact": "^8.2.9",
     "preact-compat": "^3.18.0",
+    "prop-types": "^15.6.2",
     "react": "^16.3.2",
     "react-helmet": "^5.2.0",
     "styled-components": "^3.2.6"

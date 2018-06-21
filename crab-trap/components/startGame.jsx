@@ -1,17 +1,33 @@
 import React from 'react';
 import styled from 'styled-components';
+import PropTypes from 'prop-types';
 
 import Crab from './crab';
 
-const UnstyledStartGame = ({ className, startGame, screenWidth, width }) => (
+const UnstyledStartGame = ({
+  className, startGame, screenWidth, width,
+}) => (
   <div className={className} id="startGame">
     <Crab
-      display={true}
+      id="startScreenCrab"
+      display
       screenWidth={screenWidth}
-      width={width}/>
+      width={width}
+    />
     <button onClick={startGame}>Start Game</button>
   </div>
 );
+
+UnstyledStartGame.propTypes = {
+  className: PropTypes.string,
+  startGame: PropTypes.func.isRequired,
+  screenWidth: PropTypes.number.isRequired,
+  width: PropTypes.number.isRequired,
+};
+
+UnstyledStartGame.defaultProps = {
+  className: '',
+};
 
 const StartGame = styled(UnstyledStartGame)`
 display: flex;

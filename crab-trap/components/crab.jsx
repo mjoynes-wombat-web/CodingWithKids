@@ -1,14 +1,100 @@
-import { Component } from 'react';
+import React, { Component } from 'react';
 import styled from 'styled-components';
+import PropTypes from 'prop-types';
 
 import CrabSVGRaw from '-!svg-react-loader!../assets/design/crab-final.svg';
 
-const UnstyledCrabWrapper = ({ children, paused, walking, className, id}) => (
-  <div id={id} className={`crab-wrapper 
-      ${className}  ${paused ? 'paused' : ''} ${walking ? 'walking' : ''}`}>
-      {children}
+function legRotateCSSAni(name, positions) {
+  const rotateString = positions.reduce((posAccum, pos) =>
+    `\
+  ${posAccum}
+  ${pos[0]}% { transform: rotate(${pos[1]}deg); }\
+`, '');
+  return `\
+@keyframes ${name} {\
+  ${rotateString}
+}\
+  `;
+}
+
+class LegAniObj {
+  constructor(positions) {
+    [this.firstPart, this.secondPart, this.thirdPart] = positions;
+  }
+}
+
+const legRotations = {
+  moveLefts: {
+    firstLeg: new LegAniObj([
+      [[10, -14], [50, 13]],
+      [[35, -25], [50, -25]],
+      [[35, 8], [50, 12]],
+    ]),
+    secondLeg: new LegAniObj([
+      [[10, -15.5], [50, 10]],
+      [[35, -30], [50, -30]],
+      [[35, 8], [50, 12]],
+    ]),
+    thirdLeg: new LegAniObj([
+      [[10, -15.5], [50, 10]],
+      [[35, -35], [50, -35]],
+      [[35, -3], [50, -3]],
+    ]),
+    fourthLeg: new LegAniObj([
+      [[10, -11], [50, 14]],
+      [[35, -35], [50, -35]],
+      [[35, -45], [50, -45]],
+    ]),
+  },
+  moveRights: {
+    firstLeg: new LegAniObj([
+      [[10, 14], [50, -13]],
+      [[35, 25], [50, 25]],
+      [[35, -8], [50, -12]],
+    ]),
+    secondLeg: new LegAniObj([
+      [[10, 15.5], [50, -10]],
+      [[35, 30], [50, 30]],
+      [[35, -8], [50, -12]],
+    ]),
+    thirdLeg: new LegAniObj([
+      [[10, 15.5], [50, -10]],
+      [[35, 35], [50, 35]],
+      [[35, 3], [50, 3]],
+    ]),
+    fourthLeg: new LegAniObj([
+      [[10, 11], [50, -14]],
+      [[35, 35], [50, 35]],
+      [[35, 45], [50, 45]],
+    ]),
+  },
+};
+
+const UnstyledCrabWrapper = ({
+  children, paused, walking, className, id,
+}) => (
+  <div
+    id={id}
+    className={`crab-wrapper 
+      ${className}  ${paused ? 'paused' : ''} ${walking ? 'walking' : ''}`}
+  >
+    {children}
   </div>
 );
+
+UnstyledCrabWrapper.propTypes = {
+  children: PropTypes.element,
+  paused: PropTypes.bool.isRequired,
+  walking: PropTypes.bool,
+  className: PropTypes.string,
+  id: PropTypes.string.isRequired,
+};
+
+UnstyledCrabWrapper.defaultProps = {
+  children: {},
+  className: '',
+  walking: false,
+};
 
 const CrabWrapper = styled(UnstyledCrabWrapper)`
 display: flex;
@@ -43,146 +129,16 @@ pointer-events: none;
 overflow: visible;
 min-width: ${props => Math.max(props.screenWidth * 0.12, props.width)}px;
 pointer-events: none;
-//******LEFT LEGS ANIMATIONS******//
-// First Leg Animations
-@keyframes moveLefts-firstLeg-firstPart {
-10% { transform: rotate(-14deg); }
-50% { transform: rotate(13deg); }
-}
 
-@keyframes moveLefts-firstLeg-secondPart {
-35% { transform: rotate(-25deg); }
-50% { transform: rotate(-25deg); }
-}
-
-@keyframes moveLefts-firstLeg-thirdPart {
-35% { transform: rotate(8deg); }
-50% { transform: rotate(12deg); }  
-}
-
-@keyframes returnLefts-firstLeg-firstPart {
-100% { transform: rotate(-14deg); }
-}
-
-@keyframes returnLefts-firstLeg-secondPart {
-100% { transform: rotate(31deg); }
-}
-
-@keyframes returnLefts-firstLeg-thirdPart {
-100% { transform: rotate(-17deg); }
-}
-
-// Second Leg Animations
-@keyframes moveLefts-secondLeg-firstPart {
-10% { transform: rotate(-15.5deg); }
-50% { transform: rotate(10deg); }
-}
-
-@keyframes moveLefts-secondLeg-secondPart {
-35% { transform: rotate(-30deg); }
-50% { transform: rotate(-30deg); }
-}
-
-@keyframes moveLefts-secondLeg-thirdPart {
-35% { transform: rotate(8deg); }
-50% { transform: rotate(12deg); }  
-}
-
-// Third Leg Animations
-@keyframes moveLefts-thirdLeg-firstPart {
-10% { transform: rotate(-15.5deg); }
-50% { transform: rotate(10deg); }
-}
-
-@keyframes moveLefts-thirdLeg-secondPart {
-35% { transform: rotate(-35deg); }
-50% { transform: rotate(-35deg); }
-}
-
-@keyframes moveLefts-thirdLeg-thirdPart {
-35% { transform: rotate(-3deg); }
-50% { transform: rotate(-3deg); }  
-}
-
-// Fourth Leg Animations
-@keyframes moveLefts-fourthLeg-firstPart {
-10% { transform: rotate(-11deg); }
-50% { transform: rotate(14deg); }
-}
-
-@keyframes moveLefts-fourthLeg-secondPart {
-35% { transform: rotate(-35deg); }
-50% { transform: rotate(-35deg); }
-}
-
-@keyframes moveLefts-fourthLeg-thirdPart {
-35% { transform: rotate(-45deg); }
-50% { transform: rotate(-45deg); }  
-}
-
-//******RIGHT LEGS ANIMATIONS******//
-// First Leg Animations
-@keyframes moveRights-firstLeg-firstPart {
-10% { transform: rotate(14deg); }
-50% { transform: rotate(-13deg); }
-}
-
-@keyframes moveRights-firstLeg-secondPart {
-35% { transform: rotate(25deg); }
-50% { transform: rotate(25deg); }
-}
-
-@keyframes moveRights-firstLeg-thirdPart {
-35% { transform: rotate(-8deg); }
-50% { transform: rotate(-12deg); }  
-}
-
-// Second Leg Animations
-@keyframes moveRights-secondLeg-firstPart {
-10% { transform: rotate(15.5deg); }
-50% { transform: rotate(-10deg); }
-}
-
-@keyframes moveRights-secondLeg-secondPart {
-35% { transform: rotate(30deg); }
-50% { transform: rotate(30deg); }
-}
-
-@keyframes moveRights-secondLeg-thirdPart {
-35% { transform: rotate(-8deg); }
-50% { transform: rotate(-12deg); }  
-}
-
-// Third Leg Animations
-@keyframes moveRights-thirdLeg-firstPart {
-10% { transform: rotate(15.5deg); }
-50% { transform: rotate(-10deg); }
-}
-
-@keyframes moveRights-thirdLeg-secondPart {
-35% { transform: rotate(35deg); }
-50% { transform: rotate(35deg); }
-}
-
-@keyframes moveRights-thirdLeg-thirdPart {
-35% { transform: rotate(3deg); }
-50% { transform: rotate(3deg); }  
-}
-
-// Fourth Leg Animations
-@keyframes moveRights-fourthLeg-firstPart {
-10% { transform: rotate(11deg); }
-50% { transform: rotate(-14deg); }
-}
-
-@keyframes moveRights-fourthLeg-secondPart {
-35% { transform: rotate(35deg); }
-50% { transform: rotate(35deg); }
-}
-
-@keyframes moveRights-fourthLeg-thirdPart {
-35% { transform: rotate(45deg); }
-50% { transform: rotate(45deg); }  
+// Leg Animations
+${
+  Object.keys(legRotations)
+    .map(sideName => Object.keys(legRotations[sideName])
+      .map(legName => Object.keys(legRotations[sideName][legName])
+        .map((partName) => {
+          const name = `${sideName}-${legName}-${partName}`;
+          return legRotateCSSAni(name, legRotations[sideName][legName][partName]);
+        })))
 }
 
 @keyframes move-shell {
@@ -304,7 +260,7 @@ pointer-events: none;
 &.walking {
   .legs {
     .left-legs *, .right-legs * {
-      animation-duration: ${props => 1 / props.difficulty * 1.5}s;
+      animation-duration: ${props => (1 / props.difficulty) * 1.5}s;
       animation-iteration-count: infinite;
     }
     .left-legs {
@@ -405,7 +361,7 @@ pointer-events: none;
 .shell {
     transform-origin: 50% 85.07%;
     animation-name: move-shell;
-    animation-duration: ${props => 2 / props.difficulty * 1.25}s;
+    animation-duration: ${props => (2 / props.difficulty) * 1.25}s;
     animation-iteration-count: infinite;
     pointer-events: all;
     cursor: pointer;
@@ -842,14 +798,13 @@ class Crab extends Component {
     super(props);
 
     this.state = {
-      changePincerInterval: null,
-      pincerActions: ['eating', 'waving', 'snapping' ],
+      pincerActions: ['eating', 'waving', 'snapping'],
       pincerAction: 'eating',
       walkTime: 0,
-			direction: 'right',
+      direction: 'right',
       paused: false,
-			currentPos: [0, 0],
-    }
+      currentPos: [0, 0],
+    };
 
     this.componentDidMount = this.componentDidMount.bind(this);
     this.componentWillUnmount = this.componentWillUnmount.bind(this);
@@ -864,20 +819,22 @@ class Crab extends Component {
     if (this.props.display) {
       return this.setState({
         walking: true,
-        direction: "right",
-        difficulty: 1.25,
       });
     }
-    this.base.addEventListener('transitionend', (e) => { 
+    this.base.addEventListener('transitionend', () => {
       this.pauseWalking();
       setTimeout(this.walk, Math.max(Math.random * 4000, 1000));
     });
     this.base.addEventListener('click', this.props.addPoint);
     this.base.querySelector('.left-pincer').addEventListener('animationend', this.removePincerAction);
 
-    const changePincerInterval = setInterval(this.changePincerAction, 7000 + (Math.random() * 2000));
+    const changePincerInterval = setInterval(
+      this.changePincerAction,
+      7000 + (Math.random() * 2000),
+    );
     this.setState({ changePincerInterval });
     setTimeout(this.walk, 3000);
+    return null;
   }
 
   componentWillUnmount() {
@@ -887,52 +844,55 @@ class Crab extends Component {
   }
 
   changePincerAction() {
-		let pincerAction = this.state.pincerActions[Math.floor(Math.random()*this.state.pincerActions.length)];
-		return this.setState({ pincerAction })
+    const pincerAction = this.state.pincerActions[Math
+      .floor(Math
+        .random() * this.state.pincerActions.length)];
+    return this.setState({ pincerAction });
   }
 
   removePincerAction() {
-		this.setState({ pincerAction: null });
+    this.setState({ pincerAction: null });
   }
-  
+
   walk() {
     const spot = this.pickSpot();
-		const moveTo = [
-			spot.coords[0] - (this.props.crabDimensions[0] / 2),
-			spot.coords[1] - (this.props.crabDimensions[1] / 2),
+    const moveTo = [
+      spot.coords[0] - (this.props.crabDimensions[0] / 2),
+      spot.coords[1] - (this.props.crabDimensions[1] / 2),
     ];
 
-		const walkTime = Math.hypot(
-			Math.abs(this.state.currentPos[0] - moveTo[0]),
-			Math.abs(this.state.currentPos[1] - moveTo[1])
-		)
+    const walkTime = Math.hypot(
+      Math.abs(this.state.currentPos[0] - moveTo[0]),
+      Math.abs(this.state.currentPos[1] - moveTo[1]),
+    )
     / this.props.inch / ((this.props.difficulty / 3) + 0.6666);
-	
-		const direction = (this.state.currentPos[0] <= moveTo[0] ? 'right' : 'left')
 
-		if (moveTo[0] === this.state.currentPos[0] && moveTo[1] === this.state.currentPos[1]) return this.walk();
-		return this.setState({
-			walking: true,
-			direction,
-			paused: false,
-			moveTo,
-			walkTime,
-		});
-	}
+    const direction = (this.state.currentPos[0] <= moveTo[0] ? 'right' : 'left');
 
-	pauseWalking() {
-		this.setState({ paused: true, currentPos: this.state.moveTo });
+    if (moveTo[0] === this.state.currentPos[0]
+      && moveTo[1] === this.state.currentPos[1]) return this.walk();
+    return this.setState({
+      walking: true,
+      direction,
+      paused: false,
+      moveTo,
+      walkTime,
+    });
   }
-  
-  pickSpot() {
-		const { hidingSpots } = this.props;
-		const cols = hidingSpots.length;
-		const rows = hidingSpots[0].length;
-    const spot = hidingSpots[Math.floor(Math.random()*cols)][Math.floor(Math.random()*rows)];
 
-		if (spot.hideable) return spot;
-		return this.pickSpot();
-	}
+  pauseWalking() {
+    this.setState({ paused: true, currentPos: this.state.moveTo });
+  }
+
+  pickSpot() {
+    const { hidingSpots } = this.props;
+    const cols = hidingSpots.length;
+    const rows = hidingSpots[0].length;
+    const spot = hidingSpots[Math.floor(Math.random() * cols)][Math.floor(Math.random() * rows)];
+
+    if (spot.hideable) return spot;
+    return this.pickSpot();
+  }
 
   render() {
     return (
@@ -946,7 +906,8 @@ class Crab extends Component {
         moveTo={this.state.moveTo}
         width={this.props.width}
         difficulty={this.props.difficulty || this.state.difficulty}
-        direction={this.state.direction}>
+        direction={this.state.direction}
+      >
         <CrabSVGRaw
           data-iteration="0"
           className={`
@@ -955,10 +916,43 @@ class Crab extends Component {
             ${this.state.walking ? 'walking' : ''}
             ${this.props.paused ? 'paused' : ''}
             ${this.props.direction}
-          `} />
+          `}
+        />
       </CrabWrapper>
     );
   }
 }
+
+Crab.propTypes = {
+  crabDimensions: PropTypes.arrayOf(PropTypes.number),
+  direction: PropTypes.string,
+  paused: PropTypes.bool,
+  width: PropTypes.number,
+  screenWidth: PropTypes.number,
+  className: PropTypes.string,
+  id: PropTypes.string.isRequired,
+  hidingSpots: PropTypes.arrayOf(PropTypes.arrayOf(PropTypes.shape({
+    coords: PropTypes.arrayOf(PropTypes.number),
+    hideable: PropTypes.bool,
+  }))),
+  difficulty: PropTypes.number,
+  inch: PropTypes.number,
+  addPoint: PropTypes.func,
+  display: PropTypes.bool,
+};
+
+Crab.defaultProps = {
+  crabDimensions: [0, 0],
+  className: '',
+  direction: 'right',
+  difficulty: 1.25,
+  paused: false,
+  width: null,
+  screenWidth: null,
+  hidingSpots: null,
+  inch: 96,
+  addPoint: null,
+  display: true,
+};
 
 export default Crab;
