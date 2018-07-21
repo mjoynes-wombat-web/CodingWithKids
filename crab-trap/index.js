@@ -21,6 +21,7 @@ export default class App extends Component {
       hidingSpots: [],
       rotate: false,
       points: 0,
+      screenWidth: window.screen.width,
     };
 
     this.componentDidMount = this.componentDidMount.bind(this);
@@ -36,8 +37,6 @@ export default class App extends Component {
     document.title = 'Crab Trap';
     this.setRotation();
     window.addEventListener('resize', this.setRotation);
-    const inch = document.getElementById('inch').clientHeight;
-    return this.setState({ inch, screenWidth: window.screen.width });
   }
 
   setRotation() {
@@ -137,11 +136,11 @@ export default class App extends Component {
   render() {
     return (
       <main className={this.props.className}>
+        <link href="https://fonts.googleapis.com/css?family=Lobster" rel="stylesheet" />
         <div id="inch" />
         <Crab
           id="crab"
           className="crab hidden"
-          width={this.state.inch}
           screenWidth={this.state.screenWidth}
           display
         />
@@ -150,7 +149,6 @@ export default class App extends Component {
           ? <StartGame
             startGame={this.startGame}
             screenWidth={this.state.screenWidth}
-            width={this.state.inch}
           />
           : null}
         {!this.state.rotate && this.state.fullscreen && this.state.gameInit

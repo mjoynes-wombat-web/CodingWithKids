@@ -5,14 +5,14 @@ import PropTypes from 'prop-types';
 import Crab from './crab';
 
 const UnstyledStartGame = ({
-  className, startGame, screenWidth, width,
+  className, startGame, screenWidth,
 }) => (
   <div className={className} id="startGame">
+    <h1>Crab Trap</h1>
     <Crab
       id="startScreenCrab"
       display
       screenWidth={screenWidth}
-      width={width}
     />
     <button onClick={startGame}>Start Game</button>
   </div>
@@ -22,7 +22,6 @@ UnstyledStartGame.propTypes = {
   className: PropTypes.string,
   startGame: PropTypes.func.isRequired,
   screenWidth: PropTypes.number.isRequired,
-  width: PropTypes.number.isRequired,
 };
 
 UnstyledStartGame.defaultProps = {
