@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
 import CrabSVG from './CrabSVG';
-import CrabWrapper from './wrapper';
+import CrabWrapper from './Wrapper';
 
 class Crab extends Component {
   constructor(props) {

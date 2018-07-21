@@ -3,14 +3,12 @@ import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import 'normalize.css';
 
-import logo from './logo.svg';
-import sand from './assets/images/sand.jpg';
-
 import StartGame from './scenes/StartGame';
-
-import Crab from './components/crab';
+import Crab from './components/Crab';
 import PleaseRotate from './scenes/Rotate';
 import GameBoard from './scenes/GameBoard';
+
+import sand from './assets/images/sand.jpg';
 
 class App extends Component {
   constructor(props) {
@@ -19,16 +17,13 @@ class App extends Component {
       difficulty: 1,
       fullscreen: false,
       gameInit: false,
-      hidingSpots: [],
       rotate: false,
       points: 0,
       screenWidth: window.screen.width,
     };
 
     this.componentDidMount = this.componentDidMount.bind(this);
-    this.initGame = this.initGame.bind(this);
     this.enterFullscreen = this.enterFullscreen.bind(this);
-    this.setHidable = this.setHidable.bind(this);
     this.setRotation = this.setRotation.bind(this);
     this.startGame = this.startGame.bind(this);
     this.addPoint = this.addPoint.bind(this);
@@ -43,69 +38,6 @@ class App extends Component {
   setRotation() {
     if (window.screen.orientation.type.includes('portrait')) return this.setState({ rotate: true });
     return this.setState({ rotate: false });
-  }
-
-  setHidable(spots) {
-    const { difficulty } = this.state;
-    const newSpots = spots;
-    let percentHidden = 0;
-    const numCols = newSpots.length;
-    const numRows = newSpots[0].length;
-    const minPercent = Math.min(0.5 * Math.max(difficulty * 0.33, 1), 1);
-    const maxPercent = Math.min(0.66 * Math.max(difficulty * 0.33, 1), 1);
-    for (let i = 0; i < numCols; i += 1) {
-      for (let x = 0; x < numRows; x += 1) {
-        if ((percentHidden + (1 / (numCols * numRows))) >= maxPercent) return newSpots;
-        const isHidden = (Math.random() * difficulty > 0.66);
-        newSpots[i][x].hideable = isHidden;
-        if (isHidden) { percentHidden += (1 / (numCols * numRows)); }
-      }
-    }
-    if (percentHidden < minPercent) return this.setHidable(newSpots);
-    return newSpots;
-  }
-
-  initGame() {
-    const { difficulty } = this.state;
-    const crab = document.getElementById('crab');
-    const crabDimensions = [crab.clientWidth, crab.clientHeight];
-    const shellDimensions = crab.querySelector('.shell').getBoundingClientRect();
-    const cols = Math.floor(window.screen.width
-        / Math.max(
-          shellDimensions.width * Math.round((5 - (difficulty / 1.75))),
-          (shellDimensions.width * 2),
-        ));
-    const rows = Math.floor(window.screen.height / Math.max(
-      shellDimensions.height
-        * Math.round(6 - (difficulty / 1.75)),
-      (shellDimensions.height * 4),
-    ));
-
-    const hidingSpots = [];
-    for (let x = 0; x < cols; x += 1) {
-      const colWidth = window.screen.width / cols;
-      const colCenter = ((colWidth / 2) + (colWidth * (x + 1))) - colWidth;
-      const colGroup = [];
-
-      for (let i = 0; i < rows; i += 1) {
-        const rowHeight = window.screen.height / rows;
-        const rowCenter = ((rowHeight / 2) + (rowHeight * (i + 1))) - rowHeight;
-        const spot = {
-          coords: [
-            colCenter,
-            rowCenter,
-          ],
-        };
-        colGroup.push(spot);
-      }
-      hidingSpots.push(colGroup);
-    }
-    return this.setState({
-      hidingSpots: this.setHidable(hidingSpots),
-      hidingSpotWidth: shellDimensions.width,
-      crabDimensions,
-      gameInit: true,
-    });
   }
 
   enterFullscreen(e) {
@@ -124,7 +56,6 @@ class App extends Component {
 
   startGame(e) {
     this.enterFullscreen(e);
-    this.initGame(e);
   }
 
   addPoint() {
@@ -145,7 +76,6 @@ class App extends Component {
       gameInit,
       hidingSpots,
       hidingSpotWidth,
-      crabDimensions,
       difficulty,
       points,
     } = this.state;
@@ -167,7 +97,7 @@ class App extends Component {
             />
           )
           : null}
-        {!rotate && fullscreen && gameInit
+        {!rotate && fullscreen
           ? (
             <GameBoard
               hidingSpots={hidingSpots}
@@ -175,8 +105,7 @@ class App extends Component {
               enterFullscreen={this.enterFullscreen}
               fullscreen={fullscreen}
               addPoint={this.addPoint}
-              crabDimensions={crabDimensions}
-              difficult={difficulty}
+              difficulty={difficulty}
               screenWidth={screenWidth}
             />
           )
@@ -274,7 +203,8 @@ export default styled(App)`
           .hiding-spot {
             width: 12vw;
             height: 100%;
-            background-color: rgba(red, 0.25);
+            background-color: red;
+            opacity: 0.25;
             pointer-events: all;
           }
         }
@@ -295,7 +225,6 @@ export default styled(App)`
       padding: 0.5rem;
       background-color: ${colors.orange};
       color: white;
-      line-height: 0;
       outline: none;
       margin: 0.25rem;
       cursor: pointer;
