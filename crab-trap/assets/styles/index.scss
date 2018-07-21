@@ -1,7 +1,23 @@
+$dark-orange: #FF5700;
+$orange: #FF8E00;
+$gold: #FFB828;
+$brown: #8D4A00;
+$dark-brown: darken($brown, 10);
+
+
 body {
   margin: 0;
   padding: 0;
+  font-family: 'Lobster', Arnoldboecklin, cursive;
+
+  h1 {
+    color: $dark-orange;
+    text-shadow: 0.125rem 0.125rem 0 $dark-brown;
+    font-size: 4rem;
+  }
+
   main {
+    background: url("../images/sand.jpg");
     display: flex;
     flex-direction: column;
     width: 100vw;
@@ -65,7 +81,7 @@ body {
       border: none;
       border-radius: 0.25rem;
       padding: 0.5rem;
-      background-color: #FF8E00;
+      background-color: $orange;
       color: white;
       line-height: 0;
       outline: none;
@@ -74,11 +90,11 @@ body {
       transition: background-color 0.25s;
 
       &:hover {
-        background-color: #FF5700;
+        background-color: $dark-orange;
       }
 
       &:active, &:active:hover {
-        background-color: #FFB828;
+        background-color: $gold;
       }
 
       &:disabled {
