@@ -1,42 +1,32 @@
 {
+  "name": "crab-trap-cra",
+  "version": "0.1.0",
   "private": true,
-  "name": "crab-trap",
-  "version": "0.0.0",
-  "license": "",
-  "scripts": {
-    "start": "if-env NODE_ENV=production && npm run -s serve || npm run -s dev",
-    "build": "preact build",
-    "serve": "npm run build && preact serve",
-    "dev": "preact watch",
-    "lint": "eslint src",
-    "publish": "gh-pages -d /build"
-  },
-  "eslintIgnore": [
-    "build/*"
-  ],
-  "devDependencies": {
-    "eslint": "^4.19.1",
-    "eslint-config-airbnb": "^17.0.0",
-    "eslint-config-synacor": "^1.1.0",
-    "eslint-plugin-import": "^2.13.0",
-    "eslint-plugin-jsx-a11y": "^6.1.1",
-    "eslint-plugin-react": "^7.10.0",
-    "gh-pages": "^1.1.0",
-    "if-env": "^1.0.0",
-    "node-sass": "^4.9.0",
-    "preact-cli": "^2.0.0",
-    "sass-loader": "^7.0.1",
-    "svg-react-loader": "^0.4.5"
-  },
   "dependencies": {
     "@fortawesome/fontawesome": "^1.1.8",
     "@fortawesome/fontawesome-pro-light": "^5.0.13",
-    "@fortawesome/react-fontawesome": "0.0.20",
-    "preact": "^8.2.9",
-    "preact-compat": "^3.18.0",
+    "@fortawesome/fontawesome-svg-core": "^1.2.0-14",
+    "@fortawesome/react-fontawesome": "^0.1.0",
+    "@svgr/core": "^2.1.1",
+    "normalize.css": "^8.0.0",
     "prop-types": "^15.6.2",
-    "react": "^16.3.2",
-    "react-helmet": "^5.2.0",
-    "styled-components": "^3.2.6"
+    "react": "^16.4.1",
+    "react-dom": "^16.4.1",
+    "react-scripts": "1.1.4",
+    "styled-components": "^3.3.3",
+    "svg-to-react-cli": "^1.5.0"
+  },
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test --env=jsdom",
+    "eject": "react-scripts eject"
+  },
+  "devDependencies": {
+    "eslint": "^4.19.1",
+    "eslint-config-airbnb": "^17.0.0",
+    "eslint-plugin-import": "^2.13.0",
+    "eslint-plugin-jsx-a11y": "^6.1.1",
+    "eslint-plugin-react": "^7.10.0"
   }
 }

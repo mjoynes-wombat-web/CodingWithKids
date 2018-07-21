@@ -12,13 +12,13 @@ class Crab extends Component {
       pincerActions: ['eating', 'waving', 'snapping'],
       pincerAction: 'eating',
       walkTime: 0,
-      direction: 'right',
-      paused: false,
+      direction: props.direction || 'right',
+      difficulty: props.difficulty || 1.25,
+      paused: props.paused || false,
       currentPos: [0, 0],
       walking: props.display,
     };
 
-    this.componentDidMount = this.componentDidMount.bind(this);
     this.componentWillUnmount = this.componentWillUnmount.bind(this);
     this.changePincerAction = this.changePincerAction.bind(this);
     this.removePincerAction = this.removePincerAction.bind(this);
@@ -31,21 +31,7 @@ class Crab extends Component {
     );
   }
 
-  componentDidMount() {
-    const { addPoint } = this.props;
-    this.base.addEventListener('transitionend', () => {
-      this.pauseWalking();
-      setTimeout(this.walk, Math.max(Math.random * 4000, 1000));
-    });
-    this.base.addEventListener('click', addPoint);
-    this.base.querySelector('.left-pincer').addEventListener('animationend', this.removePincerAction);
-    setTimeout(this.walk, 3000);
-    return null;
-  }
-
   componentWillUnmount() {
-    this.base.removeEventListener('transitionend', this.pauseWalking);
-    this.base.querySelector('.left-pincer').removeEventListener('animationend', this.removePincerAction);
     clearInterval(this.changePincerInterval);
   }
 
@@ -62,22 +48,24 @@ class Crab extends Component {
   }
 
   walk() {
+    const { crabDimensions, difficulty } = this.props;
+    const { currentPos } = this.state;
     const spot = this.pickSpot();
     const moveTo = [
-      spot.coords[0] - (this.props.crabDimensions[0] / 2),
-      spot.coords[1] - (this.props.crabDimensions[1] / 2),
+      spot.coords[0] - (crabDimensions[0] / 2),
+      spot.coords[1] - (crabDimensions[1] / 2),
     ];
 
     const walkTime = Math.hypot(
-      Math.abs(this.state.currentPos[0] - moveTo[0]),
-      Math.abs(this.state.currentPos[1] - moveTo[1]),
+      Math.abs(currentPos[0] - moveTo[0]),
+      Math.abs(currentPos[1] - moveTo[1]),
     )
-    / 96 / ((this.props.difficulty / 3) + 0.6666);
+    / 96 / ((difficulty / 3) + 0.6666);
 
-    const direction = (this.state.currentPos[0] <= moveTo[0] ? 'right' : 'left');
+    const direction = (currentPos[0] <= moveTo[0] ? 'right' : 'left');
 
-    if (moveTo[0] === this.state.currentPos[0]
-      && moveTo[1] === this.state.currentPos[1]) return this.walk();
+    if (moveTo[0] === currentPos[0]
+      && moveTo[1] === currentPos[1]) return this.walk();
     return this.setState({
       walking: true,
       direction,
@@ -88,7 +76,8 @@ class Crab extends Component {
   }
 
   pauseWalking() {
-    this.setState({ paused: true, currentPos: this.state.moveTo });
+    const { moveTo } = this.state;
+    this.setState({ paused: true, currentPos: moveTo });
   }
 
   pickSpot() {
@@ -102,26 +91,39 @@ class Crab extends Component {
   }
 
   render() {
+    const {
+      paused, walking, walkTime, moveTo, direction, pincerAction, difficulty,
+    } = this.state;
+    const {
+      addPoint, screenWidth, className, id,
+    } = this.props;
     return (
       <CrabWrapper
-        paused={this.state.paused}
-        walking={this.state.walking}
-        id={this.props.id}
-        className={this.props.className}
-        screenWidth={this.props.screenWidth}
-        walkTime={this.state.walkTime}
-        moveTo={this.state.moveTo}
-        difficulty={this.props.difficulty || this.state.difficulty}
-        direction={this.state.direction}
+        transitionEnd={() => {
+          this.pauseWalking();
+          setTimeout(this.walk, Math.max(Math.random * 4000, 1000));
+        }}
+        onClick={addPoint}
+
+        paused={paused}
+        walking={walking}
+        id={id}
+        className={className}
+        screenWidth={screenWidth}
+        walkTime={walkTime}
+        moveTo={moveTo}
+        difficulty={difficulty}
+        direction={direction}
       >
         <CrabSVG
+          removePincerAction={this.removePincerAction}
           data-iteration="0"
           className={`
             crab
-            ${this.state.pincerAction || ''}
-            ${this.state.walking ? 'walking' : ''}
-            ${this.props.paused ? 'paused' : ''}
-            ${this.props.direction}
+            ${pincerAction || ''}
+            ${walking ? 'walking' : ''}
+            ${paused ? 'paused' : ''}
+            ${direction}
           `}
         />
       </CrabWrapper>

@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import FAIcon from '@fortawesome/react-fontawesome';
+import { FontAwesomeIcon as FAIcon } from '@fortawesome/react-fontawesome';
 import faCompress from '@fortawesome/fontawesome-pro-light/faCompress';
 import faExpand from '@fortawesome/fontawesome-pro-light/faExpand';
 

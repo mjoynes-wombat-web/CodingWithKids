@@ -20,7 +20,7 @@ const UnstyledStartGame = ({
       Start Game
     </button>
   </div>
-);
+); 
 
 UnstyledStartGame.propTypes = {
   className: PropTypes.string,
@@ -45,6 +45,7 @@ min-width: 100vw;
   position: static;
   .crab{
     width: 100%;
+    height: auto;
   }
 }
 
