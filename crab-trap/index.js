@@ -1,20 +1,18 @@
 import React, { Component } from 'react';
-import FAIcon from '@fortawesome/react-fontawesome';
-import faCompress from '@fortawesome/fontawesome-pro-light/faCompress';
-import faExpand from '@fortawesome/fontawesome-pro-light/faExpand';
 import PropTypes from 'prop-types';
 
 import './assets/styles/index.scss';
 
+import StartGame from './scenes/StartGame';
+
 import Crab from './components/crab';
-import PleaseRotate from './components/pleaseRotate';
-import StartGame from './components/startGame';
+import PleaseRotate from './scenes/Rotate';
+import GameBoard from './scenes/GameBoard';
 
 export default class App extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      inch: null,
       difficulty: 1,
       fullscreen: false,
       gameInit: false,
@@ -45,16 +43,17 @@ export default class App extends Component {
   }
 
   setHidable(spots) {
+    const { difficulty } = this.state;
     const newSpots = spots;
     let percentHidden = 0;
     const numCols = newSpots.length;
     const numRows = newSpots[0].length;
-    const minPercent = Math.min(0.5 * Math.max(this.state.difficulty * 0.33, 1), 1);
-    const maxPercent = Math.min(0.66 * Math.max(this.state.difficulty * 0.33, 1), 1);
+    const minPercent = Math.min(0.5 * Math.max(difficulty * 0.33, 1), 1);
+    const maxPercent = Math.min(0.66 * Math.max(difficulty * 0.33, 1), 1);
     for (let i = 0; i < numCols; i += 1) {
       for (let x = 0; x < numRows; x += 1) {
         if ((percentHidden + (1 / (numCols * numRows))) >= maxPercent) return newSpots;
-        const isHidden = (Math.random() * this.state.difficulty > 0.66);
+        const isHidden = (Math.random() * difficulty > 0.66);
         newSpots[i][x].hideable = isHidden;
         if (isHidden) { percentHidden += (1 / (numCols * numRows)); }
       }
@@ -64,17 +63,18 @@ export default class App extends Component {
   }
 
   initGame() {
+    const { difficulty } = this.state;
     const crab = document.getElementById('crab');
     const crabDimensions = [crab.clientWidth, crab.clientHeight];
     const shellDimensions = crab.querySelector('.shell').getBoundingClientRect();
     const cols = Math.floor(window.screen.width
         / Math.max(
-          shellDimensions.width * Math.round((5 - (this.state.difficulty / 1.75))),
+          shellDimensions.width * Math.round((5 - (difficulty / 1.75))),
           (shellDimensions.width * 2),
         ));
     const rows = Math.floor(window.screen.height / Math.max(
       shellDimensions.height
-        * Math.round(6 - (this.state.difficulty / 1.75)),
+        * Math.round(6 - (difficulty / 1.75)),
       (shellDimensions.height * 4),
     ));
 
@@ -125,87 +125,88 @@ export default class App extends Component {
   }
 
   addPoint() {
-    const points = this.state.points + 1;
-    if (Math.ceil(points / 10) > this.state.difficulty) {
+    const { points, difficulty } = this.state;
+    const updatedPoints = points + 1;
+    if (Math.ceil(points / 10) > difficulty) {
       this.setState({ points, difficulty: Math.ceil(points / 10) });
       return this.initGame();
     }
-    return this.setState({ points });
+    return this.setState({ points: updatedPoints });
   }
 
   render() {
+    const {
+      screenWidth,
+      rotate,
+      fullscreen,
+      gameInit,
+      hidingSpots,
+      hidingSpotWidth,
+      crabDimensions,
+      difficulty,
+      points,
+    } = this.state;
+    const { className } = this.props;
     return (
-      <main className={this.props.className}>
-        <link href="https://fonts.googleapis.com/css?family=Lobster" rel="stylesheet" />
-        <div id="inch" />
+      <main className={className}>
         <Crab
           id="crab"
           className="crab hidden"
-          screenWidth={this.state.screenWidth}
+          screenWidth={screenWidth}
           display
         />
-        {this.state.rotate ? <PleaseRotate /> : null}
-        {!this.state.fullscreen && !this.state.rotate
-          ? <StartGame
-            startGame={this.startGame}
-            screenWidth={this.state.screenWidth}
-          />
-          : null}
-        {!this.state.rotate && this.state.fullscreen && this.state.gameInit
+        {rotate ? <PleaseRotate /> : null}
+        {!fullscreen && !rotate
           ? (
-            <div id="gameBoard">
-              <div className="grid">
-                {this.state.hidingSpots.map(col => (
-                  <div className="column">
-                    {col.map(row => (
-                      <div className="row">
-                        {row.hideable
-                          ? <div
-                            className="hiding-spot"
-                            style={`
-                              width: ${this.state.hidingSpotWidth + 20}px;
-                              height: ${(this.state.hidingSpotWidth * 1.25) + 20}px;
-                            `}
-                          />
-                          : null
-                        }
-                      </div>
-                    ))}
-                  </div>
-                ))}
-              </div>
-              <div className="buttons">
-                <button onClick={this.enterFullscreen}>
-                  {this.state.fullscreen
-                    ? <FAIcon icon={faCompress} />
-                    : <FAIcon icon={faExpand} />
-                  }
-                </button>
-              </div>
-              <Crab
-                id="testCrab"
-                addPoint={this.addPoint}
-                hidingSpots={this.state.hidingSpots}
-                crabDimensions={this.state.crabDimensions}
-                width={this.state.inch}
-                difficulty={this.state.difficulty}
-                inch={this.state.inch}
-                screenWidth={this.state.screenWidth}
-              />
-              <div className="state">
-                <h2>Crab State</h2>
-                <div className="details">
-                  <p>Game Difficulty: {this.state.difficulty}</p>
-                  <p>Fullscreen: {this.state.fullscreen.toString()}</p>
-                  <p>Game Init: {this.state.gameInit.toString()}</p>
-                  <p>Rotation: {this.state.rotate.toString()}</p>
-                  <p> Points: {this.state.points}</p>
-                </div>
-              </div>
-            </div>
+            <StartGame
+              startGame={this.startGame}
+              screenWidth={screenWidth}
+            />
+          )
+          : null}
+        {!rotate && fullscreen && gameInit
+          ? (
+            <GameBoard
+              hidingSpots={hidingSpots}
+              hidingSpotWidth={hidingSpotWidth}
+              enterFullscreen={this.enterFullscreen}
+              fullscreen={fullscreen}
+              addPoint={this.addPoint}
+              crabDimensions={crabDimensions}
+              difficult={difficulty}
+              screenWidth={screenWidth}
+            />
           )
           : null
         }
+        <div className="state">
+          <h2>
+            Crab State
+          </h2>
+          <div className="details">
+            <p>
+              Game Difficulty:
+              {difficulty}
+            </p>
+            <p>
+              Fullscreen:
+              {fullscreen.toString()}
+            </p>
+            <p>
+              Game Init:
+              {gameInit.toString()}
+            </p>
+            <p>
+              Rotation:
+              {rotate.toString()}
+            </p>
+            <p>
+              Points:
+              {points}
+            </p>
+          </div>
+        </div>
+        <link href="https://fonts.googleapis.com/css?family=Lobster" rel="stylesheet" />
       </main>
     );
   }
