@@ -2,19 +2,23 @@ import React from 'react';
 import styled from 'styled-components';
 import PropTypes from 'prop-types';
 
-import Crab from './crab';
+import Crab from '../../components/crab';
 
 const UnstyledStartGame = ({
   className, startGame, screenWidth,
 }) => (
   <div className={className} id="startGame">
-    <h1>Crab Trap</h1>
+    <h1>
+      Crab Trap
+    </h1>
     <Crab
       id="startScreenCrab"
       display
       screenWidth={screenWidth}
     />
-    <button onClick={startGame}>Start Game</button>
+    <button type="button" onClick={startGame}>
+      Start Game
+    </button>
   </div>
 );
 
