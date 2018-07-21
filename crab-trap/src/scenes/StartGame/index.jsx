@@ -2,7 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 import PropTypes from 'prop-types';
 
-import Crab from '../../components/crab';
+import Crab from '../../components/Crab';
 
 const UnstyledStartGame = ({
   className, startGame, screenWidth,
@@ -20,7 +20,7 @@ const UnstyledStartGame = ({
       Start Game
     </button>
   </div>
-); 
+);
 
 UnstyledStartGame.propTypes = {
   className: PropTypes.string,
@@ -50,10 +50,10 @@ min-width: 100vw;
 }
 
 button {
+  line-height: normal;
   color: white;
   font-weight: bold;
   font-size: 2rem;
-  line-height: initial;
   padding: 0.5rem 0.75rem;
 }
 `;
