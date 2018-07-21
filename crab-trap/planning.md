@@ -5,13 +5,12 @@
 * Entry
 * Multiplayer Connect
 * Wrong Rotation
-* Playing Game
+* Game Board
 * Game Over
 
 # Components
 
 * Crab
-* Game Board
 * Sand Castle
 * Rock
 * Drift Wood
