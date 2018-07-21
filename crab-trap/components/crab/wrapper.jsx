@@ -1,12 +1,9 @@
-import React, { Component } from 'react';
+import React from 'react';
 import styled from 'styled-components';
 import PropTypes from 'prop-types';
 
-import CrabSVGRaw from '-!svg-react-loader!../assets/design/crab-final.svg';
-
-function legRotateCSSAni(name, positions) {
-  const rotateString = positions.reduce((posAccum, pos) =>
-    `\
+function genLegRotateCSSAni(name, positions) {
+  const rotateString = positions.reduce((posAccum, pos) => `\
   ${posAccum}
   ${pos[0]}% { transform: rotate(${pos[1]}deg); }\
 `, '');
@@ -99,14 +96,14 @@ UnstyledCrabWrapper.defaultProps = {
 const CrabWrapper = styled(UnstyledCrabWrapper)`
 display: flex;
 justify-content: center;
-width: ${props => props.screenWidth * 0.12 * 0.6}px;
+width: ${({ screenWidth }) => screenWidth * 0.12 * 0.6}px;
 overflow: visible;
 align-items: flex-start;
 position: absolute;
 top: 0;
 left: 0;
 animation-fill-mode: both;
-transition: transform ${props => props.walkTime}s;
+transition: transform ${({ walkTime }) => walkTime}s;
 transition-timing-function: cubic-bezier(1, 1.02, 0.76, 0.99);
 cursor: pointer;
 pointer-events: none;
@@ -119,7 +116,7 @@ pointer-events: none;
 
 &.walking {
   pointer-events: all;
-  transform: translate(${props => (props.moveTo ? `${props.moveTo[0]}px, ${props.moveTo[1]}px` : '0, 0')});
+  transform: translate(${({ moveTo }) => (moveTo ? `${moveTo[0]}px, ${moveTo[1]}px` : '0, 0')});
   &.paused {
     pointer-events: none;
   }
@@ -127,7 +124,7 @@ pointer-events: none;
 
 .crab {
 overflow: visible;
-min-width: ${props => Math.max(props.screenWidth * 0.12, props.width)}px;
+min-width: ${({ screenWidth }) => Math.max(screenWidth * 0.12, 96)}px;
 pointer-events: none;
 
 // Leg Animations
@@ -137,7 +134,7 @@ ${
       .map(legName => Object.keys(legRotations[sideName][legName])
         .map((partName) => {
           const name = `${sideName}-${legName}-${partName}`;
-          return legRotateCSSAni(name, legRotations[sideName][legName][partName]);
+          return genLegRotateCSSAni(name, legRotations[sideName][legName][partName]);
         })))
 }
 
@@ -151,52 +148,52 @@ ${
 .left-legs {
     .first-leg {
         transform: rotate(-14deg);
-        transform-origin: 56.80% 61.33%;
+        transform-origin: 56.67% 61.28%;
         .second-part {
             transform: rotate(31deg);
-            transform-origin: 73.13% 41.79%;
+            transform-origin: 72.4% 42.34%;
             .third-part {
                 transform: rotate(-17deg);
-                transform-origin: 88.45% 56.52%;
+                transform-origin: 87.71% 57.02%;
             }
         }
     }
 
     .second-leg {
         transform: rotate(-15.5deg);
-        transform-origin: 56.20% 68.90%;
+        transform-origin: 56.15% 68.72%;
         .second-part {
             transform: rotate(21deg);
-            transform-origin: 70.03% 53.45%;
+            transform-origin: 69.69% 52.34%;
             .third-part {
                 transform: rotate(-16deg);
-                transform-origin: 83.50% 66.55%;
+                transform-origin: 83.02% 65.32%;
             }
         }
     }
 
     .third-leg {
         transform: rotate(-15.5deg);
-        transform-origin: 55.73% 75.86%;
+        transform-origin: 55.63% 75.74%;
         .second-part {
             transform: rotate(4deg);
-            transform-origin: 67.48% 63.48%;
+            transform-origin: 68.44% 60.43%;
             .third-part {
                 transform: rotate(3deg);
-                transform-origin: 79.50% 75.40%;
+                transform-origin: 81.04% 72.34%;
             }
         }
     }
 
     .fourth-leg {
         transform: rotate(-11deg);
-        transform-origin: 55.18% 81.89%;
+        transform-origin: 55.1% 81.7%;
         .second-part {
             transform: rotate(3.5deg);
-            transform-origin: 65.50% 71.61%;
+            transform-origin: 65.42% 71.49%;
             .third-part {
                 transform: rotate(-15deg);
-                transform-origin: 76.55% 82.51%;
+                transform-origin: 76.46% 81%;
             }
         }
     }
@@ -205,52 +202,52 @@ ${
 .right-legs {
     .first-leg {
         transform: rotate(14deg);
-        transform-origin: 43.20% 61.33%;
+        transform-origin: 43.33% 61.28%;
         .second-part {
             transform: rotate(-31deg);
-            transform-origin: 26.87% 41.79%;
+            transform-origin: 27.6% 42.34%;
             .third-part {
                 transform: rotate(17deg);
-                transform-origin: 11.55% 56.52%;
+                transform-origin: 12.29% 57.02%;
             }
         }
     }
 
     .second-leg {
         transform: rotate(15.5deg);
-        transform-origin: 43.80% 68.90%;
+        transform-origin: 43.85% 68.72%;
         .second-part {
             transform: rotate(-21deg);
-            transform-origin: 29.97% 53.45%;
+            transform-origin: 30.31% 52.34%;
             .third-part {
                 transform: rotate(16deg);
-                transform-origin: 16.50% 66.55%;
+                transform-origin: 16.98% 65.32%;
             }
         }
     }
 
     .third-leg {
         transform: rotate(15.5deg);
-        transform-origin: 44.27% 75.86%;
+        transform-origin: 44.37% 75.74%;
         .second-part {
             transform: rotate(-4deg);
-            transform-origin: 32.52% 63.48%;
+            transform-origin: 31.56% 60.43%;
             .third-part {
                 transform: rotate(-3deg);
-                transform-origin: 20.50% 75.40%;
+                transform-origin: 18.96% 72.34%;
             }
         }
     }
 
     .fourth-leg {
         transform: rotate(11deg);
-        transform-origin: 44.82% 81.89%;
+        transform-origin: 44.9% 81.7%;
         .second-part {
             transform: rotate(-3.5deg);
-            transform-origin: 34.50% 71.61%;
+            transform-origin: 34.58% 71.49%;
             .third-part {
                 transform: rotate(15deg);
-                transform-origin: 23.45% 82.51%;
+                transform-origin: 23.54% 81%;
             }
         }
     }
@@ -260,11 +257,11 @@ ${
 &.walking {
   .legs {
     .left-legs *, .right-legs * {
-      animation-duration: ${props => (1 / props.difficulty) * 1.5}s;
+      animation-duration: ${({ difficulty }) => (1 / difficulty) * 1.5}s;
       animation-iteration-count: infinite;
     }
     .left-legs {
-        * { animation-direction: ${props => (props.direction === 'right' ? 'normal' : 'reverse')}; }
+        * { animation-direction: ${({ direction }) => (direction === 'right' ? 'normal' : 'reverse')}; }
         .first-leg {
             animation-name: moveLefts-firstLeg-firstPart;
             animation-delay:0.125s;
@@ -310,7 +307,7 @@ ${
         }
     }
     .right-legs {
-        * { animation-direction: ${props => (props.direction === 'right' ? 'reverse' : 'normal')}; }
+        * { animation-direction: ${({ direction }) => (direction === 'right' ? 'reverse' : 'normal')}; }
         .first-leg {
             animation-name: moveRights-firstLeg-firstPart;
             animation-delay:0.255s;
@@ -358,10 +355,10 @@ ${
         }
     }
 }
-.shell {
+.shell .outer-shell {
     transform-origin: 50% 85.07%;
     animation-name: move-shell;
-    animation-duration: ${props => (2 / props.difficulty) * 1.25}s;
+    animation-duration: ${({ difficulty }) => (2 / difficulty) * 1.25}s;
     animation-iteration-count: infinite;
     pointer-events: all;
     cursor: pointer;
@@ -378,32 +375,32 @@ ${
 .pincers {
 .left-pincer {
   transform: rotate(20deg);
-  transform-origin: 55.28% 54.88%;
+  transform-origin: 55.42% 53.79%;
   .second-part {
     transform: rotate(-20deg);
-    transform-origin: 62.03% 43.22%;
+    transform-origin: 62.08% 42%;
     .third-part {
       transform: rotate(-75deg);
-      transform-origin: 64.93% 32.28%;
+      transform-origin: 65% 32%;
       .moving-pincer {
         transform: rotate(5deg);
-        transform-origin: 68.85% 19.08%;
+        transform-origin: 68.96% 19.79%;
       }
     }
   }
 }
 .right-pincer {
   transform: rotate(-20deg);
-  transform-origin: 44.70% 54.88%;
+  transform-origin: 44.79% 53.58%;
   .second-part {
     transform: rotate(20deg);
-    transform-origin: 37.65% 42.20%;
+    transform-origin: 37.75% 41%;
     .third-part {
       transform: rotate(20deg);
-      transform-origin: 34.38% 29.77%;
+      transform-origin: 34.48% 30.21%;
       .moving-pincer {
         transform: rotate(5deg);
-        transform-origin: 29.90% 14.78%;
+        transform-origin: 30% 15.42%;
       }
     }
   }
@@ -793,166 +790,4 @@ ${
 }
 `;
 
-class Crab extends Component {
-  constructor(props) {
-    super(props);
-
-    this.state = {
-      pincerActions: ['eating', 'waving', 'snapping'],
-      pincerAction: 'eating',
-      walkTime: 0,
-      direction: 'right',
-      paused: false,
-      currentPos: [0, 0],
-    };
-
-    this.componentDidMount = this.componentDidMount.bind(this);
-    this.componentWillUnmount = this.componentWillUnmount.bind(this);
-    this.changePincerAction = this.changePincerAction.bind(this);
-    this.removePincerAction = this.removePincerAction.bind(this);
-    this.walk = this.walk.bind(this);
-    this.pauseWalking = this.pauseWalking.bind(this);
-    this.pickSpot = this.pickSpot.bind(this);
-  }
-
-  componentDidMount() {
-    if (this.props.display) {
-      return this.setState({
-        walking: true,
-      });
-    }
-    this.base.addEventListener('transitionend', () => {
-      this.pauseWalking();
-      setTimeout(this.walk, Math.max(Math.random * 4000, 1000));
-    });
-    this.base.addEventListener('click', this.props.addPoint);
-    this.base.querySelector('.left-pincer').addEventListener('animationend', this.removePincerAction);
-
-    const changePincerInterval = setInterval(
-      this.changePincerAction,
-      7000 + (Math.random() * 2000),
-    );
-    this.setState({ changePincerInterval });
-    setTimeout(this.walk, 3000);
-    return null;
-  }
-
-  componentWillUnmount() {
-    this.base.removeEventListener('transitionend', this.pauseWalking);
-    this.base.querySelector('.left-pincer').removeEventListener('animationend', this.removePincerAction);
-    clearInterval(this.changePincerInterval);
-  }
-
-  changePincerAction() {
-    const pincerAction = this.state.pincerActions[Math
-      .floor(Math
-        .random() * this.state.pincerActions.length)];
-    return this.setState({ pincerAction });
-  }
-
-  removePincerAction() {
-    this.setState({ pincerAction: null });
-  }
-
-  walk() {
-    const spot = this.pickSpot();
-    const moveTo = [
-      spot.coords[0] - (this.props.crabDimensions[0] / 2),
-      spot.coords[1] - (this.props.crabDimensions[1] / 2),
-    ];
-
-    const walkTime = Math.hypot(
-      Math.abs(this.state.currentPos[0] - moveTo[0]),
-      Math.abs(this.state.currentPos[1] - moveTo[1]),
-    )
-    / this.props.inch / ((this.props.difficulty / 3) + 0.6666);
-
-    const direction = (this.state.currentPos[0] <= moveTo[0] ? 'right' : 'left');
-
-    if (moveTo[0] === this.state.currentPos[0]
-      && moveTo[1] === this.state.currentPos[1]) return this.walk();
-    return this.setState({
-      walking: true,
-      direction,
-      paused: false,
-      moveTo,
-      walkTime,
-    });
-  }
-
-  pauseWalking() {
-    this.setState({ paused: true, currentPos: this.state.moveTo });
-  }
-
-  pickSpot() {
-    const { hidingSpots } = this.props;
-    const cols = hidingSpots.length;
-    const rows = hidingSpots[0].length;
-    const spot = hidingSpots[Math.floor(Math.random() * cols)][Math.floor(Math.random() * rows)];
-
-    if (spot.hideable) return spot;
-    return this.pickSpot();
-  }
-
-  render() {
-    return (
-      <CrabWrapper
-        paused={this.state.paused}
-        walking={this.state.walking}
-        id={this.props.id}
-        className={this.props.className}
-        screenWidth={this.props.screenWidth}
-        walkTime={this.state.walkTime}
-        moveTo={this.state.moveTo}
-        width={this.props.width}
-        difficulty={this.props.difficulty || this.state.difficulty}
-        direction={this.state.direction}
-      >
-        <CrabSVGRaw
-          data-iteration="0"
-          className={`
-            crab
-            ${this.state.pincerAction || ''}
-            ${this.state.walking ? 'walking' : ''}
-            ${this.props.paused ? 'paused' : ''}
-            ${this.props.direction}
-          `}
-        />
-      </CrabWrapper>
-    );
-  }
-}
-
-Crab.propTypes = {
-  crabDimensions: PropTypes.arrayOf(PropTypes.number),
-  direction: PropTypes.string,
-  paused: PropTypes.bool,
-  width: PropTypes.number,
-  screenWidth: PropTypes.number,
-  className: PropTypes.string,
-  id: PropTypes.string.isRequired,
-  hidingSpots: PropTypes.arrayOf(PropTypes.arrayOf(PropTypes.shape({
-    coords: PropTypes.arrayOf(PropTypes.number),
-    hideable: PropTypes.bool,
-  }))),
-  difficulty: PropTypes.number,
-  inch: PropTypes.number,
-  addPoint: PropTypes.func,
-  display: PropTypes.bool,
-};
-
-Crab.defaultProps = {
-  crabDimensions: [0, 0],
-  className: '',
-  direction: 'right',
-  difficulty: 1.25,
-  paused: false,
-  width: null,
-  screenWidth: null,
-  hidingSpots: null,
-  inch: 96,
-  addPoint: null,
-  display: true,
-};
-
-export default Crab;
+export default CrabWrapper;
