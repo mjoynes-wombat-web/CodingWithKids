@@ -788,7 +788,7 @@ ${
 
 const CrabWrapper = styled(StaticStyleCrabWrapper)`
 width: ${({ screenWidth }) => screenWidth * 0.12 * 0.6}px;
-transition: transform ${({ walkTime }) => walkTime}s cubic-bezier(0.44, -0.16, 0.58, 0.74);
+transition: transform ${({ walkTime }) => walkTime}s cubic-bezier(0.42, -0.07, 0.58, 0.74);
 
 &.walking {
   transform: translate(${({ moveTo }) => (moveTo ? `${moveTo[0]}px, ${moveTo[1]}px` : '0, 0')});
