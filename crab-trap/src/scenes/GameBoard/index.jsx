@@ -42,7 +42,6 @@ class GameBoard extends React.Component {
         const isHidden = (Math.random() * difficulty > 0.66);
         newSpots[i][x].hideable = isHidden;
         if (isHidden) { percentHidden += (1 / (numCols * numRows)); }
-        console.log(percentHidden, minPercent);
       }
     }
     if (percentHidden < minPercent) return this.setHideable(newSpots);

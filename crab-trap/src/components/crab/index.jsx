@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import { isEqual } from 'lodash';
 
 import CrabSVG from './CrabSVG';
 import CrabWrapper from './Wrapper';
@@ -19,16 +20,16 @@ class Crab extends Component {
 
     this.pincerActions = ['eating', 'waving', 'snapping'];
 
-    this.componentWillUnmount = this.componentWillUnmount.bind(this);
     this.changePincerAction = this.changePincerAction.bind(this);
     this.removePincerAction = this.removePincerAction.bind(this);
     this.walk = this.walk.bind(this);
     this.pauseWalking = this.pauseWalking.bind(this);
     this.pickSpot = this.pickSpot.bind(this);
-    this.changePincerInterval = setInterval(
-      this.changePincerAction,
-      7000 + (Math.random() * 2000),
-    );
+    // this.changePincerInterval = setInterval(
+    //   // this.changePincerAction,
+    //   // 7000 + (Math.random() * 2000),
+    // );
+    this.continueWalk = this.continueWalk.bind(this);
   }
 
   componentWillUnmount() {
@@ -43,34 +44,40 @@ class Crab extends Component {
     return this.setState({ pincerAction });
   }
 
-  removePincerAction() {
-    this.setState({ pincerAction: null });
+  removePincerAction(e) {
+    const { target } = e;
+    if (target.classList.value === 'left-pincer') this.setState({ pincerAction: null });
   }
 
   walk() {
+    const { display } = this.props;
+    if (display) return null;
+    const { currentPos, moveTo } = this.state;
+    
+    // console.log(currentPos, moveTo);
+    if (isEqual(currentPos, [0, 0]) && moveTo) return false;
     const { crabDimensions, difficulty } = this.props;
-    const { currentPos } = this.state;
     const spot = this.pickSpot();
-    const moveTo = [
+    const newMoveTo = [
       spot.coords[0] - (crabDimensions[0] / 2),
       spot.coords[1] - (crabDimensions[1] / 2),
     ];
 
     const walkTime = Math.hypot(
-      Math.abs(currentPos[0] - moveTo[0]),
-      Math.abs(currentPos[1] - moveTo[1]),
+      Math.abs(currentPos[0] - newMoveTo[0]),
+      Math.abs(currentPos[1] - newMoveTo[1]),
     )
     / 96 / ((difficulty / 3) + 0.6666);
 
-    const direction = (currentPos[0] <= moveTo[0] ? 'right' : 'left');
+    const direction = (currentPos[0] <= newMoveTo[0] ? 'right' : 'left');
 
-    if (moveTo[0] === currentPos[0]
-      && moveTo[1] === currentPos[1]) return this.walk();
+    if (newMoveTo[0] === currentPos[0]
+      && newMoveTo[1] === currentPos[1]) return this.walk();
     return this.setState({
       walking: true,
       direction,
       paused: false,
-      moveTo,
+      moveTo: newMoveTo,
       walkTime,
     });
   }
@@ -90,23 +97,25 @@ class Crab extends Component {
     return this.pickSpot();
   }
 
+  continueWalk() {
+    this.pauseWalking();
+    setTimeout(this.walk, Math.max(Math.random * 4000, 1000));
+  }
+
   render() {
     const {
       paused, walking, walkTime, moveTo, direction, pincerAction,
     } = this.state;
     const {
-      addPoint, screenWidth, className, id, difficulty,
+      addPoint, screenWidth, className, id, difficulty, display, hidden
     } = this.props;
     return (
       <CrabWrapper
-        transitionEnd={() => {
-          this.pauseWalking();
-          setTimeout(this.walk, Math.max(Math.random * 4000, 1000));
-        }}
+        continueWalk={this.continueWalk}
         paused={paused}
         walking={walking}
         id={id}
-        className={className}
+        className={[className, hidden ? 'hidden' : ''].join(' ')}
         screenWidth={screenWidth}
         walkTime={walkTime}
         moveTo={moveTo}
@@ -114,8 +123,9 @@ class Crab extends Component {
         direction={direction}
       >
         <CrabSVG
+          walk={this.walk}
           addPoint={addPoint}
-          removePincerAction={this.removePincerAction}
+          removePincerAction={!hidden ? this.removePincerAction : () => null}
           data-iteration="0"
           className={`
             crab
@@ -154,8 +164,8 @@ Crab.defaultProps = {
   paused: false,
   screenWidth: null,
   hidingSpots: null,
-  addPoint: null,
-  display: true,
+  addPoint: () => null,
+  display: false,
 };
 
 export default Crab;

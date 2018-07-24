@@ -1,8 +1,11 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 /* eslint-disable react/style-prop-object */
-const CrabSVG = ({ className, removePincerAction, addPoint }) => (
+const CrabSVG = ({
+  className, removePincerAction, addPoint, walk,
+}) => (
   <svg
+    onLoad={walk}
     className={className}
     viewBox="0 0 72 36"
     version="1.1"
@@ -1050,7 +1053,13 @@ const CrabSVG = ({ className, removePincerAction, addPoint }) => (
 CrabSVG.propTypes = {
   className: PropTypes.string.isRequired,
   removePincerAction: PropTypes.func.isRequired,
-  addPoint: PropTypes.func.isRequired,
+  addPoint: PropTypes.func,
+  walk: PropTypes.func,
 };
+
+CrabSVG.propTypes = {
+  addPoint: () => null,
+  walk: () => null,
+}
 
 export default CrabSVG;

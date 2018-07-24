@@ -68,7 +68,7 @@ class App extends Component {
       <main className={className}>
         <Crab
           id="crab"
-          className="crab hidden"
+          hidden
           screenWidth={screenWidth}
           display
         />

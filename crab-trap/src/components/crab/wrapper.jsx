@@ -68,9 +68,10 @@ const legRotations = {
 };
 
 const UnstyledCrabWrapper = ({
-  children, paused, walking, className, id,
+  children, paused, walking, className, id, continueWalk,
 }) => (
   <div
+    onTransitionEnd={continueWalk}
     id={id}
     className={`crab-wrapper 
       ${className}  ${paused ? 'paused' : ''} ${walking ? 'walking' : ''}`}
@@ -80,6 +81,7 @@ const UnstyledCrabWrapper = ({
 );
 
 UnstyledCrabWrapper.propTypes = {
+  continueWalk: PropTypes.func.isRequired,
   children: PropTypes.element,
   paused: PropTypes.bool.isRequired,
   walking: PropTypes.bool,
@@ -104,7 +106,6 @@ position: absolute;
 top: 0;
 left: 0;
 animation-fill-mode: both;
-${({ walkTime, moveTo }) => console.log(walkTime, moveTo)}
 transition: transform ${({ walkTime }) => walkTime}s;
 transition-timing-function: cubic-bezier(1, 1.02, 0.76, 0.99);
 cursor: pointer;
