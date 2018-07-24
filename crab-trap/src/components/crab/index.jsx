@@ -53,8 +53,6 @@ class Crab extends Component {
     const { display } = this.props;
     if (display) return null;
     const { currentPos, moveTo } = this.state;
-    
-    // console.log(currentPos, moveTo);
     if (isEqual(currentPos, [0, 0]) && moveTo) return false;
     const { crabDimensions, difficulty } = this.props;
     const spot = this.pickSpot();

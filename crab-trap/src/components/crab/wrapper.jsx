@@ -15,8 +15,8 @@ function genLegRotateCSSAni(name, positions) {
 }
 
 class LegAniObj {
-  constructor(positions) {
-    [this.firstPart, this.secondPart, this.thirdPart] = positions;
+  constructor(parts) {
+    [this.firstPart, this.secondPart, this.thirdPart] = parts;
   }
 }
 
@@ -95,10 +95,9 @@ UnstyledCrabWrapper.defaultProps = {
   walking: false,
 };
 
-const CrabWrapper = styled(UnstyledCrabWrapper)`
+const StaticStyleCrabWrapper = styled(UnstyledCrabWrapper)`
 display: flex;
 justify-content: center;
-width: ${({ screenWidth }) => screenWidth * 0.12 * 0.6}px;
 height: auto;
 overflow: visible;
 align-items: flex-start;
@@ -106,8 +105,6 @@ position: absolute;
 top: 0;
 left: 0;
 animation-fill-mode: both;
-transition: transform ${({ walkTime }) => walkTime}s;
-transition-timing-function: cubic-bezier(1, 1.02, 0.76, 0.99);
 cursor: pointer;
 pointer-events: none;
 
@@ -119,7 +116,6 @@ pointer-events: none;
 
 &.walking {
   pointer-events: all;
-  transform: translate(${({ moveTo }) => (moveTo ? `${moveTo[0]}px, ${moveTo[1]}px` : '0, 0')});
   &.paused {
     pointer-events: none;
   }
@@ -127,7 +123,6 @@ pointer-events: none;
 
 .crab {
 overflow: visible;
-min-width: ${({ screenWidth }) => Math.max(screenWidth * 0.12, 96)}px;
 pointer-events: none;
 width: 100%;
 height: auto;
@@ -262,11 +257,9 @@ ${
 &.walking {
   .legs {
     .left-legs *, .right-legs * {
-      animation-duration: ${({ difficulty }) => (1 / difficulty) * 1.5}s;
       animation-iteration-count: infinite;
     }
     .left-legs {
-        * { animation-direction: ${({ direction }) => (direction === 'right' ? 'normal' : 'reverse')}; }
         .first-leg {
             animation-name: moveLefts-firstLeg-firstPart;
             animation-delay:0.125s;
@@ -312,7 +305,6 @@ ${
         }
     }
     .right-legs {
-        * { animation-direction: ${({ direction }) => (direction === 'right' ? 'reverse' : 'normal')}; }
         .first-leg {
             animation-name: moveRights-firstLeg-firstPart;
             animation-delay:0.255s;
@@ -363,7 +355,6 @@ ${
 .shell .outer-shell {
     transform-origin: 50% 85.07%;
     animation-name: move-shell;
-    animation-duration: ${({ difficulty }) => (2 / difficulty) * 1.25}s;
     animation-iteration-count: infinite;
     pointer-events: all;
     cursor: pointer;
@@ -794,5 +785,34 @@ ${
 }
 }
 `;
+
+const CrabWrapper = styled(StaticStyleCrabWrapper)`
+width: ${({ screenWidth }) => screenWidth * 0.12 * 0.6}px;
+transition: transform ${({ walkTime }) => walkTime}s cubic-bezier(0.44, -0.16, 0.58, 0.74);
+
+&.walking {
+  transform: translate(${({ moveTo }) => (moveTo ? `${moveTo[0]}px, ${moveTo[1]}px` : '0, 0')});
+}
+
+.crab {
+min-width: ${({ screenWidth }) => Math.max(screenWidth * 0.12, 96)}px;
+
+  &.walking {
+    .legs {
+      .left-legs *, .right-legs * {
+        animation-duration: ${({ difficulty }) => (1 / difficulty) * 1.5}s;
+      }
+      .left-legs * {
+          animation-direction: ${({ direction }) => (direction === 'right' ? 'normal' : 'reverse')};
+      }
+      .right-legs * {
+          animation-direction: ${({ direction }) => (direction === 'right' ? 'reverse' : 'normal')};
+      }
+    }
+    .shell .outer-shell {
+        animation-duration: ${({ difficulty }) => (2 / difficulty) * 1.25}s;
+    }
+  }
+}`;
 
 export default CrabWrapper;
