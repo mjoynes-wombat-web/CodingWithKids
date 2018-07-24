@@ -14,11 +14,9 @@ class App extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      difficulty: 1,
+      gameStatus: 'ready',
       fullscreen: false,
-      gameInit: false,
       rotate: false,
-      points: 0,
       screenWidth: window.screen.width,
     };
 
@@ -26,7 +24,6 @@ class App extends Component {
     this.enterFullscreen = this.enterFullscreen.bind(this);
     this.setRotation = this.setRotation.bind(this);
     this.startGame = this.startGame.bind(this);
-    this.addPoint = this.addPoint.bind(this);
   }
 
   componentDidMount() {
@@ -58,26 +55,13 @@ class App extends Component {
     this.enterFullscreen(e);
   }
 
-  addPoint() {
-    const { points, difficulty } = this.state;
-    const updatedPoints = points + 1;
-    if (Math.ceil(points / 10) > difficulty) {
-      this.setState({ points, difficulty: Math.ceil(points / 10) });
-      return this.initGame();
-    }
-    return this.setState({ points: updatedPoints });
-  }
-
   render() {
     const {
       screenWidth,
       rotate,
       fullscreen,
-      gameInit,
       hidingSpots,
       hidingSpotWidth,
-      difficulty,
-      points,
     } = this.state;
     const { className } = this.props;
     return (
@@ -104,40 +88,11 @@ class App extends Component {
               hidingSpotWidth={hidingSpotWidth}
               enterFullscreen={this.enterFullscreen}
               fullscreen={fullscreen}
-              addPoint={this.addPoint}
-              difficulty={difficulty}
               screenWidth={screenWidth}
             />
           )
           : null
         }
-        <div className="state">
-          <h2>
-            Crab State
-          </h2>
-          <div className="details">
-            <p>
-              Game Difficulty:
-              {difficulty}
-            </p>
-            <p>
-              Fullscreen:
-              {fullscreen.toString()}
-            </p>
-            <p>
-              Game Init:
-              {gameInit.toString()}
-            </p>
-            <p>
-              Rotation:
-              {rotate.toString()}
-            </p>
-            <p>
-              Points:
-              {points}
-            </p>
-          </div>
-        </div>
         <link href="https://fonts.googleapis.com/css?family=Lobster" rel="stylesheet" />
       </main>
     );

@@ -5,19 +5,23 @@ import faCompress from '@fortawesome/fontawesome-pro-light/faCompress';
 import faExpand from '@fortawesome/fontawesome-pro-light/faExpand';
 
 import Crab from '../../components/Crab';
-import Row from './Row';
+import Row from './components/Row';
 
 class GameBoard extends React.Component {
   constructor(props) {
     super(props);
 
     this.state = {
+      difficulty: 1,
+      points: 0,
       hidingSpots: [],
+      numCrabs: 1,
       boardInit: false,
     };
 
     this.setHideable = this.setHideable.bind(this);
     this.initBoard = this.initBoard.bind(this);
+    this.addPoint = this.addPoint.bind(this);
   }
 
   componentDidMount() {
@@ -25,19 +29,20 @@ class GameBoard extends React.Component {
   }
 
   setHideable(spots) {
-    const { difficulty } = this.props;
+    const { difficulty } = this.state;
     const newSpots = spots;
     let percentHidden = 0;
     const numCols = newSpots.length;
     const numRows = newSpots[0].length;
-    const minPercent = Math.min(0.5 * Math.max(difficulty * 0.33, 1), 1);
-    const maxPercent = Math.min(0.66 * Math.max(difficulty * 0.33, 1), 1);
+    const minPercent = Math.min(0.5 * Math.max(difficulty * 0.33, 1), 0.85);
+    const maxPercent = Math.min(0.66 * Math.max(difficulty * 0.33, 1), 0.92);
     for (let i = 0; i < numCols; i += 1) {
       for (let x = 0; x < numRows; x += 1) {
         if ((percentHidden + (1 / (numCols * numRows))) >= maxPercent) return newSpots;
         const isHidden = (Math.random() * difficulty > 0.66);
         newSpots[i][x].hideable = isHidden;
         if (isHidden) { percentHidden += (1 / (numCols * numRows)); }
+        console.log(percentHidden, minPercent);
       }
     }
     if (percentHidden < minPercent) return this.setHideable(newSpots);
@@ -45,7 +50,7 @@ class GameBoard extends React.Component {
   }
 
   initBoard() {
-    const { difficulty } = this.props;
+    const { difficulty } = this.state;
     const crab = document.getElementById('crab');
     const crabBounding = crab.getBoundingClientRect();
     const crabDimensions = [crabBounding.width, crabBounding.height];
@@ -91,25 +96,28 @@ class GameBoard extends React.Component {
     });
   }
 
+  addPoint() {
+    const { points, difficulty } = this.state;
+    const updatedPoints = points + 1;
+    if (Math.ceil(points / 10) > difficulty) {
+      this.setState({ points, difficulty: Math.ceil(points / 10) });
+      return this.initBoard();
+    }
+    return this.setState({ points: updatedPoints });
+  }
+
   render() {
     const {
       enterFullscreen,
       fullscreen,
-      addPoint,
-      difficulty,
       screenWidth,
     } = this.props;
 
     const {
       crabDimensions,
-    } = this.state;
-
-    const {
+      difficulty,
       hidingSpots,
       hidingSpotWidth,
-    } = this.state;
-
-    const {
       boardInit,
     } = this.state;
 
@@ -136,7 +144,7 @@ class GameBoard extends React.Component {
         </div>
         <Crab
           id="testCrab"
-          addPoint={addPoint}
+          addPoint={this.addPoint}
           hidingSpots={hidingSpots}
           crabDimensions={crabDimensions}
           difficulty={difficulty}
@@ -149,9 +157,7 @@ class GameBoard extends React.Component {
 
 GameBoard.propTypes = {
   enterFullscreen: PropTypes.func.isRequired,
-  difficulty: PropTypes.number.isRequired,
   fullscreen: PropTypes.bool.isRequired,
-  addPoint: PropTypes.func.isRequired,
   screenWidth: PropTypes.number.isRequired,
 };
 

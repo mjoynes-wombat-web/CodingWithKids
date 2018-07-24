@@ -9,15 +9,15 @@ class Crab extends Component {
     super(props);
 
     this.state = {
-      pincerActions: ['eating', 'waving', 'snapping'],
       pincerAction: 'eating',
       walkTime: 0,
       direction: props.direction || 'right',
-      difficulty: props.difficulty || 1.25,
       paused: props.paused || false,
       currentPos: [0, 0],
       walking: props.display,
     };
+
+    this.pincerActions = ['eating', 'waving', 'snapping'];
 
     this.componentWillUnmount = this.componentWillUnmount.bind(this);
     this.changePincerAction = this.changePincerAction.bind(this);
@@ -36,7 +36,7 @@ class Crab extends Component {
   }
 
   changePincerAction() {
-    const { pincerActions } = this.state;
+    const { pincerActions } = this;
     const pincerAction = pincerActions[Math
       .floor(Math
         .random() * pincerActions.length)];
@@ -92,10 +92,10 @@ class Crab extends Component {
 
   render() {
     const {
-      paused, walking, walkTime, moveTo, direction, pincerAction, difficulty,
+      paused, walking, walkTime, moveTo, direction, pincerAction,
     } = this.state;
     const {
-      addPoint, screenWidth, className, id,
+      addPoint, screenWidth, className, id, difficulty,
     } = this.props;
     return (
       <CrabWrapper
@@ -103,8 +103,6 @@ class Crab extends Component {
           this.pauseWalking();
           setTimeout(this.walk, Math.max(Math.random * 4000, 1000));
         }}
-        onClick={addPoint}
-
         paused={paused}
         walking={walking}
         id={id}
@@ -116,6 +114,7 @@ class Crab extends Component {
         direction={direction}
       >
         <CrabSVG
+          addPoint={addPoint}
           removePincerAction={this.removePincerAction}
           data-iteration="0"
           className={`

@@ -41,12 +41,9 @@ min-height: 100vh;
 min-width: 100vw;
 
 .crab-wrapper {
-  width: 75%;
+  max-height: 50%;
+  width: 50%;
   position: static;
-  .crab{
-    width: 100%;
-    height: auto;
-  }
 }
 
 button {

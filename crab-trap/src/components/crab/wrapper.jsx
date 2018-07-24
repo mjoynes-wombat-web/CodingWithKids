@@ -97,12 +97,14 @@ const CrabWrapper = styled(UnstyledCrabWrapper)`
 display: flex;
 justify-content: center;
 width: ${({ screenWidth }) => screenWidth * 0.12 * 0.6}px;
+height: auto;
 overflow: visible;
 align-items: flex-start;
 position: absolute;
 top: 0;
 left: 0;
 animation-fill-mode: both;
+${({ walkTime, moveTo }) => console.log(walkTime, moveTo)}
 transition: transform ${({ walkTime }) => walkTime}s;
 transition-timing-function: cubic-bezier(1, 1.02, 0.76, 0.99);
 cursor: pointer;
@@ -126,6 +128,8 @@ pointer-events: none;
 overflow: visible;
 min-width: ${({ screenWidth }) => Math.max(screenWidth * 0.12, 96)}px;
 pointer-events: none;
+width: 100%;
+height: auto;
 
 // Leg Animations
 ${
