@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { FontAwesomeIcon as FAIcon } from '@fortawesome/react-fontawesome';
 import faCompress from '@fortawesome/fontawesome-pro-light/faCompress';
 import faExpand from '@fortawesome/fontawesome-pro-light/faExpand';
+import { uniqueId } from 'lodash';
 
 import Crab from '../../components/Crab';
 import Row from './components/Row';
@@ -15,13 +16,15 @@ class GameBoard extends React.Component {
       difficulty: 1,
       points: 0,
       hidingSpots: [],
-      numCrabs: 1,
+      numCrabs: 5,
       boardInit: false,
     };
 
     this.setHideable = this.setHideable.bind(this);
     this.initBoard = this.initBoard.bind(this);
+    this.initCrabs = this.initCrabs.bind(this);
     this.addPoint = this.addPoint.bind(this);
+    this.updateCrabs = this.updateCrabs.bind(this);
   }
 
   componentDidMount() {
@@ -87,6 +90,8 @@ class GameBoard extends React.Component {
       hidingSpots.push(colGroup);
     }
 
+    this.initCrabs();
+
     return this.setState({
       hidingSpots: this.setHideable(hidingSpots),
       crabDimensions,
@@ -95,14 +100,33 @@ class GameBoard extends React.Component {
     });
   }
 
-  addPoint() {
-    const { points, difficulty } = this.state;
+  initCrabs() {
+    const { numCrabs } = this.state;
+    const crabs = [...Array(numCrabs)].map(() => uniqueId('crab'));
+
+    this.setState({ crabs });
+  }
+
+  updateCrabs(currentCrabs) {
+    const { crabs } = this.state;
+    const updatedCrabs = [...currentCrabs];
+    if (updatedCrabs.length < crabs.length) [...Array(crabs.length - updatedCrabs.length)].forEach(() => updatedCrabs.push(uniqueId('crab')));
+    return updatedCrabs;
+  }
+
+  addPoint(id) {
+    const { points, difficulty, crabs } = this.state;
+    const newCrabs = [...crabs];
+    const crabIndex = newCrabs.findIndex(crab => crab === id);
+    const updatedCrabs = this.updateCrabs(newCrabs.splice(crabIndex - 1, 1));
+
+    console.log(newCrabs);
     const updatedPoints = points + 1;
     if (Math.ceil(points / 10) > difficulty) {
       this.setState({ points, difficulty: Math.ceil(points / 10) });
       return this.initBoard();
     }
-    return this.setState({ points: updatedPoints });
+    return this.setState({ points: updatedPoints, crabs: updatedCrabs });
   }
 
   render() {
@@ -118,6 +142,7 @@ class GameBoard extends React.Component {
       hidingSpots,
       hidingSpotWidth,
       boardInit,
+      crabs,
     } = this.state;
 
     if (!boardInit) {
@@ -141,14 +166,17 @@ class GameBoard extends React.Component {
       }
           </button>
         </div>
-        <Crab
-          id="testCrab"
-          addPoint={this.addPoint}
-          hidingSpots={hidingSpots}
-          crabDimensions={crabDimensions}
-          difficulty={difficulty}
-          screenWidth={screenWidth}
-        />
+        {crabs.map(crab => (
+          <Crab
+            id={crab}
+            key={crab}
+            addPoint={this.addPoint}
+            hidingSpots={hidingSpots}
+            crabDimensions={crabDimensions}
+            difficulty={difficulty}
+            screenWidth={screenWidth}
+          />
+        ))}
       </div>
     );
   }

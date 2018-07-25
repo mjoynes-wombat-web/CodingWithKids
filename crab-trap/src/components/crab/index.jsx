@@ -15,6 +15,10 @@ class Crab extends Component {
       direction: props.direction || 'right',
       paused: props.paused || false,
       currentPos: [0, 0],
+      initialPos: [
+        Math.random() < 0.5 ? window.screen.width : 0,
+        0,
+      ],
       walking: props.display,
     };
 
@@ -25,15 +29,25 @@ class Crab extends Component {
     this.walk = this.walk.bind(this);
     this.pauseWalking = this.pauseWalking.bind(this);
     this.pickSpot = this.pickSpot.bind(this);
-    // this.changePincerInterval = setInterval(
-    //   // this.changePincerAction,
-    //   // 7000 + (Math.random() * 2000),
-    // );
+    this.setCurrentPos = this.setCurrentPos.bind(this);
+    this.changePincerInterval = setInterval(
+      this.changePincerAction,
+      7000 + (Math.random() * 2000),
+    );
     this.continueWalk = this.continueWalk.bind(this);
   }
 
   componentWillUnmount() {
     clearInterval(this.changePincerInterval);
+  }
+
+  setCurrentPos() {
+    const { screenWidth, crabDimensions } = this.props;
+
+    return [
+      Math.random() < 0.5 ? screenWidth : 0 - crabDimensions.width,
+      0,
+    ];
   }
 
   changePincerAction() {
@@ -104,13 +118,14 @@ class Crab extends Component {
 
   render() {
     const {
-      paused, walking, walkTime, moveTo, direction, pincerAction,
+      paused, walking, walkTime, moveTo, direction, pincerAction, initialPos,
     } = this.state;
     const {
       addPoint, screenWidth, className, id, difficulty, hidden,
     } = this.props;
     return (
       <CrabWrapper
+        initialPos={initialPos}
         continueWalk={this.continueWalk}
         paused={paused}
         walking={walking}
@@ -124,6 +139,7 @@ class Crab extends Component {
       >
         <CrabSVG
           walk={this.walk}
+          id={id}
           addPoint={addPoint}
           removePincerAction={!hidden ? this.removePincerAction : () => null}
           data-iteration="0"
@@ -141,12 +157,12 @@ class Crab extends Component {
 }
 
 Crab.propTypes = {
+  id: PropTypes.string,
   crabDimensions: PropTypes.arrayOf(PropTypes.number),
   direction: PropTypes.string,
   paused: PropTypes.bool,
   screenWidth: PropTypes.number,
   className: PropTypes.string,
-  id: PropTypes.string.isRequired,
   hidingSpots: PropTypes.arrayOf(PropTypes.arrayOf(PropTypes.shape({
     coords: PropTypes.arrayOf(PropTypes.number),
     hideable: PropTypes.bool,
@@ -158,6 +174,7 @@ Crab.propTypes = {
 };
 
 Crab.defaultProps = {
+  id: '',
   crabDimensions: [0, 0],
   className: '',
   direction: 'right',
