@@ -5,7 +5,7 @@ const CrabSVG = ({
   className, removePincerAction, addPoint, walk,
 }) => (
   <svg
-    onLoad={walk}
+    onLoad={() => setTimeout(walk, 2000)}
     className={className}
     viewBox="0 0 72 36"
     version="1.1"

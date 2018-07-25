@@ -42,12 +42,14 @@ class App extends Component {
     e.preventDefault();
 
     if (document.webkitIsFullScreen) {
-      document.webkitExitFullscreen();
+      setTimeout(() => {
+        document.webkitExitFullscreen();
+      }, 750);
       return this.setState({ fullscreen: false });
     }
 
     const main = document.querySelector('main');
-    main.webkitRequestFullscreen();
+    setTimeout(() => main.webkitRequestFullscreen(), 750);
 
     return this.setState({ fullscreen: true });
   }
@@ -81,7 +83,7 @@ class App extends Component {
           ) : null}
           {!rotate && fullscreen
             ? (
-              <CSSTransition component="div" classNames="scene game-board" timeout={{ enter: 2000, exit: 2000 }}>
+              <CSSTransition component="div" classNames="game-board" timeout={{ enter: 2000, exit: 500 }}>
                 <div>
                   <GameBoard
                     hidingSpots={hidingSpots}
@@ -97,7 +99,7 @@ class App extends Component {
           }
           {!fullscreen && !rotate
             ? (
-              <CSSTransition classNames="scene" timeout={{ enter: 2000, exit: 2000 }}>
+              <CSSTransition classNames="scene" timeout={{ enter: 2000, exit: 500 }}>
                 <StartGame
                   startGame={this.startGame}
                   screenWidth={screenWidth}
@@ -151,23 +153,27 @@ h1 {
 #startGame {
   background: url(${sand});
   position: relative;
-  z-index: 1000;
+  z-index: 10000;
   min-height: 100vh;
 }
 
 .scenes {
   position: relative;
-  .game-board-enter * {
-    opacity: 0;
-    transition: opacity 0.5s linear 1.5s;
+  .game-board-enter {
+    * {
+      opacity: 0;
+      transition: opacity 0.5s linear 1.5s;
+    }
     &.game-board-enter-active * {
       opacity: 1;
     }
   }
 
-  .game-board-exit * {
-    opacity: 1;
-    transition: opacity 0.5s linear 1.5s;
+  .game-board-exit {
+    * {
+      opacity: 1;
+      transition: opacity 0.5s linear;
+    }
     &.game-board-exit-active * {
       opacity: 0;
     }
@@ -184,7 +190,7 @@ h1 {
   }
   .scene-exit {
     perspective: 1000;
-    transition: all 0.5s linear 1.5s;
+    transition: all 0.5s linear;
     opacity: 1;
     transform: rotateX(0deg);
     &.scene-exit-active {

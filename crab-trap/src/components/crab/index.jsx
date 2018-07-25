@@ -82,7 +82,7 @@ class Crab extends Component {
 
   pauseWalking() {
     const { moveTo } = this.state;
-    this.setState({ paused: true, currentPos: moveTo });
+    this.setState({ paused: true, currentPos: moveTo || [0, 0] });
   }
 
   pickSpot() {
@@ -95,9 +95,11 @@ class Crab extends Component {
     return this.pickSpot();
   }
 
-  continueWalk() {
+  continueWalk(e) {
+    const { target } = e;
+    if (!target || !target.classList.contains('crab-wrapper')) return null;
     this.pauseWalking();
-    setTimeout(this.walk, Math.max(Math.random * 4000, 1000));
+    return setTimeout(this.walk, Math.max(Math.random * 4000, 1000));
   }
 
   render() {
@@ -105,7 +107,7 @@ class Crab extends Component {
       paused, walking, walkTime, moveTo, direction, pincerAction,
     } = this.state;
     const {
-      addPoint, screenWidth, className, id, difficulty, display, hidden
+      addPoint, screenWidth, className, id, difficulty, hidden,
     } = this.props;
     return (
       <CrabWrapper
@@ -152,6 +154,7 @@ Crab.propTypes = {
   difficulty: PropTypes.number,
   addPoint: PropTypes.func,
   display: PropTypes.bool,
+  hidden: PropTypes.bool,
 };
 
 Crab.defaultProps = {
@@ -164,6 +167,7 @@ Crab.defaultProps = {
   hidingSpots: null,
   addPoint: () => null,
   display: false,
+  hidden: false,
 };
 
 export default Crab;

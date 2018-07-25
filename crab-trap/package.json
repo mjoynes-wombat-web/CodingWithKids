@@ -13,6 +13,7 @@
     "react": "^16.4.1",
     "react-dom": "^16.4.1",
     "react-scripts": "1.1.4",
+    "react-transition-group": "^2.4.0",
     "styled-components": "^3.3.3",
     "svg-to-react-cli": "^1.5.0"
   },
