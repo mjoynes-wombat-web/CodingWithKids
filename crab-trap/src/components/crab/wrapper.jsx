@@ -5,7 +5,7 @@ import PropTypes from 'prop-types';
 function genLegRotateCSSAni(name, positions) {
   const rotateString = positions.reduce((posAccum, pos) => `\
   ${posAccum}
-  ${pos[0]}% { transform: rotate(${pos[1]}deg); }\
+  ${pos[0]}% { transform: rotateZ(${pos[1]}deg); }\
 `, '');
   return `\
 @keyframes ${name} {\
@@ -144,60 +144,60 @@ ${
 }
 
 @keyframes move-shell {
-33.33% { transform: rotate(1deg); }
-66.66% { transform: rotate(-1deg); }
+33.33% { transform: rotateZ(1deg); }
+66.66% { transform: rotateZ(-1deg); }
 }
 
 .legs {
 * { animation-fill-mode: both; }
 .left-legs {
     .first-leg {
-        transform: rotate(-14deg);
+        transform: rotateZ(-14deg);
         transform-origin: 56.67% 61.28%;
         .second-part {
-            transform: rotate(31deg);
+            transform: rotateZ(31deg);
             transform-origin: 72.4% 42.34%;
             .third-part {
-                transform: rotate(-17deg);
+                transform: rotateZ(-17deg);
                 transform-origin: 87.71% 57.02%;
             }
         }
     }
 
     .second-leg {
-        transform: rotate(-15.5deg);
+        transform: rotateZ(-15.5deg);
         transform-origin: 56.15% 68.72%;
         .second-part {
-            transform: rotate(21deg);
+            transform: rotateZ(21deg);
             transform-origin: 69.69% 52.34%;
             .third-part {
-                transform: rotate(-16deg);
+                transform: rotateZ(-16deg);
                 transform-origin: 83.02% 65.32%;
             }
         }
     }
 
     .third-leg {
-        transform: rotate(-15.5deg);
+        transform: rotateZ(-15.5deg);
         transform-origin: 55.63% 75.74%;
         .second-part {
-            transform: rotate(4deg);
+            transform: rotateZ(4deg);
             transform-origin: 68.44% 60.43%;
             .third-part {
-                transform: rotate(3deg);
+                transform: rotateZ(3deg);
                 transform-origin: 81.04% 72.34%;
             }
         }
     }
 
     .fourth-leg {
-        transform: rotate(-11deg);
+        transform: rotateZ(-11deg);
         transform-origin: 55.1% 81.7%;
         .second-part {
-            transform: rotate(3.5deg);
+            transform: rotateZ(3.5deg);
             transform-origin: 65.42% 71.49%;
             .third-part {
-                transform: rotate(-15deg);
+                transform: rotateZ(-15deg);
                 transform-origin: 76.46% 81%;
             }
         }
@@ -206,52 +206,52 @@ ${
 
 .right-legs {
     .first-leg {
-        transform: rotate(14deg);
+        transform: rotateZ(14deg);
         transform-origin: 43.33% 61.28%;
         .second-part {
-            transform: rotate(-31deg);
+            transform: rotateZ(-31deg);
             transform-origin: 27.6% 42.34%;
             .third-part {
-                transform: rotate(17deg);
+                transform: rotateZ(17deg);
                 transform-origin: 12.29% 57.02%;
             }
         }
     }
 
     .second-leg {
-        transform: rotate(15.5deg);
+        transform: rotateZ(15.5deg);
         transform-origin: 43.85% 68.72%;
         .second-part {
-            transform: rotate(-21deg);
+            transform: rotateZ(-21deg);
             transform-origin: 30.31% 52.34%;
             .third-part {
-                transform: rotate(16deg);
+                transform: rotateZ(16deg);
                 transform-origin: 16.98% 65.32%;
             }
         }
     }
 
     .third-leg {
-        transform: rotate(15.5deg);
+        transform: rotateZ(15.5deg);
         transform-origin: 44.37% 75.74%;
         .second-part {
-            transform: rotate(-4deg);
+            transform: rotateZ(-4deg);
             transform-origin: 31.56% 60.43%;
             .third-part {
-                transform: rotate(-3deg);
+                transform: rotateZ(-3deg);
                 transform-origin: 18.96% 72.34%;
             }
         }
     }
 
     .fourth-leg {
-        transform: rotate(11deg);
+        transform: rotateZ(11deg);
         transform-origin: 44.9% 81.7%;
         .second-part {
-            transform: rotate(-3.5deg);
+            transform: rotateZ(-3.5deg);
             transform-origin: 34.58% 71.49%;
             .third-part {
-                transform: rotate(15deg);
+                transform: rotateZ(15deg);
                 transform-origin: 23.54% 81%;
             }
         }
@@ -375,32 +375,32 @@ ${
 
 .pincers {
 .left-pincer {
-  transform: rotate(20deg);
+  transform: rotateZ(20deg);
   transform-origin: 55.42% 53.79%;
   .second-part {
-    transform: rotate(-20deg);
+    transform: rotateZ(-20deg);
     transform-origin: 62.08% 42%;
     .third-part {
-      transform: rotate(-75deg);
+      transform: rotateZ(-75deg);
       transform-origin: 65% 32%;
       .moving-pincer {
-        transform: rotate(5deg);
+        transform: rotateZ(5deg);
         transform-origin: 68.96% 19.79%;
       }
     }
   }
 }
 .right-pincer {
-  transform: rotate(-20deg);
+  transform: rotateZ(-20deg);
   transform-origin: 44.79% 53.58%;
   .second-part {
-    transform: rotate(20deg);
+    transform: rotateZ(20deg);
     transform-origin: 37.75% 41%;
     .third-part {
-      transform: rotate(20deg);
+      transform: rotateZ(20deg);
       transform-origin: 34.48% 30.21%;
       .moving-pincer {
-        transform: rotate(5deg);
+        transform: rotateZ(5deg);
         transform-origin: 30% 15.42%;
       }
     }
@@ -420,33 +420,33 @@ ${
 }
 
 @keyframes left-eye {
-0% { transform: rotate(23deg); }
-5% { transform: rotate(23deg); }
-7% { transform: rotate(27deg); }
-10% { transform: rotate(20deg); }
-25% { transform: rotate(20deg); }
-30% { transform: rotate(-10deg); }
-45% { transform: rotate(-10deg); }
-55% { transform: rotate(10deg); }
-75% { transform: rotate(-10deg); }
-80% { transform: rotate(-20deg); }
-85% { transform: rotate(23deg); }
-100% { transform: rotate(23deg); }
+0% { transform: rotateZ(23deg); }
+5% { transform: rotateZ(23deg); }
+7% { transform: rotateZ(27deg); }
+10% { transform: rotateZ(20deg); }
+25% { transform: rotateZ(20deg); }
+30% { transform: rotateZ(-10deg); }
+45% { transform: rotateZ(-10deg); }
+55% { transform: rotateZ(10deg); }
+75% { transform: rotateZ(-10deg); }
+80% { transform: rotateZ(-20deg); }
+85% { transform: rotateZ(23deg); }
+100% { transform: rotateZ(23deg); }
 }
 
 @keyframes right-eye {
-0% { transform: rotate(-10deg); }
-7% { transform: rotate(-15deg); }
-10% { transform: rotate(10deg); }
-14% { transform: rotate(29deg); }
-29% { transform: rotate(2deg); }
-33% { transform: rotate(-20deg); }
-44% { transform: rotate(10deg); }
-51% { transform: rotate(-20deg); }
-73% { transform: rotate(-25deg); }
-81% { transform: rotate(-4deg); }
-86% { transform: rotate(-10deg); }
-100% { transform: rotate(-10deg); }
+0% { transform: rotateZ(-10deg); }
+7% { transform: rotateZ(-15deg); }
+10% { transform: rotateZ(10deg); }
+14% { transform: rotateZ(29deg); }
+29% { transform: rotateZ(2deg); }
+33% { transform: rotateZ(-20deg); }
+44% { transform: rotateZ(10deg); }
+51% { transform: rotateZ(-20deg); }
+73% { transform: rotateZ(-25deg); }
+81% { transform: rotateZ(-4deg); }
+86% { transform: rotateZ(-10deg); }
+100% { transform: rotateZ(-10deg); }
 }
 
 .eyes {
@@ -455,14 +455,14 @@ ${
   animation-direction: normal;
 }
 .left-eye {
-  transform: rotate(23deg);
+  transform: rotateZ(23deg);
   transform-origin: 59.88% 28.34%;
   animation-name: left-eye;
   animation-duration: 9s;
 }
 
 .right-eye {
-  transform: rotate(-10deg);
+  transform: rotateZ(-10deg);
   transform-origin: 40.13% 28.34%;
   animation-name: right-eye;
   animation-duration: 8.5s;
@@ -471,80 +471,80 @@ ${
 
 // EATING ANIMATION
 @keyframes eating-right-pincer {
-25% { transform: rotate(40deg); }
-50% { transform: rotate(-20deg); }
+25% { transform: rotateZ(40deg); }
+50% { transform: rotateZ(-20deg); }
 }
 
 @keyframes eating-right-pincer-secondPart {
-25% { transform: rotate(-30deg); }
-50% { transform: rotate(20deg); }
-70% { transform: rotate(70deg); }
-75% { transform: rotate(70deg); }
+25% { transform: rotateZ(-30deg); }
+50% { transform: rotateZ(20deg); }
+70% { transform: rotateZ(70deg); }
+75% { transform: rotateZ(70deg); }
 }
 
 @keyframes eating-right-pincer-thirdPart {
-25% { transform: rotate(-10deg); }
-50% { transform: rotate(20deg); }
-70% { transform: rotate(40deg); }
-75% { transform: rotate(40deg); }
+25% { transform: rotateZ(-10deg); }
+50% { transform: rotateZ(20deg); }
+70% { transform: rotateZ(40deg); }
+75% { transform: rotateZ(40deg); }
 }
 
 @keyframes eating-right-pincer-close {
-17% { transform: rotate(-5deg); }
-20% { transform: rotate(35deg); }
-50% { transform: rotate(35deg); }
-70% { transform: rotate(35deg); }
-75% { transform: rotate(-5deg); }
+17% { transform: rotateZ(-5deg); }
+20% { transform: rotateZ(35deg); }
+50% { transform: rotateZ(35deg); }
+70% { transform: rotateZ(35deg); }
+75% { transform: rotateZ(-5deg); }
 }
 
 @keyframes eating-left-pincer {
-33.33% { transform: rotate(20deg); }
-46.66% { transform: rotate(5deg); }
-50% { transform: rotate(5deg); }
-60% { transform: rotate(0deg); }
-90% { transform: rotate(0deg); }
+33.33% { transform: rotateZ(20deg); }
+46.66% { transform: rotateZ(5deg); }
+50% { transform: rotateZ(5deg); }
+60% { transform: rotateZ(0deg); }
+90% { transform: rotateZ(0deg); }
 }
 
 @keyframes eating-left-pincer-secondPart {
-33.33% { transform: rotate(-20deg); }
-46.66% { transform: rotate(-24deg); }
-50% { transform: rotate(-24deg); }
-60% { transform: rotate(-30deg); }
-90% { transform: rotate(-30deg); }
+33.33% { transform: rotateZ(-20deg); }
+46.66% { transform: rotateZ(-24deg); }
+50% { transform: rotateZ(-24deg); }
+60% { transform: rotateZ(-30deg); }
+90% { transform: rotateZ(-30deg); }
 }
 
 @keyframes eating-left-pincer-thirdPart {
-33.33% { transform: rotate(-75deg); }
-46.66% { transform: rotate(-75deg); }
-50% { transform: rotate(-75deg); }
-60% { transform: rotate(-80deg); }
-90% { transform: rotate(-80deg); }
+33.33% { transform: rotateZ(-75deg); }
+46.66% { transform: rotateZ(-75deg); }
+50% { transform: rotateZ(-75deg); }
+60% { transform: rotateZ(-80deg); }
+90% { transform: rotateZ(-80deg); }
 }
 
 @keyframes eating-left-pincer-close {
-46.66% { transform: rotate(5deg); }
-50% { transform: rotate(-25deg); }
-90% { transform: rotate(-25deg); }
+46.66% { transform: rotateZ(5deg); }
+50% { transform: rotateZ(-25deg); }
+90% { transform: rotateZ(-25deg); }
 }
 
 @keyframes eating-right-mouth {
-10% { transform: rotate(-4deg) skewX(4deg); }
-20% { transform: rotate(-2deg) skewX(2deg); }
-35% { transform: rotate(-4deg) skewX(4deg); }
-45% { transform: rotate(-2deg) skewX(2deg); }
-60% { transform: rotate(-4deg) skewX(4deg); }
-65% { transform: rotate(-2deg) skewX(2deg); }
-70% { transform: rotate(-4deg) skewX(4deg); }
-80% { transform: rotate(-2deg) skewX(2deg); }
-90% { transform: rotate(-4deg) skewX(4deg); }
+10% { transform: rotateZ(-4deg) skewX(4deg); }
+20% { transform: rotateZ(-2deg) skewX(2deg); }
+35% { transform: rotateZ(-4deg) skewX(4deg); }
+45% { transform: rotateZ(-2deg) skewX(2deg); }
+60% { transform: rotateZ(-4deg) skewX(4deg); }
+65% { transform: rotateZ(-2deg) skewX(2deg); }
+70% { transform: rotateZ(-4deg) skewX(4deg); }
+80% { transform: rotateZ(-2deg) skewX(2deg); }
+90% { transform: rotateZ(-4deg) skewX(4deg); }
 }
 
 @keyframes eating-left-mouth {
-12% { transform: rotate(10deg) skewX(-10deg); }
-22% { transform: rotate(2deg) skewX(-2deg); }
-62% { transform: rotate(10deg) skewX(-10deg); }
-67% { transform: rotate(2deg) skewX(-2deg); }
-92% { transform: rotate(10deg) skewX(-10deg); }
+12% { transform: rotateZ(10deg) skewX(-10deg); }
+22% { transform: rotateZ(2deg) skewX(-2deg); }
+62% { transform: rotateZ(10deg) skewX(-10deg); }
+67% { transform: rotateZ(2deg) skewX(-2deg); }
+92% { transform: rotateZ(10deg) skewX(-10deg); }
 }
 
 &.eating {
@@ -606,36 +606,36 @@ ${
 
 //WAVING ANIMATION
 @keyframes waving-right-pincer {
-/* 0% { transform: rotate(-20deg); } */
-25% { transform: rotate(40deg); }
-45% { transform: rotate(-40deg); }
-65% { transform: rotate(50deg); }
+/* 0% { transform: rotateZ(-20deg); } */
+25% { transform: rotateZ(40deg); }
+45% { transform: rotateZ(-40deg); }
+65% { transform: rotateZ(50deg); }
 }
 
 @keyframes waving-right-pincer-secondPart {
-25% { transform: rotate(0deg); }
-90% { transform: rotate(0deg); }
+25% { transform: rotateZ(0deg); }
+90% { transform: rotateZ(0deg); }
 }
 
 @keyframes waving-right-pincer-thirdPart {
-25% { transform: rotate(5deg); }
-90% { transform: rotate(5deg); }
+25% { transform: rotateZ(5deg); }
+90% { transform: rotateZ(5deg); }
 }
 
 @keyframes waving-left-pincer {
-25% { transform: rotate(-30deg); }
-45% { transform: rotate(40deg); }
-65% { transform: rotate(-50deg); }
+25% { transform: rotateZ(-30deg); }
+45% { transform: rotateZ(40deg); }
+65% { transform: rotateZ(-50deg); }
 }
 
 @keyframes waving-left-pincer-secondPart {
-25% { transform: rotate(5deg); }
-80% { transform: rotate(5deg); }
+25% { transform: rotateZ(5deg); }
+80% { transform: rotateZ(5deg); }
 }
 
 @keyframes waving-left-pincer-thirdPart {
-25% { transform: rotate(0deg); }
-80% { transform: rotate(0deg); }
+25% { transform: rotateZ(0deg); }
+80% { transform: rotateZ(0deg); }
 }
 
 &.waving {
@@ -680,65 +680,65 @@ ${
 
 //SNAPPING ANIMATION
 @keyframes snapping-right-pincer {
-10% { transform: rotate(-30deg); }
-90% { transform: rotate(-30deg); }
+10% { transform: rotateZ(-30deg); }
+90% { transform: rotateZ(-30deg); }
 }
 
 @keyframes snapping-right-pincer-secondPart {
-10% { transform: rotate(0deg); }
-90% { transform: rotate(0deg); }
+10% { transform: rotateZ(0deg); }
+90% { transform: rotateZ(0deg); }
 }
 
 @keyframes snapping-right-pincer-thirdPart {
-10% { transform: rotate(10deg); }
-90% { transform: rotate(10deg); }
+10% { transform: rotateZ(10deg); }
+90% { transform: rotateZ(10deg); }
 }
 
 @keyframes snapping-right-pincer-close {
-17.43% { transform: rotate(5deg); }
-21.43% { transform: rotate(35deg); }
-25.43% { transform: rotate(5deg); }
-40.29% { transform: rotate(5deg); }
-44.29% { transform: rotate(35deg); }
-48.29% { transform: rotate(5deg); }
-63.15% { transform: rotate(5deg); }
-67.15% { transform: rotate(35deg); }
-71.15% { transform: rotate(5deg); }
-74.58% { transform: rotate(5deg); }
-78.58% { transform: rotate(35deg); }
-82.58% { transform: rotate(5deg); }
+17.43% { transform: rotateZ(5deg); }
+21.43% { transform: rotateZ(35deg); }
+25.43% { transform: rotateZ(5deg); }
+40.29% { transform: rotateZ(5deg); }
+44.29% { transform: rotateZ(35deg); }
+48.29% { transform: rotateZ(5deg); }
+63.15% { transform: rotateZ(5deg); }
+67.15% { transform: rotateZ(35deg); }
+71.15% { transform: rotateZ(5deg); }
+74.58% { transform: rotateZ(5deg); }
+78.58% { transform: rotateZ(35deg); }
+82.58% { transform: rotateZ(5deg); }
 }
 
 @keyframes snapping-left-pincer {
-10% { transform: rotate(30deg); }
-90% { transform: rotate(30deg); }
+10% { transform: rotateZ(30deg); }
+90% { transform: rotateZ(30deg); }
 }
 
 @keyframes snapping-left-pincer-secondPart {
-10% { transform: rotate(0deg); }
-90% { transform: rotate(0deg); }
+10% { transform: rotateZ(0deg); }
+90% { transform: rotateZ(0deg); }
 }
 
 @keyframes snapping-left-pincer-thirdPart {
-10% { transform: rotate(-10deg); }
-90% { transform: rotate(-10deg); }
+10% { transform: rotateZ(-10deg); }
+90% { transform: rotateZ(-10deg); }
 }
 
 @keyframes snapping-left-pincer-close {
-28.86% { transform: rotate(-5deg); }
-32.86% { transform: rotate(-35deg); }
-35.72% { transform: rotate(-5deg); }
-38.58% { transform: rotate(-35deg); }
-42.58% { transform: rotate(-5deg); }
-51.72% { transform: rotate(-5deg); }
-55.72% { transform: rotate(-35deg); }
-59.72% { transform: rotate(-5deg); }
-63.15% { transform: rotate(-5deg); }
-67.15% { transform: rotate(-35deg); }
-71.15% { transform: rotate(-5deg); }
-74.58% { transform: rotate(-5deg); }
-78.58% { transform: rotate(-35deg); }
-82.58% { transform: rotate(-5deg); }
+28.86% { transform: rotateZ(-5deg); }
+32.86% { transform: rotateZ(-35deg); }
+35.72% { transform: rotateZ(-5deg); }
+38.58% { transform: rotateZ(-35deg); }
+42.58% { transform: rotateZ(-5deg); }
+51.72% { transform: rotateZ(-5deg); }
+55.72% { transform: rotateZ(-35deg); }
+59.72% { transform: rotateZ(-5deg); }
+63.15% { transform: rotateZ(-5deg); }
+67.15% { transform: rotateZ(-35deg); }
+71.15% { transform: rotateZ(-5deg); }
+74.58% { transform: rotateZ(-5deg); }
+78.58% { transform: rotateZ(-35deg); }
+82.58% { transform: rotateZ(-5deg); }
 }
 
 &.snapping {
