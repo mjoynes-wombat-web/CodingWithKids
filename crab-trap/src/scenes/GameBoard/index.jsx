@@ -4,19 +4,21 @@ import { FontAwesomeIcon as FAIcon } from '@fortawesome/react-fontawesome';
 import faCompress from '@fortawesome/fontawesome-pro-light/faCompress';
 import faExpand from '@fortawesome/fontawesome-pro-light/faExpand';
 import { uniqueId } from 'lodash';
+import { TransitionGroup, CSSTransition } from 'react-transition-group';
+import styled from 'styled-components';
 
 import Crab from '../../components/Crab';
 import Row from './components/Row';
 
-class GameBoard extends React.Component {
+class UnstyledGameBoard extends React.Component {
   constructor(props) {
     super(props);
 
     this.state = {
       difficulty: 1,
-      points: 0,
+      score: 0,
       hidingSpots: [],
-      numCrabs: 5,
+      numCrabs: 3,
       boardInit: false,
     };
 
@@ -51,13 +53,14 @@ class GameBoard extends React.Component {
     return newSpots;
   }
 
-  initBoard() {
+  initBoard(newDifficulty, updatedScore) {
     const { difficulty } = this.state;
     const crab = document.getElementById('crab');
     const crabBounding = crab.getBoundingClientRect();
     const crabDimensions = [crabBounding.width, crabBounding.height];
     const shell = crab.querySelector('.shell');
     const shellDimensions = shell.getBoundingClientRect();
+    const numCrabs = Math.min(Math.ceil((newDifficulty || difficulty) * 0.26) + 2, 6);
 
     const cols = Math.floor(window.screen.width
       / Math.max(
@@ -90,19 +93,22 @@ class GameBoard extends React.Component {
       hidingSpots.push(colGroup);
     }
 
-    this.initCrabs();
+    this.initCrabs(numCrabs);
 
     return this.setState({
       hidingSpots: this.setHideable(hidingSpots),
       crabDimensions,
       hidingSpotWidth: shellDimensions.width,
       boardInit: true,
+      score: updatedScore || 0,
+      difficulty: newDifficulty || 1,
+      numCrabs,
     });
   }
 
-  initCrabs() {
+  initCrabs(newNumCrabs) {
     const { numCrabs } = this.state;
-    const crabs = [...Array(numCrabs)].map(() => uniqueId('crab'));
+    const crabs = [...Array(newNumCrabs || numCrabs)].map(() => uniqueId('crab'));
 
     this.setState({ crabs });
   }
@@ -115,18 +121,17 @@ class GameBoard extends React.Component {
   }
 
   addPoint(id) {
-    const { points, difficulty, crabs } = this.state;
+    const { score, difficulty, crabs } = this.state;
     const newCrabs = [...crabs];
     const crabIndex = newCrabs.findIndex(crab => crab === id);
-    const updatedCrabs = this.updateCrabs(newCrabs.splice(crabIndex - 1, 1));
-
-    console.log(newCrabs);
-    const updatedPoints = points + 1;
-    if (Math.ceil(points / 10) > difficulty) {
-      this.setState({ points, difficulty: Math.ceil(points / 10) });
-      return this.initBoard();
+    newCrabs.splice(crabIndex, 1);
+    const updatedCrabs = this.updateCrabs(newCrabs);
+    const updatedScore = score + 1;
+    const newDifficulty = Math.ceil(updatedScore / 9.99);
+    if (newDifficulty > difficulty) {
+      return this.initBoard(newDifficulty, updatedScore);
     }
-    return this.setState({ points: updatedPoints, crabs: updatedCrabs });
+    return this.setState({ score: updatedScore, crabs: updatedCrabs });
   }
 
   render() {
@@ -134,6 +139,7 @@ class GameBoard extends React.Component {
       enterFullscreen,
       fullscreen,
       screenWidth,
+      className,
     } = this.props;
 
     const {
@@ -143,6 +149,7 @@ class GameBoard extends React.Component {
       hidingSpotWidth,
       boardInit,
       crabs,
+      score,
     } = this.state;
 
     if (!boardInit) {
@@ -154,7 +161,15 @@ class GameBoard extends React.Component {
     }
 
     return (
-      <div id="gameBoard">
+      <div id="gameBoard" className={className}>
+        <TransitionGroup component="h2" className="score">
+          Score:
+          <CSSTransition component="span" key={score} classNames="number" timeout={{ enter: 750, exit: 500 }}>
+            <span className="number">
+              {score}
+            </span>
+          </CSSTransition>
+        </TransitionGroup>
         <div className="grid">
           {hidingSpots.map((col, i) => <Row col={col} hidingSpotWidth={hidingSpotWidth} key={`hidingRow${i}`} index={i} />)}
         </div>
@@ -182,10 +197,74 @@ class GameBoard extends React.Component {
   }
 }
 
-GameBoard.propTypes = {
+UnstyledGameBoard.propTypes = {
   enterFullscreen: PropTypes.func.isRequired,
   fullscreen: PropTypes.bool.isRequired,
   screenWidth: PropTypes.number.isRequired,
 };
+
+const GameBoard = styled(UnstyledGameBoard)`
+.score {
+  position: absolute;
+  right: 1rem;
+  top: 1rem;
+  padding: 0 3.5rem 0 0;
+  font-size: 2rem;
+  margin: 0;
+
+  .number {
+    position: absolute;
+    right: 0;
+    display: inline-block;
+    &.number-enter {
+      transition: all 0.5s ease-in-out 0.25s;
+      perspective: 1000;
+      transform: rotateX(90deg);
+      &.number-enter-active {
+        transform: rotateX(0deg);
+      }
+    }
+    &.number-exit {
+      transition: all 0.5s;
+      perspective: 1000;
+      transform: rotateX(0deg);
+      &.number-exit-active {
+        transform: rotateX(-90deg);
+      }
+    }
+  }
+}
+
+.grid {
+  position: absolute;
+  min-width: 100vw;
+  min-height: 100vh;
+  display: flex;
+  z-index: 1000;
+  pointer-events: none;
+
+  .column {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+
+    .row {
+      flex: 1;
+      padding: 1rem;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+
+      .hiding-spot {
+        width: 12vw;
+        height: 100%;
+        background-color: red;
+        opacity: 0.25;
+        pointer-events: all;
+      }
+    }
+  }
+}
+`;
 
 export default GameBoard;

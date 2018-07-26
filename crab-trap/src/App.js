@@ -139,11 +139,17 @@ flex-direction: column;
 width: 100vw;
 height: 100vh;
 
-h1 {
+h1, h2 {
   color: ${colors.darkOrange};
   text-shadow: 0.125rem 0.125rem 0 ${colors.darkBrown};
-  font-size: 4rem;
   font-family: 'Lobster', Arnoldboecklin, cursive;
+}
+
+h1 {
+  font-size: 4rem;
+}
+h2 {
+  font-size: 3rem;
 }
 
 > * {
@@ -196,37 +202,6 @@ h1 {
     &.scene-exit-active {
       opacity: 0;
       transform: rotateX(180deg);
-    }
-  }
-}
-
-.grid {
-  position: absolute;
-  min-width: 100vw;
-  min-height: 100vh;
-  display: flex;
-  z-index: 1000;
-  pointer-events: none;
-
-  .column {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-
-    .row {
-      flex: 1;
-      padding: 1rem;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-
-      .hiding-spot {
-        width: 12vw;
-        height: 100%;
-        background-color: red;
-        opacity: 0.25;
-        pointer-events: all;
-      }
     }
   }
 }

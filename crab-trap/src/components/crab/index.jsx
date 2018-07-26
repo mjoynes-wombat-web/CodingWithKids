@@ -9,15 +9,19 @@ class Crab extends Component {
   constructor(props) {
     super(props);
 
+    const direction = Math.random() < 0.5 ? 'right' : 'left';
+
     this.state = {
       pincerAction: 'eating',
       walkTime: 0,
-      direction: props.direction || 'right',
+      direction: props.direction || direction,
       paused: props.paused || false,
       currentPos: [0, 0],
       initialPos: [
-        Math.random() < 0.5 ? window.screen.width : 0,
-        0,
+        direction === 'left'
+          ? window.screen.width + (((props.crabDimensions[0] * 1.66) - props.crabDimensions[0]) / 2)
+          : -(props.crabDimensions[0] * 1.66),
+        (window.screen.height * Math.random()) - props.crabDimensions[1],
       ],
       walking: props.display,
     };
@@ -29,7 +33,6 @@ class Crab extends Component {
     this.walk = this.walk.bind(this);
     this.pauseWalking = this.pauseWalking.bind(this);
     this.pickSpot = this.pickSpot.bind(this);
-    this.setCurrentPos = this.setCurrentPos.bind(this);
     this.changePincerInterval = setInterval(
       this.changePincerAction,
       7000 + (Math.random() * 2000),
@@ -39,15 +42,6 @@ class Crab extends Component {
 
   componentWillUnmount() {
     clearInterval(this.changePincerInterval);
-  }
-
-  setCurrentPos() {
-    const { screenWidth, crabDimensions } = this.props;
-
-    return [
-      Math.random() < 0.5 ? screenWidth : 0 - crabDimensions.width,
-      0,
-    ];
   }
 
   changePincerAction() {
@@ -63,10 +57,14 @@ class Crab extends Component {
     if (target.classList.value === 'left-pincer') this.setState({ pincerAction: null });
   }
 
-  walk() {
+  walk(e) {
+    if (e) {
+      const { target } = e;
+      if (!target || !target.classList.contains('crab')) return null;
+    }
     const { display } = this.props;
     if (display) return null;
-    const { currentPos, moveTo } = this.state;
+    const { currentPos, moveTo, initialPos } = this.state;
     if (isEqual(currentPos, [0, 0]) && moveTo) return false;
     const { crabDimensions, difficulty } = this.props;
     const spot = this.pickSpot();
@@ -74,14 +72,13 @@ class Crab extends Component {
       spot.coords[0] - (crabDimensions[0] / 2),
       spot.coords[1] - (crabDimensions[1] / 2),
     ];
-
     const walkTime = Math.hypot(
-      Math.abs(currentPos[0] - newMoveTo[0]),
-      Math.abs(currentPos[1] - newMoveTo[1]),
+      Math.abs((currentPos[0] || initialPos[0]) - newMoveTo[0]),
+      Math.abs((currentPos[1] || initialPos[0]) - newMoveTo[1]),
     )
-    / 96 / ((difficulty / 3) + 0.6666);
+    / 96 / (0.875 + (difficulty * 0.125));
 
-    const direction = (currentPos[0] <= newMoveTo[0] ? 'right' : 'left');
+    const direction = ((currentPos[0] || initialPos[0]) <= newMoveTo[0] ? 'right' : 'left');
 
     if (newMoveTo[0] === currentPos[0]
       && newMoveTo[1] === currentPos[1]) return this.walk();
@@ -144,7 +141,6 @@ class Crab extends Component {
           removePincerAction={!hidden ? this.removePincerAction : () => null}
           data-iteration="0"
           className={`
-            crab
             ${pincerAction || ''}
             ${walking ? 'walking' : ''}
             ${paused ? 'paused' : ''}
@@ -177,7 +173,7 @@ Crab.defaultProps = {
   id: '',
   crabDimensions: [0, 0],
   className: '',
-  direction: 'right',
+  direction: '',
   difficulty: 1.25,
   paused: false,
   screenWidth: null,

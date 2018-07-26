@@ -6,7 +6,7 @@ const CrabSVG = ({
 }) => (
   <svg
     onLoad={() => setTimeout(walk, 2000)}
-    className={className}
+    className={`crab ${className}`}
     viewBox="0 0 72 36"
     version="1.1"
     style={{
@@ -18,7 +18,7 @@ const CrabSVG = ({
     <rect x={0} y={0} width={72} height="35.189" style={{ fill: 'none' }} />
     <g>
       <g className="shell">
-        <path onClick={() => addPoint(id)} className="outer-shell" d="M16.268,16.734l7.73,-8.8l24.001,0l7.733,8.8l-9.357,13.2l-20.752,0l-9.355,-13.2Z" style={{ fill: 'url(#_Linear1)', stroke: '#8d4a00', strokeWidth: '0.22px' }} />
+        <path onClick={() => addPoint(id)} onTouchStart={() => addPoint(id)} className="outer-shell" d="M16.268,16.734l7.73,-8.8l24.001,0l7.733,8.8l-9.357,13.2l-20.752,0l-9.355,-13.2Z" style={{ fill: 'url(#_Linear1)', stroke: '#8d4a00', strokeWidth: '0.22px' }} />
         <path className="inner-shell" d="M21.061,16.239l5.808,-6.917l18.26,0l5.81,6.917l-4.565,13.695l-20.751,0l-4.562,-13.695Z" style={{ fill: 'url(#_Radial2)', stroke: '#8d4a00', strokeWidth: '0.22px' }} />
       </g>
       <g className="nose">

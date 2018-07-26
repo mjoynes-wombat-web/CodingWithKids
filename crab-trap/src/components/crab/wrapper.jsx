@@ -107,6 +107,11 @@ left: 0;
 animation-fill-mode: both;
 cursor: pointer;
 pointer-events: none;
+user-select: none;
+
+* {
+  user-select: none;
+}
 
 &.hidden {
   position: absolute;
