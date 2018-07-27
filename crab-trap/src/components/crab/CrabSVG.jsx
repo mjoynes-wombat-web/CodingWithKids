@@ -1,17 +1,38 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 /* eslint-disable react/style-prop-object */
+
+const directionLeftLegsCSS = direction => ({
+  animationDirection: direction === 'right' ? 'normal' : 'reverse',
+});
+
+const directionRightLegsCSS = direction => ({
+  animationDirection: direction === 'right' ? 'reverse' : 'normal',
+});
+
+const durationCSS = difficulty => ({
+  animationDuration: `${(1 / difficulty) * 1.5}s`,
+});
+
+const minCrabWidthCSS = screenWidth => ({
+  minWidth: `${Math.max(screenWidth * 0.12, 96)}px`,
+});
+
 const CrabSVG = ({
-  className, removePincerAction, addPoint, walk, id,
+  className, removePincerAction, addPoint, walk, id, screenWidth, direction, difficulty,
 }) => (
   <svg
     onLoad={() => setTimeout(walk, 2000)}
     className={`crab ${className}`}
+    style={{
+      ...minCrabWidthCSS(screenWidth),
+      fillRule: 'evenodd',
+      clipRule: 'evenodd',
+      strokeLinecap: 'square',
+      strokeMiterlimit: '1.5',
+    }}
     viewBox="0 0 72 36"
     version="1.1"
-    style={{
-      fillRule: 'evenodd', clipRule: 'evenodd', strokeLinecap: 'square', strokeMiterlimit: '1.5',
-    }}
     width={72}
     height={36}
   >
@@ -72,8 +93,14 @@ const CrabSVG = ({
         </g>
       </g>
       <g className="legs">
-        <g className="left-legs">
-          <g className="fourth-leg">
+        <g
+          className="left-legs leg"
+          style={{
+            ...directionLeftLegsCSS(direction),
+            ...durationCSS(difficulty),
+          }}
+        >
+          <g className="fourth-leg fourth-left-leg">
             <g>
               <path
                 d="M39.668,29.902l-0.333,-0.53c0,0 0.197,-2.131 7.401,-4.702c-0.187,0.121 -0.303,0.334 -0.288,0.567c0.021,0.348 0.326,0.61 0.681,0.587c0.031,-0.002 0.061,-0.006 0.09,-0.013l0,0.002c0,0 -7.075,4.471 -7.551,4.089Z"
@@ -81,7 +108,7 @@ const CrabSVG = ({
                   fill: 'url(#_Linear10)', stroke: '#8d4a00', strokeWidth: '0.11px', strokeLinecap: 'round',
                 }}
               />
-              <g className="second-part">
+              <g className="second-part fourth-left-leg-second-part">
                 <path
                   d="M47.262,24.583c3.773,-0.031 8.1,4.037 8.1,4.037l-0.703,0.8c-7.238,-3.211 -7.393,-3.599 -7.396,-3.614c0.285,-0.07 0.493,-0.327 0.486,-0.627c-0.007,-0.29 -0.212,-0.529 -0.487,-0.596Z"
                   style={{
@@ -94,7 +121,7 @@ const CrabSVG = ({
                     fill: 'url(#_Linear12)', stroke: '#8d4a00', strokeWidth: '0.11px', strokeLinecap: 'round',
                   }}
                 />
-                <g className="third-part">
+                <g className="third-part fourth-left-leg-third-part">
                   <path
                     d="M54.584,29.309c-0.001,0 -1.546,1.53 -0.994,2.656c0.438,0.896 1.512,1.031 2.192,0.378c0.896,-0.861 -0.133,-3.486 -0.133,-3.486"
                     style={{
@@ -119,7 +146,7 @@ const CrabSVG = ({
               }}
             />
           </g>
-          <g className="third-leg">
+          <g className="third-leg third-left-leg">
             <g>
               <g>
                 <clipPath id="_clip15">
@@ -135,7 +162,7 @@ const CrabSVG = ({
                   }}
                 />
               </g>
-              <g className="second-part">
+              <g className="second-part third-left-leg-second-part">
                 <g>
                   <clipPath id="_clip17">
                     <path d="M49.458,20.663c4.297,-0.035 9.224,4.408 9.224,4.408l-0.8,0.873c-8.243,-3.506 -8.421,-3.93 -8.424,-3.947c0.325,-0.077 0.562,-0.357 0.554,-0.684c-0.008,-0.317 -0.243,-0.578 -0.554,-0.65Z" />
@@ -164,7 +191,7 @@ const CrabSVG = ({
                     }}
                   />
                 </g>
-                <g className="third-part">
+                <g className="third-part third-left-leg-third-part">
                   <g>
                     <clipPath id="_clip21">
                       <path d="M58.975,25.719c0.061,-0.168 -0.181,-0.539 -0.181,-0.539c0,0 3.275,3.372 0.967,8.604c0.378,-5.737 -1.726,-7.652 -1.726,-7.652l0.025,-0.025c0.02,0.008 0.04,0.015 0.061,0.022c0.351,0.107 0.734,-0.077 0.854,-0.41Z" />
@@ -205,7 +232,7 @@ const CrabSVG = ({
               }}
             />
           </g>
-          <g className="second-leg">
+          <g className="second-leg second-left-leg">
             <g>
               <g>
                 <clipPath id="_clip25">
@@ -221,7 +248,7 @@ const CrabSVG = ({
                   }}
                 />
               </g>
-              <g className="second-part">
+              <g className="second-part second-left-leg-second-part">
                 <g>
                   <clipPath id="_clip26">
                     <path d="M50.35,17.687c4.548,-0.038 9.763,4.829 9.763,4.829l-0.847,0.957c-8.724,-3.841 -8.912,-4.305 -8.916,-4.323c0.344,-0.085 0.596,-0.391 0.587,-0.75c-0.008,-0.347 -0.257,-0.634 -0.587,-0.713Z" />
@@ -250,7 +277,7 @@ const CrabSVG = ({
                     }}
                   />
                 </g>
-                <g className="third-part">
+                <g className="third-part second-left-leg-third-part">
                   <g>
                     <clipPath id="_clip29">
                       <path d="M60.423,23.227c0.064,-0.185 -0.191,-0.591 -0.191,-0.591c0,0 3.466,3.694 1.022,9.426c0.401,-6.285 -1.825,-8.383 -1.825,-8.383l0.026,-0.027c0.021,0.009 0.042,0.017 0.064,0.024c0.372,0.117 0.777,-0.085 0.904,-0.449Z" />
@@ -291,7 +318,7 @@ const CrabSVG = ({
               }}
             />
           </g>
-          <g className="first-leg">
+          <g className="first-leg first-left-leg">
             <g>
               <path
                 d="M41.31,21.235l0,-0.649c0,0 0.272,-2.879 10.265,-6.352c-0.259,0.164 -0.422,0.451 -0.401,0.766c0.03,0.47 0.454,0.824 0.946,0.792c0.042,-0.002 0.084,-0.008 0.125,-0.016l0,0.002c0,0 -10.757,7.861 -11.415,7.344c0,0 0.285,-0.298 0.231,-1.136c-0.034,-0.531 0.668,-0.465 0.249,-0.751Z"
@@ -299,7 +326,7 @@ const CrabSVG = ({
                   fill: 'url(#_Linear32)', stroke: '#8d4a00', strokeWidth: '0.11px', strokeLinecap: 'round',
                 }}
               />
-              <g className="second-part">
+              <g className="second-part first-left-leg-second-part">
                 <path
                   d="M52.305,14.117c5.232,-0.043 11.233,5.453 11.233,5.453l-0.974,1.081c-10.039,-4.338 -10.255,-4.863 -10.259,-4.883c0.396,-0.095 0.685,-0.442 0.675,-0.847c-0.009,-0.392 -0.296,-0.715 -0.675,-0.804Z"
                   style={{
@@ -312,7 +339,7 @@ const CrabSVG = ({
                     fill: 'url(#_Linear34)', stroke: '#8d4a00', strokeWidth: '0.11px', strokeLinecap: 'round',
                   }}
                 />
-                <g className="third-part">
+                <g className="third-part first-left-leg-third-part">
                   <path
                     d="M63.895,20.372c0.074,-0.208 -0.22,-0.666 -0.22,-0.666c0,0 3.988,4.17 1.176,10.644c0.461,-7.098 -2.1,-9.467 -2.1,-9.467l0.03,-0.031c0.024,0.01 0.048,0.019 0.074,0.027c0.427,0.132 0.894,-0.095 1.04,-0.507Z"
                     style={{
@@ -338,8 +365,14 @@ const CrabSVG = ({
             />
           </g>
         </g>
-        <g className="right-legs">
-          <g className="fourth-leg">
+        <g
+          className="right-legs leg"
+          style={{
+            ...directionRightLegsCSS(direction),
+            ...durationCSS(difficulty),
+          }}
+        >
+          <g className="fourth-leg fourth-right-leg">
             <g>
               <path
                 d="M32.332,29.902l0.333,-0.53c0,0 -0.197,-2.131 -7.401,-4.702c0.186,0.121 0.303,0.334 0.288,0.567c-0.021,0.348 -0.327,0.61 -0.681,0.587c-0.031,-0.002 -0.061,-0.006 -0.09,-0.013l0,0.002c0,0 7.075,4.471 7.551,4.089Z"
@@ -347,7 +380,7 @@ const CrabSVG = ({
                   fill: 'url(#_Linear37)', stroke: '#8d4a00', strokeWidth: '0.11px', strokeLinecap: 'round',
                 }}
               />
-              <g className="second-part">
+              <g className="second-part fourth-right-leg-second-part">
                 <path
                   d="M24.738,24.583c-3.773,-0.031 -8.1,4.037 -8.1,4.037l0.703,0.8c7.238,-3.211 7.393,-3.599 7.396,-3.614c-0.285,-0.07 -0.493,-0.327 -0.487,-0.627c0.008,-0.29 0.213,-0.529 0.488,-0.596Z"
                   style={{
@@ -360,7 +393,7 @@ const CrabSVG = ({
                     fill: 'url(#_Linear39)', stroke: '#8d4a00', strokeWidth: '0.11px', strokeLinecap: 'round',
                   }}
                 />
-                <g className="third-part">
+                <g className="third-part fourth-right-leg-third-part">
                   <path
                     d="M17.416,29.309c0,0 1.546,1.53 0.994,2.656c-0.439,0.896 -1.512,1.031 -2.192,0.378c-0.896,-0.861 0.133,-3.486 0.133,-3.486"
                     style={{
@@ -385,7 +418,7 @@ const CrabSVG = ({
               }}
             />
           </g>
-          <g className="third-leg">
+          <g className="third-leg third-right-leg">
             <g>
               <g>
                 <clipPath id="_clip42">
@@ -401,7 +434,7 @@ const CrabSVG = ({
                   }}
                 />
               </g>
-              <g className="second-part">
+              <g className="second-part third-right-leg-second-part">
                 <g>
                   <clipPath id="_clip44">
                     <path d="M22.542,20.663c-4.297,-0.035 -9.224,4.408 -9.224,4.408l0.8,0.873c8.243,-3.506 8.421,-3.93 8.424,-3.947c-0.325,-0.077 -0.562,-0.357 -0.554,-0.684c0.008,-0.317 0.243,-0.578 0.554,-0.65Z" />
@@ -430,7 +463,7 @@ const CrabSVG = ({
                     }}
                   />
                 </g>
-                <g className="third-part">
+                <g className="third-part third-right-leg-third-part">
                   <g>
                     <clipPath id="_clip48">
                       <path d="M13.025,25.719c-0.061,-0.168 0.181,-0.539 0.181,-0.539c0,0 -3.275,3.372 -0.967,8.604c-0.378,-5.737 1.726,-7.652 1.726,-7.652l-0.025,-0.025c-0.02,0.008 -0.04,0.015 -0.061,0.022c-0.351,0.107 -0.734,-0.077 -0.854,-0.41Z" />
@@ -471,7 +504,7 @@ const CrabSVG = ({
               }}
             />
           </g>
-          <g className="second-leg">
+          <g className="second-leg second-right-leg">
             <g>
               <g>
                 <clipPath id="_clip52">
@@ -487,7 +520,7 @@ const CrabSVG = ({
                   }}
                 />
               </g>
-              <g className="second-part">
+              <g className="second-part second-right-leg-second-part">
                 <g>
                   <clipPath id="_clip53">
                     <path d="M21.65,17.687c-4.548,-0.038 -9.763,4.829 -9.763,4.829l0.847,0.957c8.724,-3.841 8.912,-4.305 8.916,-4.323c-0.344,-0.085 -0.596,-0.391 -0.587,-0.75c0.008,-0.347 0.257,-0.634 0.587,-0.713Z" />
@@ -516,7 +549,7 @@ const CrabSVG = ({
                     }}
                   />
                 </g>
-                <g className="third-part">
+                <g className="third-part second-right-leg-third-part">
                   <g>
                     <clipPath id="_clip56">
                       <path d="M11.577,23.227c-0.064,-0.185 0.191,-0.591 0.191,-0.591c0,0 -3.466,3.694 -1.022,9.426c-0.401,-6.285 1.825,-8.383 1.825,-8.383l-0.026,-0.027c-0.021,0.009 -0.042,0.017 -0.064,0.024c-0.372,0.117 -0.777,-0.085 -0.904,-0.449Z" />
@@ -557,7 +590,7 @@ const CrabSVG = ({
               }}
             />
           </g>
-          <g className="first-leg">
+          <g className="first-leg first-right-leg">
             <g>
               <path
                 d="M30.69,21.235l0,-0.649c0,0 -0.272,-2.879 -10.265,-6.352c0.259,0.164 0.422,0.451 0.401,0.766c-0.03,0.47 -0.454,0.824 -0.946,0.792c-0.042,-0.002 -0.084,-0.008 -0.125,-0.016l0,0.002c0,0 10.757,7.861 11.415,7.344c0,0 -0.285,-0.298 -0.231,-1.136c0.034,-0.531 -0.668,-0.465 -0.249,-0.751Z"
@@ -565,7 +598,7 @@ const CrabSVG = ({
                   fill: 'url(#_Linear59)', stroke: '#8d4a00', strokeWidth: '0.11px', strokeLinecap: 'round',
                 }}
               />
-              <g className="second-part">
+              <g className="second-part first-right-leg-second-part">
                 <path
                   d="M19.695,14.117c-5.232,-0.043 -11.233,5.453 -11.233,5.453l0.974,1.081c10.039,-4.338 10.255,-4.863 10.259,-4.883c-0.396,-0.095 -0.685,-0.442 -0.675,-0.847c0.009,-0.392 0.296,-0.715 0.675,-0.804Z"
                   style={{
@@ -578,7 +611,7 @@ const CrabSVG = ({
                     fill: 'url(#_Linear61)', stroke: '#8d4a00', strokeWidth: '0.11px', strokeLinecap: 'round',
                   }}
                 />
-                <g className="third-part">
+                <g className="third-part first-right-leg-third-part">
                   <path
                     d="M8.105,20.372c-0.074,-0.208 0.22,-0.666 0.22,-0.666c0,0 -3.988,4.17 -1.176,10.644c-0.461,-7.098 2.1,-9.467 2.1,-9.467l-0.03,-0.031c-0.024,0.01 -0.048,0.019 -0.074,0.027c-0.427,0.132 -0.894,-0.095 -1.04,-0.507Z"
                     style={{

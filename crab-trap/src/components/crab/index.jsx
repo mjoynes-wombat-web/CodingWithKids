@@ -58,12 +58,12 @@ class Crab extends Component {
   }
 
   walk(e) {
+    const { display } = this.props;
+    if (display) return null;
     if (e) {
       const { target } = e;
       if (!target || !target.classList.contains('crab')) return null;
     }
-    const { display } = this.props;
-    if (display) return null;
     const { currentPos, moveTo, initialPos } = this.state;
     if (isEqual(currentPos, [0, 0]) && moveTo) return false;
     const { crabDimensions, difficulty } = this.props;
@@ -118,24 +118,25 @@ class Crab extends Component {
       paused, walking, walkTime, moveTo, direction, pincerAction, initialPos,
     } = this.state;
     const {
-      addPoint, screenWidth, className, id, difficulty, hidden,
+      addPoint, screenWidth, className, id, difficulty, hidden, display,
     } = this.props;
+
     return (
       <CrabWrapper
-        initialPos={initialPos}
+        initialPos={display ? null : initialPos}
         continueWalk={this.continueWalk}
         paused={paused}
         walking={walking}
         id={id}
         className={[className, hidden ? 'hidden' : ''].join(' ')}
-        screenWidth={screenWidth}
         walkTime={walkTime}
-        moveTo={moveTo}
-        difficulty={difficulty}
-        direction={direction}
+        moveTo={display ? null : moveTo}
       >
         <CrabSVG
           walk={this.walk}
+          direction={direction}
+          difficulty={difficulty}
+          screenWidth={screenWidth}
           id={id}
           addPoint={addPoint}
           removePincerAction={!hidden ? this.removePincerAction : () => null}
