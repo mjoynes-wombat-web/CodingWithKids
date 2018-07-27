@@ -15,10 +15,10 @@ class UnstyledGameBoard extends React.Component {
     super(props);
 
     this.state = {
-      difficulty: 10,
+      difficulty: 1,
       score: 0,
       hidingSpots: [],
-      numCrabs: 5,
+      numCrabs: 3,
       boardInit: false,
     };
 
