@@ -258,8 +258,9 @@ const GameBoard = styled(UnstyledGameBoard)`
       .hiding-spot {
         width: 12vw;
         height: 100%;
-        background-color: red;
-        opacity: 0.25;
+        background-size: 100% auto;
+        background-repeat: no-repeat;
+        background-position: center;
         pointer-events: all;
       }
     }
