@@ -5,10 +5,9 @@ import styled from 'styled-components';
 import rock from '../../../../assets/images/rock.png';
 
 const UnstyledRock = ({ className }) => (
-  <div
-    className={className}
-    alt="Sea Rock"
-  />
+  <div className={className}>
+    <img src={rock} alt="Rock" />
+  </div>
 );
 
 UnstyledRock.propTypes = {
@@ -20,7 +19,11 @@ UnstyledRock.defaultProps = {
 };
 
 const Rock = styled(UnstyledRock)`
-  background-image: url(${rock});
+  img {
+    width: 92%;
+    pointer-events: all;
+    margin-bottom: 5%;
+  }
 `;
 
 export default Rock;

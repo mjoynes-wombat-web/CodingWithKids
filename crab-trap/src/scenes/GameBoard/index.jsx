@@ -261,7 +261,11 @@ const GameBoard = styled(UnstyledGameBoard)`
         background-size: 100% auto;
         background-repeat: no-repeat;
         background-position: center;
-        pointer-events: all;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-content: center;
+        position: relative;
       }
     }
   }

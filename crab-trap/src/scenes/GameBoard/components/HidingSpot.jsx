@@ -4,9 +4,10 @@ import PropTypes from 'prop-types';
 import Turtle from './spots/Turtle';
 import SandCastle from './spots/SandCastle';
 import Rock from './spots/Rock';
+import DriftWood from './spots/DriftWood';
 
 const pickSpot = (hidingSpotWidth) => {
-  const spot = Math.floor(Math.random() * 3);
+  const spot = Math.floor(Math.random() * 4);
   const spotProps = {
     className: 'hiding-spot',
     style: {
@@ -21,6 +22,8 @@ const pickSpot = (hidingSpotWidth) => {
       return <SandCastle {...spotProps} />;
     case 2:
       return <Rock {...spotProps} />;
+    case 3:
+      return <DriftWood {...spotProps} />;
     default:
       return (<Rock {...spotProps} />);
   }

@@ -5,10 +5,9 @@ import styled from 'styled-components';
 import turtle from '../../../../assets/images/turtle.png';
 
 const UnstyledTurtle = ({ className }) => (
-  <div
-    className={className}
-    alt="Sea Turtle"
-  />
+  <div className={className}>
+    <img src={turtle} alt="Sea Turtle" />
+  </div>
 );
 
 UnstyledTurtle.propTypes = {
@@ -20,7 +19,13 @@ UnstyledTurtle.defaultProps = {
 };
 
 const Turtle = styled(UnstyledTurtle)`
-  background-image: url(${turtle});
+  img {
+    width: 120%;
+    pointer-events: all;
+    position: absolute;
+    left: -10%;
+    margin-top: 17%;
+  }
 `;
 
 export default Turtle;

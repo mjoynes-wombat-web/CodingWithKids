@@ -5,10 +5,9 @@ import styled from 'styled-components';
 import sandCastle from '../../../../assets/images/sand-castle.png';
 
 const UnstyledSandCastle = ({ className }) => (
-  <div
-    className={className}
-    alt="Sand Castle"
-  />
+  <div className={className}>
+    <img src={sandCastle} alt="Sand Castle" />
+  </div>
 );
 
 UnstyledSandCastle.propTypes = {
@@ -20,7 +19,11 @@ UnstyledSandCastle.defaultProps = {
 };
 
 const SandCastle = styled(UnstyledSandCastle)`
-  background-image: url(${sandCastle});
+  img {
+    width: 90%;
+    pointer-events: all;
+    margin-bottom: 20%;
+  }
 `;
 
 export default SandCastle;
