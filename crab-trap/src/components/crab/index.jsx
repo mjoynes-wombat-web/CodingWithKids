@@ -127,6 +127,7 @@ class Crab extends Component {
         continueWalk={this.continueWalk}
         paused={paused}
         walking={walking}
+        screenWidth={screenWidth}
         id={id}
         className={[className, hidden ? 'hidden' : ''].join(' ')}
         walkTime={walkTime}

@@ -15,7 +15,6 @@ class App extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      gameStatus: 'ready',
       fullscreen: false,
       rotate: false,
       screenWidth: window.screen.width,

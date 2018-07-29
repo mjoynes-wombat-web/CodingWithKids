@@ -29,7 +29,6 @@ const CrabWrapper = ({
     className={`crab-wrapper 
     ${className}  ${paused ? 'paused' : ''} ${walking ? 'walking' : ''}`}
   >
-    {console.log(moveTo)}
     {children}
   </div>
 );
@@ -41,12 +40,19 @@ CrabWrapper.propTypes = {
   walking: PropTypes.bool,
   className: PropTypes.string,
   id: PropTypes.string.isRequired,
+  screenWidth: PropTypes.number.isRequired,
+  moveTo: PropTypes.arrayOf(PropTypes.number),
+  walkTime: PropTypes.number,
+  initialPos: PropTypes.arrayOf(PropTypes.number),
 };
 
 CrabWrapper.defaultProps = {
   children: {},
   className: '',
   walking: false,
+  moveTo: [0, 0],
+  walkTime: 0,
+  initialPos: [0, 0],
 };
 
 export default CrabWrapper;

@@ -1089,6 +1089,9 @@ CrabSVG.propTypes = {
   removePincerAction: PropTypes.func.isRequired,
   addPoint: PropTypes.func,
   walk: PropTypes.func,
+  screenWidth: PropTypes.number.isRequired,
+  direction: PropTypes.string.isRequired,
+  difficulty: PropTypes.number.isRequired,
 };
 
 CrabSVG.defaultProps = {
