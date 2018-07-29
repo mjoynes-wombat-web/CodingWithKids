@@ -10,6 +10,22 @@ import styled from 'styled-components';
 import Crab from '../../components/Crab';
 import Row from './components/Row';
 
+function pickSpot() {
+  const spot = Math.floor(Math.random() * 6);
+  switch (spot) {
+    case 0 || 1:
+      return 'turtle';
+    case 2 || 3:
+      return 'sandCastle';
+    case 4:
+      return 'rock';
+    case 5:
+      return 'driftWood';
+    default:
+      return 'rock';
+  }
+}
+
 class UnstyledGameBoard extends React.Component {
   constructor(props) {
     super(props);
@@ -46,7 +62,10 @@ class UnstyledGameBoard extends React.Component {
         if ((percentHidden + (1 / (numCols * numRows))) >= maxPercent) return newSpots;
         const isHidden = (Math.random() * difficulty > 0.66);
         newSpots[i][x].hideable = isHidden;
-        if (isHidden) { percentHidden += (1 / (numCols * numRows)); }
+        if (isHidden) {
+          newSpots[i][x].type = pickSpot();
+          percentHidden += (1 / (numCols * numRows));
+        }
       }
     }
     if (percentHidden < minPercent) return this.setHideable(newSpots);
