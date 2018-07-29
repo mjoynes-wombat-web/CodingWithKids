@@ -8,7 +8,7 @@ import { TransitionGroup, CSSTransition } from 'react-transition-group';
 import styled from 'styled-components';
 
 import Crab from '../../components/Crab';
-import Row from './components/Row';
+import Column from './components/Column';
 
 function pickSpot() {
   const spot = Math.floor(Math.random() * 6);
@@ -106,6 +106,7 @@ class UnstyledGameBoard extends React.Component {
             colCenter,
             rowCenter,
           ],
+          id: uniqueId('hidingSpot'),
         };
         colGroup.push(spot);
       }
@@ -190,7 +191,7 @@ class UnstyledGameBoard extends React.Component {
           </CSSTransition>
         </TransitionGroup>
         <div className="grid">
-          {hidingSpots.map((col, i) => <Row col={col} hidingSpotWidth={hidingSpotWidth} key={`hidingRow${i}`} index={i} />)}
+          {hidingSpots.map(col => <Column col={col} hidingSpotWidth={hidingSpotWidth} key={uniqueId('hidingRow')} />)}
         </div>
         <div className="buttons">
           <button type="button" onClick={enterFullscreen}>
@@ -220,6 +221,7 @@ UnstyledGameBoard.propTypes = {
   enterFullscreen: PropTypes.func.isRequired,
   fullscreen: PropTypes.bool.isRequired,
   screenWidth: PropTypes.number.isRequired,
+  className: PropTypes.string.isRequired,
 };
 
 const GameBoard = styled(UnstyledGameBoard)`
