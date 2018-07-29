@@ -206,11 +206,13 @@ UnstyledGameBoard.propTypes = {
 const GameBoard = styled(UnstyledGameBoard)`
 .score {
   position: absolute;
-  right: 1rem;
+  right: 1.5rem;
   top: 1rem;
   padding: 0 3.5rem 0 0;
   font-size: 2rem;
   margin: 0;
+  z-index: 2000;
+  pointer-events: none;
 
   .number {
     position: absolute;
