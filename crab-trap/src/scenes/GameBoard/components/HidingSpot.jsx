@@ -3,28 +3,27 @@ import PropTypes from 'prop-types';
 
 import Turtle from './spots/Turtle';
 import SandCastle from './spots/SandCastle';
+import Rock from './spots/Rock';
 
 const pickSpot = (hidingSpotWidth) => {
-  if (Math.random() > 0.5) {
-    return (
-      <Turtle
-        className="hiding-spot"
-        style={{
-          width: `${hidingSpotWidth + 20}px`,
-          height: `${(hidingSpotWidth * 1.25) + 20}px`,
-        }}
-      />
-    );
+  const spot = Math.floor(Math.random() * 3);
+  const spotProps = {
+    className: 'hiding-spot',
+    style: {
+      width: `${hidingSpotWidth + 20}px`,
+      height: `${(hidingSpotWidth * 1.25) + 20}px`,
+    },
+  };
+  switch (spot) {
+    case 0:
+      return <Turtle {...spotProps} />;
+    case 1:
+      return <SandCastle {...spotProps} />;
+    case 2:
+      return <Rock {...spotProps} />;
+    default:
+      return (<Rock {...spotProps} />);
   }
-  return (
-    <SandCastle
-      className="hiding-spot"
-      style={{
-        width: `${hidingSpotWidth + 20}px`,
-        height: `${(hidingSpotWidth * 1.25) + 20}px`,
-      }}
-    />
-  );
 };
 
 const HidingSpot = ({ row, hidingSpotWidth }) => (
