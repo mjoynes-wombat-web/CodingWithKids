@@ -13,14 +13,16 @@ import Column from './components/Column';
 function pickSpot() {
   const spot = Math.floor(Math.random() * 6);
   switch (spot) {
-    case 0 || 1:
-      return 'turtle';
-    case 2 || 3:
-      return 'sandCastle';
-    case 4:
+    case 0:
+    case 1:
       return 'rock';
-    case 5:
+    case 2:
+    case 3:
       return 'driftWood';
+    case 4:
+      return 'turtle';
+    case 5:
+      return 'sandCastle';
     default:
       return 'rock';
   }
