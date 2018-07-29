@@ -1,10 +1,11 @@
 {
   "main.css": "static/css/main.08f19edb.css",
   "main.css.map": "static/css/main.08f19edb.css.map",
-  "main.js": "static/js/main.794508c7.js",
-  "main.js.map": "static/js/main.794508c7.js.map",
-  "static/media/rock.png": "static/media/rock.7ecbcf3f.png",
-  "static/media/sand-castle.png": "static/media/sand-castle.a86170e9.png",
+  "main.js": "static/js/main.6dcd0cf6.js",
+  "main.js.map": "static/js/main.6dcd0cf6.js.map",
+  "static/media/drift-wood.png": "static/media/drift-wood.e6142e18.png",
+  "static/media/rock.png": "static/media/rock.23f6d8d4.png",
+  "static/media/sand-castle.png": "static/media/sand-castle.f42620ff.png",
   "static/media/sand.jpg": "static/media/sand.2abfc4f1.jpg",
-  "static/media/turtle.png": "static/media/turtle.f359d3c7.png"
+  "static/media/turtle.png": "static/media/turtle.7fdf6b22.png"
 }
