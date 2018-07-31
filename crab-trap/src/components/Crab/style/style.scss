@@ -109,6 +109,16 @@
   animation-fill-mode: both;
   pointer-events: none;
   user-select: none;
+  -webkit-tap-highlight-color: transparent;
+
+
+  @media (pointer: coarse) {
+    * {
+      cursor: initial!important;
+    }
+  }
+
+  
 
   &.display * {
     cursor: initial!important;
@@ -116,6 +126,7 @@
 
   * {
     user-select: none;
+    -webkit-tap-highlight-color: transparent;
   }
 
   &.hidden {
