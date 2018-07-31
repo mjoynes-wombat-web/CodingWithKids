@@ -143,7 +143,10 @@ class UnstyledGameBoard extends React.Component {
   }
 
   addPoint(id) {
-    const { score, difficulty, crabs } = this.state;
+    const {
+      score, difficulty, crabs, lastCrab,
+    } = this.state;
+    if (lastCrab === id) return null;
     const newCrabs = [...crabs];
     const crabIndex = newCrabs.findIndex(crab => crab === id);
     newCrabs.splice(crabIndex, 1);
@@ -153,7 +156,7 @@ class UnstyledGameBoard extends React.Component {
     if (newDifficulty > difficulty) {
       return this.initBoard(newDifficulty, updatedScore);
     }
-    return this.setState({ score: updatedScore, crabs: updatedCrabs });
+    return this.setState({ score: updatedScore, crabs: updatedCrabs, lastCrab: id });
   }
 
   render() {
@@ -205,7 +208,7 @@ class UnstyledGameBoard extends React.Component {
         </div>
         <TransitionGroup className="crabs">
           {crabs.map(crab => (
-            <CSSTransition component="Crab" key={`${crab}Transition`} classNames="crab-transition" timeout={{ enter: 1000, exit: 1000 }}>
+            <CSSTransition component="Crab" key={`${crab}Transition`} classNames="crab-transition" timeout={{ enter: 0, exit: 1250 }}>
               <Crab
                 id={crab}
                 key={crab}
@@ -231,14 +234,21 @@ UnstyledGameBoard.propTypes = {
 };
 
 const GameBoard = styled(UnstyledGameBoard)`
+.crab-transition-exit {
+  opacity: 1;
+  transition: all 0.5s ease-in-out 0.75s !important;
+  &.crab-transition-exit-active {
+    opacity: 0;
+  }
+}
 .crab-transition-exit.paused {
-  transition: all 0.5s ease-in-out 0.5s !important;
+  transition: all 0.5s ease-in-out 0.75s !important;
   * {
     animation-play-state: paused;
   }
 
   .bucket {
-    transition: all 0.5s;
+    transition: all 0.5s linear 0.25s;
   }
 
   &.crab-transition-exit-active {
