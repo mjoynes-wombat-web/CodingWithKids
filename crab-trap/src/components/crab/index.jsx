@@ -4,6 +4,7 @@ import { isEqual } from 'lodash';
 
 import CrabSVG from './CrabSVG';
 import CrabWrapper from './Wrapper';
+import Bucket from '../Bucket';
 
 class Crab extends Component {
   constructor(props) {
@@ -38,10 +39,23 @@ class Crab extends Component {
       7000 + (Math.random() * 2000),
     );
     this.continueWalk = this.continueWalk.bind(this);
+    this.crabClicked = this.crabClicked.bind(this);
   }
 
   componentWillUnmount() {
     clearInterval(this.changePincerInterval);
+  }
+
+  crabClicked(e, id) {
+    const { addPoint, display } = this.props;
+    if (display) return null;
+    const { target } = e;
+    const { left, top } = target.parentElement.parentElement.parentElement.getBoundingClientRect();
+    this.setState({
+      paused: true,
+      stopPos: [left, top],
+    });
+    return addPoint(id);
   }
 
   changePincerAction() {
@@ -115,10 +129,10 @@ class Crab extends Component {
 
   render() {
     const {
-      paused, walking, walkTime, moveTo, direction, pincerAction, initialPos,
+      paused, walking, walkTime, moveTo, direction, pincerAction, initialPos, stopPos,
     } = this.state;
     const {
-      addPoint, screenWidth, className, id, difficulty, hidden, display,
+      screenWidth, className, id, difficulty, hidden, display,
     } = this.props;
 
     return (
@@ -127,19 +141,22 @@ class Crab extends Component {
         continueWalk={this.continueWalk}
         paused={paused}
         walking={walking}
+        display={display}
         screenWidth={screenWidth}
         id={id}
         className={[className, hidden ? 'hidden' : ''].join(' ')}
         walkTime={walkTime}
         moveTo={display ? null : moveTo}
+        stopPos={stopPos}
       >
+        <Bucket />
         <CrabSVG
           walk={this.walk}
           direction={direction}
           difficulty={difficulty}
           screenWidth={screenWidth}
           id={id}
-          addPoint={addPoint}
+          crabClicked={this.crabClicked}
           removePincerAction={!hidden ? this.removePincerAction : () => null}
           data-iteration="0"
           className={`

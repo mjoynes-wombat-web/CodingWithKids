@@ -107,9 +107,12 @@
   top: 0;
   left: 0;
   animation-fill-mode: both;
-  cursor: pointer;
   pointer-events: none;
   user-select: none;
+
+  &.display * {
+    cursor: initial!important;
+  }
 
   * {
     user-select: none;

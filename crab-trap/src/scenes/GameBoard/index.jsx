@@ -203,17 +203,21 @@ class UnstyledGameBoard extends React.Component {
       }
           </button>
         </div>
-        {crabs.map(crab => (
-          <Crab
-            id={crab}
-            key={crab}
-            addPoint={this.addPoint}
-            hidingSpots={hidingSpots}
-            crabDimensions={crabDimensions}
-            difficulty={difficulty}
-            screenWidth={screenWidth}
-          />
-        ))}
+        <TransitionGroup className="crabs">
+          {crabs.map(crab => (
+            <CSSTransition component="Crab" key={`${crab}Transition`} classNames="crab-transition" timeout={{ enter: 1000, exit: 1000 }}>
+              <Crab
+                id={crab}
+                key={crab}
+                addPoint={this.addPoint}
+                hidingSpots={hidingSpots}
+                crabDimensions={crabDimensions}
+                difficulty={difficulty}
+                screenWidth={screenWidth}
+              />
+            </CSSTransition>
+          ))}
+        </TransitionGroup>
       </div>
     );
   }
@@ -227,6 +231,26 @@ UnstyledGameBoard.propTypes = {
 };
 
 const GameBoard = styled(UnstyledGameBoard)`
+.crab-transition-exit.paused {
+  transition: all 0.5s ease-in-out 0.5s !important;
+  * {
+    animation-play-state: paused;
+  }
+
+  .bucket {
+    transition: all 0.5s;
+  }
+
+  &.crab-transition-exit-active {
+    opacity: 0;
+
+    .bucket {
+      transform: translateY(45%);
+      opacity: 1;
+    }
+  }
+}
+
 .score {
   position: absolute;
   right: 1.5rem;

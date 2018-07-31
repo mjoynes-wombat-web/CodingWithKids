@@ -7,27 +7,46 @@ const crabWidthCSS = screenWidth => ({
   minWidth: `${screenWidth * 0.12 * 0.6}px`,
 });
 
-const transformCSS = moveTo => ({
-  transform: moveTo ? `translate3d(${moveTo ? `${moveTo[0]}px, ${moveTo[1]}px` : '0, 0'}, 0)` : '',
-});
+const transformCSS = (moveTo, initialPos, stopPos) => {
+  let position;
+  if (stopPos && stopPos[0] !== 0) {
+    position = stopPos;
+  } else if (moveTo && moveTo[0] !== 0) {
+    position = moveTo;
+  } else {
+    position = initialPos;
+  }
+  return { transform: `translate3d(${position ? `${position[0]}px, ${position[1]}px` : '0, 0'}, 0)` };
+};
 
 const transitionTime = walkTime => ({
   transition: `all ${walkTime}s cubic-bezier(0.42, -0.07, 0.58, 0.74)`,
 });
 
 const CrabWrapper = ({
-  children, paused, walking, className, id, continueWalk, screenWidth, moveTo, walkTime, initialPos,
+  children,
+  paused,
+  walking,
+  className,
+  id,
+  continueWalk,
+  screenWidth,
+  moveTo,
+  walkTime,
+  initialPos,
+  stopPos,
+  display,
 }) => (
   <div
     style={{
       ...crabWidthCSS(screenWidth),
-      ...transformCSS((!moveTo || moveTo[0] === 0 ? initialPos : moveTo)),
+      ...transformCSS(moveTo, initialPos, stopPos),
       ...transitionTime(walkTime),
     }}
     onTransitionEnd={continueWalk}
     id={id}
     className={`crab-wrapper 
-    ${className}  ${paused ? 'paused' : ''} ${walking ? 'walking' : ''}`}
+    ${className} ${display ? 'display' : ''} ${paused ? 'paused' : ''} ${walking ? 'walking' : ''}`}
   >
     {children}
   </div>
@@ -35,7 +54,7 @@ const CrabWrapper = ({
 
 CrabWrapper.propTypes = {
   continueWalk: PropTypes.func.isRequired,
-  children: PropTypes.element,
+  children: PropTypes.arrayOf(PropTypes.element),
   paused: PropTypes.bool.isRequired,
   walking: PropTypes.bool,
   className: PropTypes.string,
@@ -44,6 +63,7 @@ CrabWrapper.propTypes = {
   moveTo: PropTypes.arrayOf(PropTypes.number),
   walkTime: PropTypes.number,
   initialPos: PropTypes.arrayOf(PropTypes.number),
+  stopPos: PropTypes.arrayOf(PropTypes.number),
 };
 
 CrabWrapper.defaultProps = {
@@ -53,6 +73,7 @@ CrabWrapper.defaultProps = {
   moveTo: [0, 0],
   walkTime: 0,
   initialPos: [0, 0],
+  stopPos: [0, 0],
 };
 
 export default CrabWrapper;
