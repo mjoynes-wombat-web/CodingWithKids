@@ -3,22 +3,28 @@ import styled from 'styled-components';
 import PropTypes from 'prop-types';
 
 import Crab from '../../components/Crab';
+import SinglePlayerButton from './SinglePlayerButton';
+import MultiPlayerButton from './MultiPlayerButon';
 
 const UnstyledStartGame = ({
   className, startGame, screenWidth,
 }) => (
   <div className={className} id="startGame">
-    <h1>
-      Crab Trap
-    </h1>
+    <div className="ui">
+      <h1>
+        Crab Trap
+      </h1>
+      <SinglePlayerButton onClick={startGame} />
+      <MultiPlayerButton disabled />
+      <p className="note">
+        Multiplayer Coming Soon!
+      </p>
+    </div>
     <Crab
       id="startScreenCrab"
       display
       screenWidth={screenWidth}
     />
-    <button type="button" onClick={startGame}>
-      Start Game
-    </button>
   </div>
 );
 
@@ -34,24 +40,62 @@ UnstyledStartGame.defaultProps = {
 
 const StartGame = styled(UnstyledStartGame)`
 display: flex;
-flex-direction: column;
 align-items: center;
 justify-content: space-around;
 min-height: 100vh;
 min-width: 100vw;
 
-.crab-wrapper {
-  max-height: 50%;
-  width: 50%;
-  position: static;
+&.start-game-exit {
+  opacity: 1;
+  transition: 0.5s ease-in-out 0.25s;
+  .crab-wrapper {
+    transition: 0.75s ease-in-out !important;
+  }
+  &.start-game-exit-active {
+    opacity: 0;
+    .crab-wrapper {
+      transform: translateX(150%) !important;
+    }
+  }
 }
 
-button {
-  line-height: normal;
-  color: white;
-  font-weight: bold;
-  font-size: 2rem;
-  padding: 0.5rem 0.75rem;
+&.start-game-enter {
+  opacity: 0;
+  transition: 0.5s ease-in-out 1.75s;
+  .crab-wrapper {
+    transition: 0.75s ease-in-out 1.5s !important;
+    transform: translateX(150%) !important;
+  }
+  &.start-game-enter-active {
+    opacity: 1;
+    .crab-wrapper {
+      transform: translateX(0%) !important;
+    }
+  }
+}
+
+.crab-wrapper {
+  width: 60%;
+  position: relative;
+  margin-top: 5%;
+
+  .crab {
+    min-width: 175%!important;
+    max-height: 95vh;
+  }
+}
+
+.ui {
+  text-align: center;
+  min-height: 90vh;
+  z-index: 1000;
+  margin: 0 2rem;
+  flex: 1;
+
+  .note {
+    font-size: 1.5rem;
+    margin: 1.8755rem;
+  }
 }
 `;
 

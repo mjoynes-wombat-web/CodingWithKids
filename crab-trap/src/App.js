@@ -9,7 +9,11 @@ import Crab from './components/Crab';
 import PleaseRotate from './scenes/Rotate';
 import GameBoard from './scenes/GameBoard';
 
+import colors from './helpers/colors';
+
 import sand from './assets/images/sand.jpg';
+
+import './assets/styles/index.css';
 
 class App extends Component {
   constructor(props) {
@@ -48,7 +52,7 @@ class App extends Component {
     }
 
     const main = document.querySelector('main');
-    setTimeout(() => main.webkitRequestFullscreen(), 750);
+    setTimeout(() => main.webkitRequestFullscreen(), 1000);
 
     return this.setState({ fullscreen: true });
   }
@@ -76,29 +80,27 @@ class App extends Component {
         />
         <TransitionGroup className="scenes">
           {rotate ? (
-            <CSSTransition classNames="scene" timeout={{ enter: 2000, exit: 2000 }}>
+            <CSSTransition classNames="scene" timeout={{ enter: 1000, exit: 1000 }}>
               <PleaseRotate />
             </CSSTransition>
           ) : null}
           {!rotate && fullscreen
             ? (
-              <CSSTransition component="div" classNames="game-board" timeout={{ enter: 2000, exit: 500 }}>
-                <div>
-                  <GameBoard
-                    hidingSpots={hidingSpots}
-                    hidingSpotWidth={hidingSpotWidth}
-                    enterFullscreen={this.enterFullscreen}
-                    fullscreen={fullscreen}
-                    screenWidth={screenWidth}
-                  />
-                </div>
+              <CSSTransition component="div" classNames="game-board" timeout={{ enter: 1000, exit: 1000 }}>
+                <GameBoard
+                  hidingSpots={hidingSpots}
+                  hidingSpotWidth={hidingSpotWidth}
+                  enterFullscreen={this.enterFullscreen}
+                  fullscreen={fullscreen}
+                  screenWidth={screenWidth}
+                />
               </CSSTransition>
             )
             : null
           }
           {!fullscreen && !rotate
             ? (
-              <CSSTransition classNames="scene" timeout={{ enter: 2000, exit: 500 }}>
+              <CSSTransition classNames="start-game" timeout={{ enter: 2250, exit: 1000 }}>
                 <StartGame
                   startGame={this.startGame}
                   screenWidth={screenWidth}
@@ -107,7 +109,7 @@ class App extends Component {
             )
             : null}
         </TransitionGroup>
-        <link href="https://fonts.googleapis.com/css?family=Lobster" rel="stylesheet" />
+        <link href="https://fonts.googleapis.com/css?family=Lobster|Lobster+Two" rel="stylesheet" />
       </main>
     );
   }
@@ -121,14 +123,6 @@ App.defaultProps = {
   className: '',
 };
 
-const colors = {
-  darkOrange: '#FF5700',
-  orange: '#FF8E00',
-  gold: '#FFB828',
-  brown: '#8D4A00',
-  darkBrown: '#5a2f00',
-};
-
 export default styled(App)`
 margin: 0;
 padding: 0;
@@ -137,6 +131,7 @@ display: flex;
 flex-direction: column;
 width: 100vw;
 height: 100vh;
+overflow: hidden;
 
 h1, h2 {
   color: ${colors.darkOrange};
@@ -145,10 +140,17 @@ h1, h2 {
 }
 
 h1 {
-  font-size: 4rem;
+  font-size: 6rem;
+  margin: 0 0 1.75rem 0;
 }
 h2 {
   font-size: 3rem;
+}
+
+p {
+  font-size: 1rem;
+  color: ${colors.brown};
+  font-family: 'Lobster Two', Arnoldboecklin, cursive;
 }
 
 > * {
@@ -210,35 +212,5 @@ h2 {
   z-index: 10000;
   top: 0;
   left: 0;
-}
-
-button {
-  appearance: none;
-  border: none;
-  border-radius: 0.25rem;
-  padding: 0.5rem;
-  background-color: ${colors.orange};
-  color: white;
-  outline: none;
-  margin: 0.25rem;
-  cursor: pointer;
-  transition: background-color 0.25s;
-
-  &:hover {
-    background-color: ${colors.darkOrange};
-  }
-
-  &:active, &:active:hover {
-    background-color: ${colors.gold};
-  }
-
-  &:disabled {
-    background-color: #999;
-  }
-
-  svg.fa-expand, svg.fa-compress, svg.fa-walking {
-    width: 1rem;
-    height: 1rem;
-  }
 }
 `;

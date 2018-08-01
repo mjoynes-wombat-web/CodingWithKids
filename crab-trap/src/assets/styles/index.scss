@@ -63,37 +63,6 @@ body {
       top: 0;
       left: 0;
     }
-    
-    button {
-      appearance: none;
-      border: none;
-      border-radius: 0.25rem;
-      padding: 0.5rem;
-      background-color: $orange;
-      color: white;
-      line-height: 0;
-      outline: none;
-      margin: 0.25rem;
-      cursor: pointer;
-      transition: background-color 0.25s;
-
-      &:hover {
-        background-color: $dark-orange;
-      }
-
-      &:active, &:active:hover {
-        background-color: $gold;
-      }
-
-      &:disabled {
-        background-color: #999;
-      }
-
-      svg.fa-expand, svg.fa-compress, svg.fa-walking {
-        width: 1rem;
-        height: 1rem;
-      }
-    }
     .state {
       display: flex;
       flex-direction: column;
