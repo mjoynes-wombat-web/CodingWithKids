@@ -106,8 +106,10 @@ class Crab extends Component {
   }
 
   pauseWalking() {
+    const { display } = this.props;
+    if (display) return null;
     const { moveTo } = this.state;
-    this.setState({ paused: true, currentPos: moveTo || [0, 0] });
+    return this.setState({ paused: true, currentPos: moveTo || [0, 0] });
   }
 
   pickSpot() {
