@@ -50,6 +50,12 @@ min-width: 100vw;
   transition: 0.5s ease-in-out 0.25s;
   .crab-wrapper {
     transition: 0.75s ease-in-out !important;
+    .left-legs {
+      animation-direction: normal !important;
+    }
+    .right-legs {
+      animation-direction: reverse !important;
+    }
   }
   &.start-game-exit-active {
     opacity: 0;
@@ -62,6 +68,12 @@ min-width: 100vw;
 &.start-game-enter {
   opacity: 0;
   transition: 0.5s ease-in-out 1.75s;
+  .left-legs {
+      animation-direction: reverse !important;
+    }
+  .right-legs {
+    animation-direction: normal !important;
+  }
   .crab-wrapper {
     transition: 0.75s ease-in-out 1.5s !important;
     transform: translateX(150%) !important;
@@ -73,11 +85,19 @@ min-width: 100vw;
     }
   }
 }
+&.start-game-enter-done {
+  .left-legs {
+    animation-direction: reverse !important;
+  }
+  .right-legs {
+    animation-direction: normal !important;
+  }
+}
 
 .crab-wrapper {
   width: 60%;
   position: relative;
-  margin-top: 5%;
+  bottom: 0;
 
   .crab {
     min-width: 175%!important;
@@ -87,10 +107,10 @@ min-width: 100vw;
 
 .ui {
   text-align: center;
-  min-height: 90vh;
+  min-height: 100vh;
   z-index: 1000;
-  margin: 0 2rem;
-  flex: 1;
+  margin: 0 3rem;
+  padding: 5% 0;
 
   .note {
     font-size: 1.5rem;
