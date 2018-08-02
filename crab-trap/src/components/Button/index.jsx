@@ -37,7 +37,7 @@ const Button = styled(UnstyledButton)`
   outline: none;
   margin: 1rem 1rem;
   cursor: pointer;
-  transition: all 0.5s;
+  transition: transform 0.5s, background-color 0.5s, box-shadow 0.5s;
   display: inline-block;
 
   &:hover {
@@ -47,7 +47,8 @@ const Button = styled(UnstyledButton)`
   }
 
   &:active, &:active:hover {
-    background-color: ${colors.gold};
+    background-color: ${colors.darkTeal};
+    transform: scale3d(1.02,1.02,1);
   }
 
   &:disabled {

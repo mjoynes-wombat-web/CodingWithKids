@@ -1,14 +1,12 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { FontAwesomeIcon as FAIcon } from '@fortawesome/react-fontawesome';
-import faCompress from '@fortawesome/fontawesome-pro-light/faCompress';
-import faExpand from '@fortawesome/fontawesome-pro-light/faExpand';
 import { uniqueId } from 'lodash';
 import { TransitionGroup, CSSTransition } from 'react-transition-group';
 import styled from 'styled-components';
 
 import Crab from '../../components/Crab';
 import Column from './components/Column';
+import Menu from './components/Menu';
 
 function pickSpot() {
   const spot = Math.floor(Math.random() * 6);
@@ -35,6 +33,7 @@ class UnstyledGameBoard extends React.Component {
     this.state = {
       difficulty: 1,
       score: 0,
+      paused: false,
       hidingSpots: [],
       numCrabs: 3,
       boardInit: false,
@@ -45,6 +44,7 @@ class UnstyledGameBoard extends React.Component {
     this.initCrabs = this.initCrabs.bind(this);
     this.addPoint = this.addPoint.bind(this);
     this.updateCrabs = this.updateCrabs.bind(this);
+    this.pause = this.pause.bind(this);
   }
 
   componentDidMount() {
@@ -159,10 +159,15 @@ class UnstyledGameBoard extends React.Component {
     return this.setState({ score: updatedScore, crabs: updatedCrabs, lastCrab: id });
   }
 
+  pause() {
+    console.log('click happened');
+    const { paused } = this.state;
+    return this.setState({ paused: !paused });
+  }
+
   render() {
     const {
       enterFullscreen,
-      fullscreen,
       screenWidth,
       className,
     } = this.props;
@@ -175,6 +180,7 @@ class UnstyledGameBoard extends React.Component {
       boardInit,
       crabs,
       score,
+      paused,
     } = this.state;
 
     if (!boardInit) {
@@ -199,12 +205,7 @@ class UnstyledGameBoard extends React.Component {
           {hidingSpots.map(col => <Column col={col} hidingSpotWidth={hidingSpotWidth} key={uniqueId('hidingRow')} />)}
         </div>
         <div className="buttons">
-          <button type="button" onClick={enterFullscreen}>
-            {fullscreen
-              ? <FAIcon icon={faCompress} />
-              : <FAIcon icon={faExpand} />
-      }
-          </button>
+          <Menu pause={this.pause} exit={enterFullscreen} />
         </div>
         <TransitionGroup className="crabs">
           {crabs.map(crab => (
@@ -212,6 +213,7 @@ class UnstyledGameBoard extends React.Component {
               <Crab
                 id={crab}
                 key={crab}
+                gamePaused={paused}
                 addPoint={this.addPoint}
                 hidingSpots={hidingSpots}
                 crabDimensions={crabDimensions}
@@ -228,7 +230,6 @@ class UnstyledGameBoard extends React.Component {
 
 UnstyledGameBoard.propTypes = {
   enterFullscreen: PropTypes.func.isRequired,
-  fullscreen: PropTypes.bool.isRequired,
   screenWidth: PropTypes.number.isRequired,
   className: PropTypes.string.isRequired,
 };
@@ -266,7 +267,7 @@ const GameBoard = styled(UnstyledGameBoard)`
   right: 1.5rem;
   top: 1rem;
   padding: 0 3.5rem 0 0;
-  font-size: 2rem;
+  font-size: 2.5rem;
   margin: 0;
   z-index: 2000;
   pointer-events: none;

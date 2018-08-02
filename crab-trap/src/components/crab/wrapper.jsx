@@ -64,6 +64,7 @@ CrabWrapper.propTypes = {
   walkTime: PropTypes.number,
   initialPos: PropTypes.arrayOf(PropTypes.number),
   stopPos: PropTypes.arrayOf(PropTypes.number),
+  display: PropTypes.bool,
 };
 
 CrabWrapper.defaultProps = {
@@ -74,6 +75,7 @@ CrabWrapper.defaultProps = {
   walkTime: 0,
   initialPos: [0, 0],
   stopPos: [0, 0],
+  display: false,
 };
 
 export default CrabWrapper;

@@ -137,8 +137,9 @@
 
   &.walking {
     pointer-events: all;
-    &.paused {
+    &.paused * {
       pointer-events: none;
+      animation-play-state: paused;
     }
   }
 

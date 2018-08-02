@@ -134,14 +134,14 @@ class Crab extends Component {
       paused, walking, walkTime, moveTo, direction, pincerAction, initialPos, stopPos,
     } = this.state;
     const {
-      screenWidth, className, id, difficulty, hidden, display,
+      screenWidth, className, id, difficulty, hidden, display, gamePaused,
     } = this.props;
 
     return (
       <CrabWrapper
         initialPos={display ? null : initialPos}
         continueWalk={this.continueWalk}
-        paused={paused}
+        paused={gamePaused || paused}
         walking={walking}
         display={display}
         screenWidth={screenWidth}
@@ -180,6 +180,7 @@ Crab.propTypes = {
   paused: PropTypes.bool,
   screenWidth: PropTypes.number,
   className: PropTypes.string,
+  gamePaused: PropTypes.bool.isRequired,
   hidingSpots: PropTypes.arrayOf(PropTypes.arrayOf(PropTypes.shape({
     coords: PropTypes.arrayOf(PropTypes.number),
     hideable: PropTypes.bool,
