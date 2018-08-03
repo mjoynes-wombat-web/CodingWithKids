@@ -4,6 +4,7 @@ import styled from 'styled-components';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import faEllipsisV from '@fortawesome/fontawesome-pro-light/faEllipsisV';
 import faPause from '@fortawesome/fontawesome-pro-regular/faPause';
+import faPlay from '@fortawesome/fontawesome-pro-regular/faPlay';
 import faTimes from '@fortawesome/fontawesome-pro-regular/faTimes';
 
 import colors from '../../../../helpers/colors';
@@ -24,7 +25,9 @@ class UnstyledMenu extends Component {
   }
 
   render() {
-    const { className, pause, exit } = this.props;
+    const {
+      className, pause, exit, paused, unpause,
+    } = this.props;
     const { open } = this.state;
     return (
       <nav className={`${open ? 'open' : ''} ${className}`}>
@@ -32,24 +35,35 @@ class UnstyledMenu extends Component {
           <FontAwesomeIcon icon={faEllipsisV} />
         </button>
         <div className="menu-list">
-          <button type="button" onClick={this.toggleOpen}>
-            <span className="text">
-              Close
-            </span>
+          <button type="button" className="close" onClick={this.toggleOpen}>
             <span className="icon">
               <FontAwesomeIcon icon={faTimes} />
             </span>
           </button>
           <ul>
             <li>
-              <button type="button" onClick={pause}>
-                <span className="icon">
-                  <FontAwesomeIcon icon={faPause} />
-                </span>
-                <span className="text">
-                  Pause
-                </span>
-              </button>
+              {paused
+                ? (
+                  <button type="button" onClick={unpause}>
+                    <span className="icon">
+                      <FontAwesomeIcon icon={faPlay} />
+                    </span>
+                    <span className="text">
+                      Continue
+                    </span>
+                  </button>
+                )
+                : (
+                  <button type="button" onClick={pause}>
+                    <span className="icon">
+                      <FontAwesomeIcon icon={faPause} />
+                    </span>
+                    <span className="text">
+                      Pause
+                    </span>
+                  </button>
+                )}
+
             </li>
             <li>
               <button type="button" onClick={exit}>
@@ -71,7 +85,13 @@ class UnstyledMenu extends Component {
 UnstyledMenu.propTypes = {
   className: PropTypes.string.isRequired,
   pause: PropTypes.func.isRequired,
+  unpause: PropTypes.func.isRequired,
   exit: PropTypes.func.isRequired,
+  paused: PropTypes.bool,
+};
+
+UnstyledMenu.defaultProps = {
+  paused: false,
 };
 
 const Menu = styled(UnstyledMenu)`
@@ -87,7 +107,7 @@ button {
 }
 
 .menu-button {
-  height: 2.5rem;
+  height: 3rem;
   padding: 1rem 1rem;
   box-sizing: content-box;
 
@@ -95,7 +115,7 @@ button {
     height: 100%;
     width: auto;
     color: ${colors.darkOrange};
-    filter: drop-shadow(0.0625rem 0.0625rem 0 ${colors.darkBrown});
+    filter: drop-shadow(0.125rem 0.125rem 0 ${colors.darkBrown});
     transition: color 0.5s, transform 0.5s;
   }
 
@@ -127,17 +147,15 @@ button {
     color: white;
     padding: 1rem 1.25rem 1.125rem 1.25rem;
     text-align: right;
-    width: 100%;
     font-size: 1.0625rem;
     transition: transform 0.5s;
-    transform-origin: right;
+
+    &.close {
+      float: right;
+    }
 
     &:hover {
       transform: scale3d(1.1, 1.1, 1);
-    }
-
-    .icon {
-      margin-left: 0.5rem;
     }
   }
 
@@ -150,10 +168,11 @@ button {
       text-align: left;
       font-size: 1.375rem;
       transform-origin: left;
+      width: 100%;
 
       .icon {
         margin: 0 0.5rem 0 0;
-        .fa-pause {
+        .fa-pause, .fa-play {
           font-size: 1.125rem;
         }
       }

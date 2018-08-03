@@ -42,6 +42,15 @@ class Crab extends Component {
     this.crabClicked = this.crabClicked.bind(this);
   }
 
+  componentDidUpdate() {
+    const { gamePaused } = this.props;
+    const { paused } = this.state;
+    if (gamePaused === false && paused) {
+      return setTimeout(this.walk, Math.max(Math.random * 4000, 1000));
+    }
+    return null;
+  }
+
   componentWillUnmount() {
     clearInterval(this.changePincerInterval);
   }
@@ -123,10 +132,17 @@ class Crab extends Component {
   }
 
   continueWalk(e) {
-    const { target } = e;
-    if (!target || !target.classList.contains('crab-wrapper')) return null;
+    if (e) {
+      const { target } = e;
+      if (!target || !target.classList.contains('crab-wrapper')) return null;
+    }
     this.pauseWalking();
-    return setTimeout(this.walk, Math.max(Math.random * 4000, 1000));
+
+    const { gamePaused } = this.props;
+    if (!gamePaused) {
+      return setTimeout(this.walk, Math.max(Math.random * 4000, 1000));
+    }
+    return null;
   }
 
   render() {
@@ -134,14 +150,14 @@ class Crab extends Component {
       paused, walking, walkTime, moveTo, direction, pincerAction, initialPos, stopPos,
     } = this.state;
     const {
-      screenWidth, className, id, difficulty, hidden, display, gamePaused,
+      screenWidth, className, id, difficulty, hidden, display,
     } = this.props;
 
     return (
       <CrabWrapper
         initialPos={display ? null : initialPos}
         continueWalk={this.continueWalk}
-        paused={gamePaused || paused}
+        paused={paused}
         walking={walking}
         display={display}
         screenWidth={screenWidth}

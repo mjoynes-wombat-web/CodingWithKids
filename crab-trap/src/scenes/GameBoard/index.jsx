@@ -33,7 +33,6 @@ class UnstyledGameBoard extends React.Component {
     this.state = {
       difficulty: 1,
       score: 0,
-      paused: false,
       hidingSpots: [],
       numCrabs: 3,
       boardInit: false,
@@ -45,6 +44,7 @@ class UnstyledGameBoard extends React.Component {
     this.addPoint = this.addPoint.bind(this);
     this.updateCrabs = this.updateCrabs.bind(this);
     this.pause = this.pause.bind(this);
+    this.unpause = this.unpause.bind(this);
   }
 
   componentDidMount() {
@@ -159,10 +159,13 @@ class UnstyledGameBoard extends React.Component {
     return this.setState({ score: updatedScore, crabs: updatedCrabs, lastCrab: id });
   }
 
+  unpause() {
+    return this.setState({ paused: false });
+  }
+
   pause() {
-    console.log('click happened');
-    const { paused } = this.state;
-    return this.setState({ paused: !paused });
+    console.log('paused clicked');
+    return this.setState({ paused: true });
   }
 
   render() {
@@ -205,7 +208,7 @@ class UnstyledGameBoard extends React.Component {
           {hidingSpots.map(col => <Column col={col} hidingSpotWidth={hidingSpotWidth} key={uniqueId('hidingRow')} />)}
         </div>
         <div className="buttons">
-          <Menu pause={this.pause} exit={enterFullscreen} />
+          <Menu paused={paused} pause={this.pause} unpause={this.unpause} exit={enterFullscreen} />
         </div>
         <TransitionGroup className="crabs">
           {crabs.map(crab => (
@@ -267,7 +270,7 @@ const GameBoard = styled(UnstyledGameBoard)`
   right: 1.5rem;
   top: 1rem;
   padding: 0 3.5rem 0 0;
-  font-size: 2.5rem;
+  font-size: 3rem;
   margin: 0;
   z-index: 2000;
   pointer-events: none;
