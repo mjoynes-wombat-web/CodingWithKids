@@ -1,6 +1,7 @@
+☐ Fix bucket animation. @critical 
 ☐ Transfer over to netlify. @high 
-☐ Pause game when screen rotates. @high
-☐ Reduce number of cols for hiding spots. @high 
+☐ Pause game when screen rotates or leaves fullscreen without exiting game. @high
+✔ Reduce number of cols for hiding spots. @high @done (2018-8-3 16:43:48)
 ☐ Implement multiplayer. @low 
 ☐ Optimize. @low
 ☐ Improve UI UX. @low

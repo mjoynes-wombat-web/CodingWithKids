@@ -25,7 +25,7 @@ const getSpot = (type, hidingSpotWidth) => {
 };
 
 const HidingSpot = ({ row, hidingSpotWidth }) => (
-  <div className="row">
+  <div className="row" style={{ maxWidth: `${hidingSpotWidth}px` }}>
     {row.hideable
       ? getSpot(row.type, hidingSpotWidth)
       : null

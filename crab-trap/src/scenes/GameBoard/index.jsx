@@ -75,7 +75,7 @@ class UnstyledGameBoard extends React.Component {
   }
 
   initBoard(newDifficulty, updatedScore) {
-    const { difficulty } = this.state;
+    const { difficulty, score } = this.state;
     const crab = document.getElementById('crab');
     const crabBounding = crab.getBoundingClientRect();
     const crabDimensions = [crabBounding.width, crabBounding.height];
@@ -86,7 +86,7 @@ class UnstyledGameBoard extends React.Component {
     const cols = Math.floor(window.screen.width
       / Math.max(
         shellDimensions.width * Math.round((5 - (difficulty / 1.75))),
-        (shellDimensions.width * 2),
+        (shellDimensions.width * 3),
       ));
     const rows = Math.floor(window.screen.height / Math.max(
       shellDimensions.height
@@ -120,10 +120,10 @@ class UnstyledGameBoard extends React.Component {
     return this.setState({
       hidingSpots: this.setHideable(hidingSpots),
       crabDimensions,
-      hidingSpotWidth: shellDimensions.width,
+      hidingSpotWidth: shellDimensions.width * 1.5,
       boardInit: true,
-      score: updatedScore || 0,
-      difficulty: newDifficulty || 1,
+      score: updatedScore || score,
+      difficulty: newDifficulty || difficulty,
       numCrabs,
     });
   }
@@ -269,7 +269,7 @@ const GameBoard = styled(UnstyledGameBoard)`
   position: absolute;
   right: 1.5rem;
   top: 1rem;
-  padding: 0 3.5rem 0 0;
+  padding-right: 4.5rem;
   font-size: 3rem;
   margin: 0;
   z-index: 2000;
@@ -310,16 +310,18 @@ const GameBoard = styled(UnstyledGameBoard)`
     flex: 1;
     display: flex;
     flex-direction: column;
+    align-items: center;
 
     .row {
       flex: 1;
+      width: 100%;
       padding: 1rem;
       display: flex;
       justify-content: center;
       align-items: center;
 
       .hiding-spot {
-        width: 12vw;
+        width: 100%;
         height: 100%;
         background-size: 100% auto;
         background-repeat: no-repeat;

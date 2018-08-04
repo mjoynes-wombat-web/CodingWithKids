@@ -11,7 +11,7 @@ const directionRightLegsCSS = direction => ({
 });
 
 const durationCSS = difficulty => ({
-  animationDuration: `${(1 / difficulty) * 1.5}s`,
+  animationDuration: `${Math.max(1.65 - (difficulty * 0.15), 0.5)}s`,
 });
 
 const minCrabWidthCSS = screenWidth => ({
