@@ -269,7 +269,7 @@ const GameBoard = styled(UnstyledGameBoard)`
   position: absolute;
   right: 1.5rem;
   top: 1rem;
-  padding-right: 4.5rem;
+  padding-right: 5rem;
   font-size: 3rem;
   margin: 0;
   z-index: 2000;
