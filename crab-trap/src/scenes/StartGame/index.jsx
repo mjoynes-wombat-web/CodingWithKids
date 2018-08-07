@@ -3,8 +3,8 @@ import styled from 'styled-components';
 import PropTypes from 'prop-types';
 
 import Crab from '../../components/Crab';
-import SinglePlayerButton from './SinglePlayerButton';
-import MultiPlayerButton from './MultiPlayerButon';
+import SinglePlayerButton from './components/SinglePlayerButton';
+import MultiPlayerButton from './components/MultiPlayerButon';
 
 const UnstyledStartGame = ({
   className, startGame, screenWidth,

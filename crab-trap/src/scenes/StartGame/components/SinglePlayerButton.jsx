@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import Button from '../../components/Button';
+import Button from '../../../components/Button';
 
 const SinglePlayerButton = ({ onClick }) => (
   <Button onClick={onClick}>

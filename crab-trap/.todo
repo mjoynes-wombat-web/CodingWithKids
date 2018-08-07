@@ -1,4 +1,5 @@
-☐ Fix bucket animation. @critical 
+☐ Fix bucket animation. Doesn't always display. @critical 
+☐ Make click pause leg animation. @critical
 ☐ Transfer over to netlify. @high 
 ☐ Pause game when screen rotates or leaves fullscreen without exiting game. @high
 ✔ Reduce number of cols for hiding spots. @high @done (2018-8-3 16:43:48)
@@ -7,3 +8,4 @@
 ☐ Improve UI UX. @low
 ☐ Animate transition between play and pause. @low
 ☐ Add paused display over game.
+☐ Look into request animation frame. @low

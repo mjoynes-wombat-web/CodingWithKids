@@ -7,7 +7,7 @@ import faPause from '@fortawesome/fontawesome-pro-regular/faPause';
 import faPlay from '@fortawesome/fontawesome-pro-regular/faPlay';
 import faTimes from '@fortawesome/fontawesome-pro-regular/faTimes';
 
-import colors from '../../../../helpers/colors';
+import colors from '../../../helpers/colors';
 
 class UnstyledMenu extends Component {
   constructor(props) {
