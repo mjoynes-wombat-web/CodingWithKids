@@ -1,0 +1,19 @@
+{
+  "name": "coding-with-kids",
+  "version": "1.0.0",
+  "description": "I am a web developer, graphic designer, and avid problem solver. However, I am also a father. It's difficult to take time away from my family to advance my skills. So I decided, why not create things for them.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ssmith-wombatweb/CodingWithKids.git"
+  },
+  "author": "Simeon Smith",
+  "license": "Please ask for permission.",
+  "bugs": {
+    "url": "https://github.com/ssmith-wombatweb/CodingWithKids/issues"
+  },
+  "homepage": "https://github.com/ssmith-wombatweb/CodingWithKids#readme"
+}

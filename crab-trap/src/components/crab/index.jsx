@@ -16,7 +16,7 @@ class Crab extends Component {
       pincerAction: 'eating',
       walkTime: 0,
       direction: props.direction || direction,
-      paused: props.paused || false,
+      paused: false,
       currentPos: [0, 0],
       initialPos: [
         direction === 'left'

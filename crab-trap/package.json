@@ -35,5 +35,6 @@
     "gh-pages": "^1.2.0",
     "node-sass": "^4.9.2"
   },
-  "homepage": "https://ssmith-wombatweb.github.io/CodingWithKids/"
+  "homepage": "https://ssmith-wombatweb.github.io/CodingWithKids/crab-trap/build/",
+  "license": "Please ask for permission."
 }
