@@ -96,7 +96,8 @@ UnstyledMenu.defaultProps = {
 
 const Menu = styled(UnstyledMenu)`
 position: absolute;
-z-index: 5000;
+z-index: 50001
+;
 top: 0;
 left: 0;
 height: 100%;

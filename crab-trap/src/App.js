@@ -28,6 +28,7 @@ class App extends Component {
     this.enterFullscreen = this.enterFullscreen.bind(this);
     this.checkScreenState = this.checkScreenState.bind(this);
     this.startGame = this.startGame.bind(this);
+    this.exitGame = this.exitGame.bind(this);
   }
 
   componentDidMount() {
@@ -45,15 +46,19 @@ class App extends Component {
     this.setState({ rotate, fullscreen });
   }
 
-  enterFullscreen(e) {
+  exitGame(e) {
     e.preventDefault();
 
     if (document.webkitIsFullScreen) {
       setTimeout(() => {
         document.webkitExitFullscreen();
       }, 750);
-      return this.setState({ fullscreen: false });
     }
+    return this.setState({ fullscreen: false, gameStarted: false });
+  }
+
+  enterFullscreen(e) {
+    e.preventDefault();
 
     const main = document.querySelector('main');
     setTimeout(() => main.webkitRequestFullscreen(), 1000);
@@ -84,7 +89,7 @@ class App extends Component {
           display
         />
         {rotate ? <PleaseRotate /> : null}
-        <TransitionGroup className={`scenes ${rotate ? 'rotated' : ''}`}>
+        <TransitionGroup className="scenes">
           {!gameStarted
             ? (
               <CSSTransition classNames="start-game" timeout={{ enter: 2250, exit: 1000 }}>
@@ -104,6 +109,7 @@ class App extends Component {
                     hidingSpots={hidingSpots}
                     hidingSpotWidth={hidingSpotWidth}
                     enterFullscreen={this.enterFullscreen}
+                    exitGame={this.exitGame}
                     fullscreen={fullscreen}
                     screenWidth={screenWidth}
                   />
@@ -168,9 +174,6 @@ p {
 }
 
 .scenes {
-  &.rotated {
-    opacity: 0.5;
-  }
   position: relative;
   .game-board-enter {
     * {

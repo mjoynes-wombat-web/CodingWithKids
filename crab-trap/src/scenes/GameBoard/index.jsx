@@ -173,7 +173,7 @@ class UnstyledGameBoard extends React.Component {
 
   render() {
     const {
-      enterFullscreen,
+      exitGame,
       screenWidth,
       className,
       fullscreen,
@@ -217,7 +217,7 @@ class UnstyledGameBoard extends React.Component {
             paused={!fullscreen || paused}
             pause={this.pause}
             unpause={this.unpause}
-            exit={enterFullscreen}
+            exit={exitGame}
           />
         </div>
         <TransitionGroup className="crabs">

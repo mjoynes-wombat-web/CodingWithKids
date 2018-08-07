@@ -18,7 +18,8 @@ height: 100vh;
 display: flex;
 align-items: center;
 justify-content: center;
-z-index: 5000;
+z-index: 50000;
+background-color: rgba(255, 255, 255, 0.25);
 
   h2 {
     font-size: 12rem;
