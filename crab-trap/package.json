@@ -35,5 +35,6 @@
     "gh-pages": "^1.2.0",
     "node-sass": "^4.9.2"
   },
+  "homepage": "https://elegant-curie-a94ca0.netlify.com/crab-trap/build/",
   "license": "Please ask for permission."
 }
