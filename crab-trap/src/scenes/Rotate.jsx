@@ -1,15 +1,11 @@
 import React from 'react';
-import styled from 'styled-components';
 
-const UnstyledRotate = () => (
-  <div id="pleaseRotate">
-    <h1>
-      Please Rotate Your Screen
-    </h1>
-  </div>
+import OverlayText from '../components/OverlayText';
+
+const Rotate = () => (
+  <OverlayText>
+    Please Rotate Your Screen
+  </OverlayText>
 );
-
-const Rotate = styled(UnstyledRotate)`
-`;
 
 export default Rotate;

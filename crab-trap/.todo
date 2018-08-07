@@ -1,7 +1,8 @@
-☐ Fix bucket animation. Doesn't always display. @critical 
+☐ Fix bucket animation. Doesn't always display. Note: seems to happen on pause. @critical 
 ✔ Make click pause leg animation. @critical @done (2018-8-6 17:21:59)
-☐ Transfer over to netlify. @high 
-☐ Pause game when screen rotates or leaves fullscreen without exiting game. @high
+✔ Transfer over to netlify. @high @done (2018-8-6 18:11:21)
+✔ Fix fade in transition for game board. @critical @done (2018-8-6 20:40:59)
+✔ Pause game when screen rotates or leaves fullscreen without exiting game. @high @done (2018-8-6 21:07:10)
 ✔ Reduce number of cols for hiding spots. @high @done (2018-8-3 16:43:48)
 ☐ Implement multiplayer. @low 
 ☐ Optimize. @low

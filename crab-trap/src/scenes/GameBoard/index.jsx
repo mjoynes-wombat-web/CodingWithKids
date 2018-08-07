@@ -7,6 +7,7 @@ import styled from 'styled-components';
 import Crab from '../../components/Crab';
 import Column from './components/Column';
 import Menu from './components/Menu';
+import Paused from './components/Paused';
 
 function pickSpot() {
   const spot = Math.floor(Math.random() * 6);
@@ -36,6 +37,7 @@ class UnstyledGameBoard extends React.Component {
       hidingSpots: [],
       numCrabs: 3,
       boardInit: false,
+      paused: false,
     };
 
     this.setHideable = this.setHideable.bind(this);
@@ -159,12 +161,13 @@ class UnstyledGameBoard extends React.Component {
     return this.setState({ score: updatedScore, crabs: updatedCrabs, lastCrab: id });
   }
 
-  unpause() {
+  unpause(e) {
+    const { enterFullscreen, fullscreen } = this.props;
+    if (!fullscreen) enterFullscreen(e);
     return this.setState({ paused: false });
   }
 
   pause() {
-    console.log('paused clicked');
     return this.setState({ paused: true });
   }
 
@@ -173,6 +176,7 @@ class UnstyledGameBoard extends React.Component {
       enterFullscreen,
       screenWidth,
       className,
+      fullscreen,
     } = this.props;
 
     const {
@@ -196,6 +200,7 @@ class UnstyledGameBoard extends React.Component {
 
     return (
       <div id="gameBoard" className={className}>
+        {paused || !fullscreen ? <Paused /> : null}
         <TransitionGroup component="h2" className="score">
           Score:
           <CSSTransition component="span" key={score} classNames="number" timeout={{ enter: 750, exit: 500 }}>
@@ -208,7 +213,12 @@ class UnstyledGameBoard extends React.Component {
           {hidingSpots.map(col => <Column col={col} hidingSpotWidth={hidingSpotWidth} key={uniqueId('hidingRow')} />)}
         </div>
         <div className="buttons">
-          <Menu paused={paused} pause={this.pause} unpause={this.unpause} exit={enterFullscreen} />
+          <Menu
+            paused={!fullscreen || paused}
+            pause={this.pause}
+            unpause={this.unpause}
+            exit={enterFullscreen}
+          />
         </div>
         <TransitionGroup className="crabs">
           {crabs.map(crab => (
@@ -216,7 +226,7 @@ class UnstyledGameBoard extends React.Component {
               <Crab
                 id={crab}
                 key={crab}
-                gamePaused={paused}
+                gamePaused={!fullscreen || paused}
                 addPoint={this.addPoint}
                 hidingSpots={hidingSpots}
                 crabDimensions={crabDimensions}
@@ -235,6 +245,7 @@ UnstyledGameBoard.propTypes = {
   enterFullscreen: PropTypes.func.isRequired,
   screenWidth: PropTypes.number.isRequired,
   className: PropTypes.string.isRequired,
+  fullscreen: PropTypes.bool.isRequired,
 };
 
 const GameBoard = styled(UnstyledGameBoard)`

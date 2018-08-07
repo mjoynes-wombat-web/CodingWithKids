@@ -20,25 +20,29 @@ class App extends Component {
     super(props);
     this.state = {
       fullscreen: false,
+      gameStarted: false,
       rotate: false,
       screenWidth: window.screen.width,
     };
 
-    this.componentDidMount = this.componentDidMount.bind(this);
     this.enterFullscreen = this.enterFullscreen.bind(this);
-    this.setRotation = this.setRotation.bind(this);
+    this.checkScreenState = this.checkScreenState.bind(this);
     this.startGame = this.startGame.bind(this);
   }
 
   componentDidMount() {
-    document.title = 'Crab Trap';
-    this.setRotation();
-    window.addEventListener('resize', this.setRotation);
+    this.checkScreenState();
+    window.addEventListener('resize', this.checkScreenState);
   }
 
-  setRotation() {
-    if (window.screen.orientation.type.includes('portrait')) return this.setState({ rotate: true });
-    return this.setState({ rotate: false });
+  componentWillUnmount() {
+    window.removeEventListener('resize', this.checkScreenState);
+  }
+
+  checkScreenState() {
+    const rotate = window.screen.orientation.type.includes('portrait');
+    const fullscreen = document.webkitIsFullScreen;
+    this.setState({ rotate, fullscreen });
   }
 
   enterFullscreen(e) {
@@ -54,7 +58,7 @@ class App extends Component {
     const main = document.querySelector('main');
     setTimeout(() => main.webkitRequestFullscreen(), 1000);
 
-    return this.setState({ fullscreen: true });
+    return this.setState({ gameStarted: true, fullscreen: true });
   }
 
   startGame(e) {
@@ -64,9 +68,10 @@ class App extends Component {
   render() {
     const {
       screenWidth,
-      rotate,
       fullscreen,
+      gameStarted,
       hidingSpots,
+      rotate,
       hidingSpotWidth,
     } = this.state;
     const { className } = this.props;
@@ -78,27 +83,9 @@ class App extends Component {
           screenWidth={screenWidth}
           display
         />
-        <TransitionGroup className="scenes">
-          {rotate ? (
-            <CSSTransition classNames="scene" timeout={{ enter: 1000, exit: 1000 }}>
-              <PleaseRotate />
-            </CSSTransition>
-          ) : null}
-          {!rotate && fullscreen
-            ? (
-              <CSSTransition component="div" classNames="game-board" timeout={{ enter: 1000, exit: 1000 }}>
-                <GameBoard
-                  hidingSpots={hidingSpots}
-                  hidingSpotWidth={hidingSpotWidth}
-                  enterFullscreen={this.enterFullscreen}
-                  fullscreen={fullscreen}
-                  screenWidth={screenWidth}
-                />
-              </CSSTransition>
-            )
-            : null
-          }
-          {!fullscreen && !rotate
+        {rotate ? <PleaseRotate /> : null}
+        <TransitionGroup className={`scenes ${rotate ? 'rotated' : ''}`}>
+          {!gameStarted
             ? (
               <CSSTransition classNames="start-game" timeout={{ enter: 2250, exit: 1000 }}>
                 <StartGame
@@ -107,7 +94,24 @@ class App extends Component {
                 />
               </CSSTransition>
             )
-            : null}
+            : null
+          }
+          {gameStarted
+            ? (
+              <CSSTransition component="div" classNames="game-board" timeout={{ enter: 1000, exit: 1000 }}>
+                <div>
+                  <GameBoard
+                    hidingSpots={hidingSpots}
+                    hidingSpotWidth={hidingSpotWidth}
+                    enterFullscreen={this.enterFullscreen}
+                    fullscreen={fullscreen}
+                    screenWidth={screenWidth}
+                  />
+                </div>
+              </CSSTransition>
+            )
+            : null
+            }
         </TransitionGroup>
         <link href="https://fonts.googleapis.com/css?family=Lobster|Lobster+Two" rel="stylesheet" />
       </main>
@@ -158,13 +162,15 @@ p {
 }
 
 #startGame {
-  background: url(${sand});
   position: relative;
   z-index: 10000;
   min-height: 100vh;
 }
 
 .scenes {
+  &.rotated {
+    opacity: 0.5;
+  }
   position: relative;
   .game-board-enter {
     * {

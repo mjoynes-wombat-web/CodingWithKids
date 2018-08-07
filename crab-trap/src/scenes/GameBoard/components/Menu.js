@@ -44,7 +44,7 @@ class UnstyledMenu extends Component {
             <li>
               {paused
                 ? (
-                  <button type="button" onClick={unpause}>
+                  <button type="button" onClick={(e) => { this.toggleOpen(); unpause(e); }}>
                     <span className="icon">
                       <FontAwesomeIcon icon={faPlay} />
                     </span>
@@ -54,7 +54,7 @@ class UnstyledMenu extends Component {
                   </button>
                 )
                 : (
-                  <button type="button" onClick={pause}>
+                  <button type="button" onClick={(e) => { this.toggleOpen(); pause(e); }}>
                     <span className="icon">
                       <FontAwesomeIcon icon={faPause} />
                     </span>
@@ -96,7 +96,7 @@ UnstyledMenu.defaultProps = {
 
 const Menu = styled(UnstyledMenu)`
 position: absolute;
-z-index: 2000;
+z-index: 5000;
 top: 0;
 left: 0;
 height: 100%;
