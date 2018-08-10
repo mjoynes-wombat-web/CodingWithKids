@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 
 import Crab from '../../components/Crab';
 import SinglePlayerButton from './components/SinglePlayerButton';
-import MultiPlayerButton from './components/MultiPlayerButon';
+// import MultiPlayerButton from './components/MultiPlayerButon';
 
 const UnstyledStartGame = ({
   className, startGame, screenWidth,
@@ -15,7 +15,7 @@ const UnstyledStartGame = ({
         Crab Trap
       </h1>
       <SinglePlayerButton onClick={startGame} />
-      <MultiPlayerButton disabled />
+      {/* <MultiPlayerButton disabled /> */}
       <p className="note">
         Multiplayer Coming Soon!
       </p>
