@@ -4,6 +4,7 @@
 ✔ Fix fade in transition for game board. @critical @done (2018-8-6 20:40:59)
 ✔ Pause game when screen rotates or leaves fullscreen without exiting game. @high @done (2018-8-6 21:07:10)
 ✔ Reduce number of cols for hiding spots. @high @done (2018-8-3 16:43:48)
+☐ Change crab position to percentage based instead of px based. @high
 ☐ Implement multiplayer. @low 
 ☐ Optimize. @low
 ☐ Improve UI UX. @low
