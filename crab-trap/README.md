@@ -92,9 +92,7 @@ The other thing my research turned up was that having fewer CSS selectors improv
 
 I was still having animation glitches, and the animations would only be visibly smooth on my laptop. My phone, while a pretty decent, was still glitching. So I ran another performance profile and found that styled-components was taking a long time to calculate styles.
 
-![alt text]
-
-Doing some research turn up the fact that [inline styles in React Native perform better than styled-components](https://medium.com/@jm90mm/a-quick-performance-comparison-of-styled-components-vs-inline-styles-in-react-native-21d8f6a561d7). So I decided to test this in React myself. I moved my static CSS for the crab to a SASS file. Running a performance profile on this showed no discernable change. I then moved all dynamic styling to inline styling. This removed all animation glitch from the crab. As you can see from the re-run [profile](https://github.com/ssmith-wombatweb/CodingWithKids/blob/crab-trap/crab-trap/article-resources/performance-profiles/dynamic-to-inline-styling) the frame rate bounces up and down more (green line) but it never gets as low as it did with styled-components.
+Doing some research turn up the fact that [inline styles in React Native perform better than styled-components](https://medium.com/@jm90mm/a-quick-performance-comparison-of-styled-components-vs-inline-styles-in-react-native-21d8f6a561d7). So I decided to test this in React myself. I moved my static CSS for the crab to a SASS file. Running a performance profile on this showed no discernable change. I then moved all dynamic styling to inline styling. This removed all animation glitch from the crab. As you can see from the profile graphs below the frame rate bounces up and down more (green line) but it never gets as low as it did with styled-components.
 
 ![Before Moving Dynamic Styling to Inline](./article-resources/imgs/pre-dynamic-to-inline-style.jpg "Before Moving Dynamic Styling to Inline")
 > Before Moving Dynamic Styling to Inline
